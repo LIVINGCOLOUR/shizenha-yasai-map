@@ -134,7 +134,7 @@ async function createDraftWithOpenAI(answers, apiKey, model) {
         },
         {
           role: "user",
-          content: JSON.stringify({ answers }, null, 2),
+          content: buildUserPrompt(answers),
         },
       ],
     }),
@@ -229,23 +229,91 @@ function sanitizeDiagnosticMessage(value, apiKey = "") {
 function buildSystemPrompt() {
   return [
     "あなたは、自然派やさいマップの農家プロフィール下書きを手伝う編集者です。",
+    "農家さんの短い回答、口語の回答、まだ整理されていない回答を、掲載前のプロフィール下書きとして自然な日本語に整えてください。",
     "農家さんの回答をもとに、必ずJSONだけを返してください。JSON以外の説明文、Markdown、コードブロックは返さないでください。",
     "返すJSON形式は次のキーだけです。",
     '{"status":"下書き・本人確認前","farmName":"","area":"","crops":"","importantThings":"","cultivation":"","localConnection":"","future":"","message":"","restaurantMaterial":"","tagCandidates":[],"expressionMemo":[],"checklist":[]}',
-    "ルール:",
+    "全体ルール:",
     "- 日本語で出力する",
     "- 農家さんの言葉を尊重する",
+    "- 入力内容をそのままコピーしない",
+    "- 話し言葉を、掲載前のプロフィール下書きとして自然な文章に整える",
+    "- 短い回答や雑な回答でも、意味をくみ取って丁寧な表現にする",
+    "- 乱暴な表現、くだけすぎた表現、意味が曖昧な表現は、穏やかで掲載可能な表現に直す",
+    "- 「わからない」「つかわないじゃん」「いいこと」などの曖昧な回答は、断定せず、自然な表現に変換する",
+    "- 入力が短すぎる場合でも空欄にせず、分かる範囲で控えめな文章にする",
+    "- ただし、事実を勝手に増やしすぎない",
     "- 誇張しすぎない",
     "- 断定しすぎない",
+    "- 不明なことは断定しない",
+    "- 農家本人が確認・修正する前提の下書きにする",
     "- 「無農薬」「安心安全」「有機」「オーガニック」などは慎重に扱う",
+    "- 農薬不使用、有機JAS、無農薬、安心安全などの表現は勝手に断定しない",
     "- 有機JAS認証が確認できない場合、「有機農家です」と断定しない",
     "- 未入力項目がある場合は自然に省略する",
-    "- 農家本人が確認・修正する前提の下書きにする",
     "- tagCandidates は候補であり、断定しない",
     "- expressionMemo には注意が必要な表現があれば入れる",
     "- checklist には掲載前確認事項を入れる",
+    "",
+    "各項目の生成ルール:",
+    "- farmName: 農園名は原則として入力を尊重する。ただし不要な記号や明らかな誤字は軽く整える",
+    "- area: 地域名は原則として入力を尊重する。勝手に市町村名を補完しすぎない",
+    "- crops: 作物名は原則として入力を尊重する。複数ある場合は読みやすく整える",
+    "- importantThings: 「大切にしていること」と「農家さんの想い」から、農家のこだわりが伝わる文章にする。入力をそのままコピーしない",
+    "- cultivation: 農薬・化学肥料・有機・無農薬に関わる内容を慎重に表現する。「無農薬」と入力されても、すぐに断定せず、栽培期間中の農薬使用状況は本人確認が必要であることを補足する。有機JAS認証が不明な場合は「有機農家」と断定しない",
+    "- localConnection: 地域イベント、販売店、学校、マルシェ、飲食店などの関わりを自然な文章にする。口語をそのまま出さない",
+    "- future: 目指したいことが短い場合でも、前向きで控えめな文章に整える。勝手に大きなビジョンを作りすぎない",
+    "- message: 農家紹介の短い本文として使える文章にする。農家詳細ページに載っても違和感がない表現にする",
+    "- restaurantMaterial: 販売店POP、メニュー説明、Instagram投稿の素材に使いやすい文章にする。消費者向けに分かりやすくし、誇張しすぎない",
+    "- tagCandidates: 入力内容から候補タグを出す。必ず候補として扱い、断定しない",
+    "- expressionMemo: 「無農薬」「安心安全」「有機」「オーガニック」など、注意が必要な表現があればメモを出す。問題がなければ、掲載前に本人確認が必要である旨を書く",
+    "",
+    "変換例:",
+    "入力例:",
+    "農園名: やまだ",
+    "地域: 八郷",
+    "育てているもの: だいこん",
+    "大切にしていること: やば無農薬",
+    "栽培方法について: つかわないじゃん",
+    "地域との関わり: 田植えイベントとかいろいろやってるよーん",
+    "これから目指したいこと: いいこと",
+    "望ましい出力例:",
+    "farmName: やまだ",
+    "area: 八郷",
+    "crops: だいこん",
+    "importantThings: 農薬に頼りすぎず、作物本来の育ち方を大切にしながら、だいこんを育てている農園です。",
+    "cultivation: 栽培方法については、農薬をできるだけ使わない方針で取り組んでいる可能性があります。掲載前には、具体的な使用状況を農家さん本人に確認する必要があります。",
+    "localConnection: 地域では、田植えイベントなどを通じて、農業に触れる機会づくりにも関わっています。",
+    "future: これからも地域に根ざし、食べる人や地域とのつながりを大切にする農業を続けていきたいという想いがうかがえます。",
+    "message: 八郷の地域で、だいこんづくりを通じて、自然や地域とのつながりを大切にしている農家です。",
+    "restaurantMaterial: 八郷で育てられただいこんです。農薬に頼りすぎない栽培への関心や、地域イベントへの関わりなど、作り手の背景を伝えやすい食材です。店頭POPやメニュー説明では、地域とのつながりを感じられる野菜として紹介できます。",
+    "上記は例です。実際の出力では、入力内容に応じて自然に生成してください。",
+    "",
     "checklist には最低限、次の6項目を含めてください。",
     CHECKLIST.map((item) => `- ${item}`).join("\n"),
+  ].join("\n");
+}
+
+function buildUserPrompt(answers) {
+  return [
+    "次の回答をもとに、農家プロフィールの掲載前下書きJSONを作成してください。",
+    "回答が短い場合や口語の場合も、そのままコピーせず、意味をくみ取って自然な日本語に整えてください。",
+    "",
+    `農園名:\n${answers.farmName || "未入力"}`,
+    "",
+    `地域:\n${answers.area || "未入力"}`,
+    "",
+    `育てているもの:\n${answers.crops || "未入力"}`,
+    "",
+    `大切にしていること:\n${answers.values || "未入力"}`,
+    "",
+    `栽培方法について:\n${answers.cultivation || "未入力"}`,
+    "",
+    `地域との関わり:\n${answers.localConnection || "未入力"}`,
+    "",
+    `これから目指したいこと:\n${answers.future || "未入力"}`,
+    "",
+    `農家さんの想い:\n${answers.message || "未入力"}`,
   ].join("\n");
 }
 
@@ -315,7 +383,7 @@ function validateDraft(draft, answers) {
     normalized.expressionMemo = fallback.expressionMemo;
   }
 
-  return normalized;
+  return polishCopiedFields(normalized, answers);
 }
 
 function normalizeStringArray(value) {
@@ -329,6 +397,58 @@ function mergeChecklist(items) {
     if (!merged.includes(item)) merged.push(item);
   }
   return merged;
+}
+
+function polishCopiedFields(draft, answers) {
+  const polished = { ...draft };
+  const farmName = polished.farmName || answers.farmName || "この農園";
+  const area = polished.area || answers.area || "地域";
+  const crops = polished.crops || answers.crops || "作物";
+
+  if (isExactCopy(polished.importantThings, answers.values)) {
+    polished.importantThings = `${answers.values}という想いを大切にしながら、${area}で${crops}づくりに取り組んでいます。掲載前には、具体的な内容を農家さん本人と確認します。`;
+  }
+  if (isExactCopy(polished.cultivation, answers.cultivation)) {
+    polished.cultivation = createCultivationSentence(answers.cultivation);
+  }
+  if (isExactCopy(polished.localConnection, answers.localConnection)) {
+    polished.localConnection = `${answers.localConnection}といった地域との関わりがあります。掲載前には、現在の取り組み内容を農家さん本人に確認します。`;
+  }
+  if (isExactCopy(polished.future, answers.future)) {
+    polished.future = `${answers.future}という想いをもとに、無理なく続けられる農業と地域とのつながりを大切にしていく意向がうかがえます。`;
+  }
+  if (isExactCopy(polished.message, answers.message)) {
+    polished.message = `${farmName}は、${area}で${crops}を育てる農園です。農家さんの想いや詳しい取り組みは、本人確認後に掲載します。`;
+  }
+  if (isExactCopyOfAnyInput(polished.restaurantMaterial, answers)) {
+    polished.restaurantMaterial = `${area}で育てられた${crops}です。作り手の想いや地域との関わりを伝えるための、売場POPやメニュー説明の素材として活用できます。掲載前には、栽培方法や販売方法を農家さん本人に確認します。`;
+  }
+
+  return polished;
+}
+
+function isExactCopy(value, source) {
+  return Boolean(cleanText(value) && cleanText(value) === cleanText(source));
+}
+
+function isExactCopyOfAnyInput(value, answers) {
+  const text = cleanText(value);
+  if (!text) return false;
+  return Object.values(answers).some((answer) => text === cleanText(answer));
+}
+
+function createCultivationSentence(cultivation) {
+  const text = cleanText(cultivation);
+  if (!text) {
+    return "栽培方法については、農家さん本人の確認後に掲載します。";
+  }
+  if (/無農薬|農薬を使わない|使っていない|不使用/.test(text)) {
+    return "農薬に頼りすぎない栽培に取り組んでいる可能性があります。掲載前には、栽培期間中の農薬使用状況や具体的な栽培方法を農家さん本人に確認する必要があります。";
+  }
+  if (/有機|オーガニック/.test(text)) {
+    return "有機やオーガニックに関わる表現は、認証や具体的な取り組みの確認が必要です。掲載前には、農家さん本人と表現を確認します。";
+  }
+  return `${text}という栽培方針について、掲載前には具体的な内容を農家さん本人と確認します。`;
 }
 
 function buildMockDraft(answers) {
