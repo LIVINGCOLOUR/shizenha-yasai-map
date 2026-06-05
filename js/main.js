@@ -14,26 +14,35 @@ const INTEREST_LABELS = [
   "里山の暮らしを大切にする農家",
 ];
 
+function currentPageName() {
+  const path = window.location.pathname.replace(/\/$/, "");
+  const last = path.split("/").pop() || "index";
+  return last.replace(/\.html$/, "") || "index";
+}
+
+function isPage(name) {
+  return currentPageName() === name;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   setupDemoActionDialog();
   setupAiProfileDemoDialog();
   setupConceptDemoDialog();
 
-  const path = window.location.pathname.split("/").pop();
-  if (path === "farmers.html") {
+  if (isPage("farmers")) {
     loadFarmersList();
   }
-  if (path === "places.html") {
+  if (isPage("places")) {
     loadPlacesList();
   }
-  if (path === "farmer.html") {
+  if (isPage("farmer")) {
     loadFarmerDetail();
   }
-  if (path === "index.html" || path === "") {
+  if (isPage("index")) {
     setupInterestFilters();
     loadHomepageFarmers();
   }
-  if (path === "seeds.html") {
+  if (isPage("seeds")) {
     loadSeedsMap();
   }
 });
