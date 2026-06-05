@@ -12,9 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT_PATH = ROOT / "reports" / "qa_report.md"
 
 EXPECTED_NAV = [
+    "ホーム",
     "地域の販売店",
     "農家と出会う",
-    "たねを見る",
+    "地域に根差した野菜を見る",
     "農家さんへ",
     "地域で使う",
     "マイページ",
