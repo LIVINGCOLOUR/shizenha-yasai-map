@@ -638,6 +638,254 @@ button { font: inherit; }
 }
 .button:disabled:hover { transform: none; }
 
+.eat-page {
+  display: grid;
+  gap: 0;
+}
+.eat-hero-section {
+  padding: clamp(26px, 3vw, 42px);
+  border-radius: 28px;
+  border: 1px solid rgba(32,57,42,.1);
+  background:
+    radial-gradient(circle at 92% 10%, rgba(174,191,132,.2), transparent 18rem),
+    linear-gradient(135deg, rgba(255,253,247,.94), rgba(235,241,216,.62));
+  box-shadow: 0 14px 34px rgba(32,57,42,.07);
+}
+.eat-hero-section .section-intro { max-width: 840px; }
+.eat-hero-section h1 {
+  margin: 8px 0 13px;
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(2rem, 3.6vw, 3.3rem);
+  line-height: 1.16;
+  letter-spacing: -.035em;
+}
+.eat-hero-note {
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 14px !important;
+  padding: 10px 13px;
+  border-radius: 13px;
+  border: 1px solid rgba(146,114,79,.16);
+  background: rgba(255,253,247,.74);
+  color: var(--earth) !important;
+  font-size: .86rem;
+  font-weight: 800;
+}
+.eat-filter-section {
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(32,57,42,.1);
+  background: rgba(255,253,247,.72);
+  box-shadow: 0 8px 22px rgba(32,57,42,.04);
+}
+.eat-filter-section .compact-head {
+  align-items: center;
+}
+.eat-filter-section .section-intro,
+.eat-filter-section .compact-head p:not(.eyebrow) {
+  max-width: 720px;
+}
+.eat-location-button {
+  white-space: nowrap;
+}
+.eat-filter-status {
+  margin: 13px 0 0;
+  color: var(--earth);
+  font-size: .86rem;
+  font-weight: 800;
+  line-height: 1.7;
+}
+.eat-prefecture-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(53,100,65,.16);
+  background: rgba(235,241,216,.58);
+  color: var(--forest);
+}
+.eat-prefecture-label {
+  color: var(--moss);
+  font-size: .74rem;
+  font-weight: 900;
+}
+.eat-filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.eat-filter-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(32,57,42,.14);
+  background: rgba(255,253,247,.86);
+  color: var(--forest);
+  cursor: pointer;
+  font-size: .83rem;
+  font-weight: 850;
+  line-height: 1.45;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.eat-filter-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(53,100,65,.32);
+  box-shadow: 0 8px 18px rgba(32,57,42,.06);
+}
+.eat-filter-button:focus-visible {
+  outline: 3px solid rgba(214,180,115,.55);
+  outline-offset: 2px;
+}
+.eat-filter-button.is-active {
+  border-color: rgba(53,100,65,.55);
+  background: linear-gradient(135deg, rgba(53,100,65,.95), rgba(76,119,74,.9));
+  color: var(--white);
+}
+.small-intro h2 {
+  margin-top: 5px;
+}
+.eat-place-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.eat-place-card {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 0;
+  padding: 22px;
+  border-radius: 20px;
+  border: 1px solid rgba(32,57,42,.12);
+  background: linear-gradient(180deg, rgba(255,253,247,.96), rgba(244,239,227,.78));
+  box-shadow: var(--soft-shadow);
+}
+.eat-place-card:first-child {
+  border-color: rgba(53,100,65,.26);
+  background: linear-gradient(180deg, rgba(255,253,247,.98), rgba(235,241,216,.76));
+}
+.eat-place-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.eat-place-card h3 {
+  margin: 0;
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 1.38rem;
+  line-height: 1.28;
+}
+.eat-place-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.75;
+}
+.eat-place-region {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--forest) !important;
+  font-weight: 850;
+}
+.eat-match-badge {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(214,180,115,.22);
+  color: var(--earth);
+  font-size: .72rem;
+  font-weight: 900;
+}
+.eat-place-facts,
+.eat-detail-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid rgba(32,57,42,.1);
+}
+.eat-place-facts div,
+.eat-detail-list div {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(32,57,42,.08);
+}
+.eat-place-facts dt,
+.eat-detail-list dt {
+  color: var(--moss);
+  font-size: .72rem;
+  font-weight: 900;
+}
+.eat-place-facts dd,
+.eat-detail-list dd {
+  margin: 0;
+  color: var(--text);
+  font-size: .82rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.eat-detail-list a {
+  color: var(--forest);
+  border-bottom: 1px solid rgba(32,57,42,.24);
+  font-weight: 900;
+}
+.eat-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.eat-card-tags span {
+  display: inline-flex;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(111,143,95,.13);
+  color: var(--forest);
+  font-size: .72rem;
+  font-weight: 900;
+  line-height: 1.45;
+}
+.eat-detail-button {
+  width: 100%;
+  margin-top: auto;
+  min-height: 42px;
+  border-radius: 9px;
+}
+.eat-detail-panel {
+  min-height: 150px;
+  padding: 24px;
+  border-radius: 22px;
+  border: 1px solid rgba(32,57,42,.11);
+  background: rgba(255,253,247,.82);
+  box-shadow: var(--soft-shadow);
+}
+.eat-detail-card {
+  display: grid;
+  gap: 18px;
+}
+.eat-detail-card h3 {
+  margin: 6px 0 10px;
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(1.5rem, 2.2vw, 2.05rem);
+}
+.eat-detail-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 .advantage-grid { display: grid; grid-template-columns: .92fr 1.08fr; gap: 22px; }
 .advantage-card { position: relative; overflow: hidden; border-radius: 22px; min-height: 310px; box-shadow: 0 10px 26px rgba(32,57,42,.06); border: 1px solid rgba(32,57,42,.09); background: rgba(255,253,247,.82); }
 .municipality-card { background: linear-gradient(135deg, rgba(255,255,255,.93), rgba(235,241,216,.96)); }
@@ -2483,7 +2731,7 @@ button { font: inherit; }
   .section { margin-top: 48px; }
   .discovery-section { margin-top: 46px; }
   .section-head, .horizontal-head { display: grid; align-items: start; }
-  .home-farm-grid, .seed-grid, .feature-grid, .footer-top, .footer-links, .community-items, .ai-demo-grid, .seed-list, .card-grid, .info-grid, .ai-before-after-grid, .place-guide-grid, .place-grid, .next-link-grid, .future-card-grid, .compact-future-grid, .future-example-box, .mypage-layout, .profile-mode-grid, .profile-field-grid, .draft-field-grid, .profile-interview-layout, .interview-step-grid, .profile-draft-layout, .about-two-column, .about-entry-grid, .about-list-grid, .about-check-list, .about-feedback-grid, .about-reference-list, .learn-choice-grid { grid-template-columns: 1fr; }
+  .home-farm-grid, .seed-grid, .feature-grid, .footer-top, .footer-links, .community-items, .ai-demo-grid, .seed-list, .card-grid, .info-grid, .ai-before-after-grid, .place-guide-grid, .place-grid, .eat-place-grid, .next-link-grid, .future-card-grid, .compact-future-grid, .future-example-box, .mypage-layout, .profile-mode-grid, .profile-field-grid, .draft-field-grid, .profile-interview-layout, .interview-step-grid, .profile-draft-layout, .about-two-column, .about-entry-grid, .about-list-grid, .about-check-list, .about-feedback-grid, .about-reference-list, .learn-choice-grid { grid-template-columns: 1fr; }
   .interview-start-panel, .voice-future-box { grid-template-columns: 1fr; display: grid; }
   .voice-future-box .button { width: fit-content; }
   .interest-section, .farmer-ai-section { padding: 22px; border-radius: 20px; }
@@ -2491,6 +2739,10 @@ button { font: inherit; }
   .point-card, .mypage-notice { padding: 20px; }
   .point-status-list div { grid-template-columns: 94px minmax(0, 1fr); }
   .place-card { padding: 18px; }
+  .eat-filter-section, .eat-detail-panel, .eat-place-card { padding: 18px; }
+  .eat-place-facts div, .eat-detail-list div { grid-template-columns: 1fr; gap: 3px; }
+  .eat-location-button { width: 100%; white-space: normal; }
+  .eat-filter-button { width: 100%; justify-content: flex-start; text-align: left; }
   .place-detail-list div { grid-template-columns: 92px minmax(0, 1fr); }
   .closing-note-section { gap: 10px; margin-top: 38px; padding: 20px; }
   .interest-filter-options { display: grid; grid-template-columns: 1fr; gap: 8px; }

@@ -23,6 +23,7 @@ EXPECTED_NAV = [
 
 REQUIRED_HTML = [
     "index.html",
+    "eat.html",
     "learn.html",
     "places.html",
     "farmers.html",
@@ -129,11 +130,19 @@ def check_nav() -> None:
         path = ROOT / relative
         if not path.exists():
             continue
-        labels = extract_nav_labels(read_text(path))
+        html = read_text(path)
+        labels = extract_nav_labels(html)
         if labels != EXPECTED_NAV:
             add_error(f"{relative}: nav order mismatch: {' | '.join(labels)}")
         else:
             add_info(f"{relative}: nav OK")
+        nav_match = re.search(r'<nav class="(?:main-nav|site-nav)"[\s\S]*?</nav>', html)
+        if nav_match:
+            nav_html = nav_match.group(0)
+            if '<a href="eat.html">食べる</a>' not in nav_html:
+                add_error(f"{relative}: nav '食べる' must link to eat.html")
+            if '<a href="places.html">買う</a>' not in nav_html:
+                add_error(f"{relative}: nav '買う' must link to places.html")
 
 
 def is_external_or_anchor(value: str) -> bool:

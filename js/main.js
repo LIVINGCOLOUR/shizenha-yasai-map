@@ -14,6 +14,85 @@ const INTEREST_LABELS = [
   "里山の暮らしを大切にする農家",
 ];
 
+const EAT_REGION_LABELS = [
+  "石岡市",
+  "笠間市",
+  "水戸市",
+  "つくば市",
+  "土浦市",
+  "小美玉市",
+  "かすみがうら市",
+  "桜川市",
+  "茨城町",
+  "城里町",
+];
+
+const EAT_SCENE_LABELS = [
+  "カフェ",
+  "ランチ",
+  "ディナー",
+  "子どもが入りやすい",
+  "一人で入りやすい",
+  "季節の野菜を楽しめる",
+  "地域に根差した野菜を楽しめる",
+  "農家の背景が見える",
+  "予約して行きたい",
+];
+
+const EAT_FARMER_LABELS = ["やまだ農園", "〇〇自然農園"];
+
+const EAT_DEMO_PLACES = [
+  {
+    id: "satoyama-gohan-tsuchinoko",
+    name: "里山ごはん つちのこ",
+    type: "飲食店・ランチ",
+    region: "石岡市八郷周辺",
+    municipalities: ["石岡市"],
+    description: "地元農家の季節野菜を使った食事を楽しめるお店です。食べることをきっかけに、地域の農や野菜の背景に出会える場所です。",
+    usedItems: ["季節の野菜", "米", "だいこん"],
+    connectedFarmers: [{ name: "やまだ農園", farmerId: "yamada-nouen" }],
+    visibleBackground: "やまだ農園の季節野菜を使ったメニューを通じて、八郷周辺の農の営みを感じられます。",
+    statusLabel: "デモ表示・店舗確認前",
+    sceneTags: ["ランチ", "季節の野菜を楽しめる", "地域に根差した野菜を楽しめる", "農家の背景が見える", "予約して行きたい"],
+    tags: ["地元野菜を使う店", "農家の背景が見える店", "ランチ", "季節の野菜を楽しめる"],
+    checkMemo: "営業時間や提供内容は変わることがあります。訪問前に店舗の公式情報を確認してください。",
+  },
+  {
+    id: "komorebi-cafe-sample",
+    name: "カフェこもれび（サンプル）",
+    type: "カフェ",
+    region: "つくば市周辺",
+    municipalities: ["つくば市", "土浦市"],
+    description: "地域の野菜を使った軽食や季節のプレートをイメージしたサンプル店舗です。実在店舗を特定する情報ではありません。",
+    usedItems: ["季節の野菜", "ハーブ", "焼き菓子"],
+    connectedFarmers: [{ name: "〇〇自然農園", farmerId: "model-shizen-nouen" }],
+    visibleBackground: "自然体験や土づくりに関心のある農家像とつながる、やわらかな食の入口として表示しています。",
+    statusLabel: "デモ表示・店舗確認前",
+    sceneTags: ["カフェ", "子どもが入りやすい", "一人で入りやすい", "季節の野菜を楽しめる", "農家の背景が見える"],
+    tags: ["地元野菜を使う店", "カフェ", "一人で入りやすい", "農家の背景が見える店"],
+    checkMemo: "メニューや営業日は未確認です。実運用時は店舗確認後に掲載します。",
+  },
+  {
+    id: "machi-no-hatake-table",
+    name: "まちの畑テーブル（サンプル）",
+    type: "飲食店・ディナー",
+    region: "水戸市周辺",
+    municipalities: ["水戸市", "茨城町"],
+    description: "地元野菜を使った食事を通じて、作り手の背景を少し知るためのサンプル店舗です。",
+    usedItems: ["季節の野菜", "米", "根菜"],
+    connectedFarmers: [{ name: "やまだ農園", farmerId: "yamada-nouen" }],
+    visibleBackground: "季節の野菜や米を使った料理から、地域の農家が続けている日々の営みに目を向けられます。",
+    statusLabel: "デモ表示・店舗確認前",
+    sceneTags: ["ディナー", "予約して行きたい", "地域に根差した野菜を楽しめる", "農家の背景が見える"],
+    tags: ["地元野菜を使う店", "ディナー", "予約して行きたい", "地域に根差した野菜を楽しめる"],
+    checkMemo: "席数、予約、提供内容は店舗確認後に掲載する想定です。",
+  },
+];
+
+const selectedEatRegions = new Set();
+const selectedEatScenes = new Set();
+const selectedEatFarmers = new Set();
+
 function currentPageName() {
   const path = window.location.pathname.replace(/\/$/, "");
   const last = path.split("/").pop() || "index";
@@ -35,6 +114,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   if (isPage("places")) {
     loadPlacesList();
+  }
+  if (isPage("eat")) {
+    setupEatPage();
   }
   if (isPage("farmer")) {
     loadFarmerDetail();
@@ -174,6 +256,207 @@ function createHomepageFarmerCard(farmer, matchCount) {
         </div>
       </div>
     </article>`;
+}
+
+function setupEatPage() {
+  const list = document.getElementById("eatPlaceList");
+  if (!list) return;
+
+  renderEatFilterButtons("eatRegionFilters", EAT_REGION_LABELS, selectedEatRegions, "eat-region", "eatRegion");
+  renderEatFilterButtons("eatSceneFilters", EAT_SCENE_LABELS, selectedEatScenes, "eat-scene", "eatScene");
+  renderEatFilterButtons("eatFarmerFilters", EAT_FARMER_LABELS, selectedEatFarmers, "eat-farmer", "eatFarmer");
+  renderEatPlaces();
+  setupEatLocationButton();
+
+  if (list.dataset.ready === "true") return;
+  list.dataset.ready = "true";
+  list.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-eat-detail-id]");
+    if (!button) return;
+    const place = EAT_DEMO_PLACES.find((item) => item.id === button.dataset.eatDetailId);
+    if (!place) return;
+    renderEatDetail(place);
+    const panel = document.getElementById("eatDetailPanel");
+    if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function setupEatLocationButton() {
+  const button = document.querySelector("[data-eat-location-button]");
+  const status = document.getElementById("eatLocationStatus");
+  if (!button || button.dataset.ready === "true") return;
+  button.dataset.ready = "true";
+  button.addEventListener("click", () => {
+    if (!status) return;
+    if (!navigator.geolocation) {
+      status.textContent = "現在地を取得できませんでした。地域を選んで探してください。";
+      return;
+    }
+    status.textContent = "現在地を確認しています。デモでは地域候補の表示にのみ使います。";
+    navigator.geolocation.getCurrentPosition(
+      () => {
+        selectedEatRegions.add("石岡市");
+        status.textContent = "現在地候補として茨城県内の地域を表示しました。デモでは石岡市周辺を選択しています。";
+        renderEatFilterButtons("eatRegionFilters", EAT_REGION_LABELS, selectedEatRegions, "eat-region", "eatRegion");
+        renderEatPlaces();
+      },
+      () => {
+        status.textContent = "現在地を取得できませんでした。地域を選んで探してください。";
+      },
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 600000 },
+    );
+  });
+}
+
+function renderEatFilterButtons(containerId, labels, selectedSet, dataAttr, datasetKey) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = labels
+    .map((label) => {
+      const active = selectedSet.has(label);
+      return `<button class="eat-filter-button${active ? " is-active" : ""}" type="button" data-${dataAttr}="${escapeAttribute(label)}" aria-pressed="${active}">${escapeHtml(label)}</button>`;
+    })
+    .join("");
+
+  if (container.dataset.ready === "true") return;
+  container.dataset.ready = "true";
+  container.addEventListener("click", (event) => {
+    const button = event.target.closest(`[data-${dataAttr}]`);
+    if (!button) return;
+    const label = button.dataset[datasetKey];
+    if (selectedSet.has(label)) {
+      selectedSet.delete(label);
+    } else {
+      selectedSet.add(label);
+    }
+    renderEatFilterButtons(containerId, labels, selectedSet, dataAttr, datasetKey);
+    renderEatPlaces();
+  });
+}
+
+function renderEatPlaces() {
+  const list = document.getElementById("eatPlaceList");
+  const status = document.getElementById("eatResultStatus");
+  if (!list) return;
+
+  const selectedCount = selectedEatRegions.size + selectedEatScenes.size + selectedEatFarmers.size;
+  const sortedPlaces = EAT_DEMO_PLACES
+    .map((place, index) => ({
+      place,
+      index,
+      matchCount: getEatMatchCount(place),
+    }))
+    .sort((a, b) => {
+      if (!selectedCount) return a.index - b.index;
+      if (b.matchCount !== a.matchCount) return b.matchCount - a.matchCount;
+      return a.index - b.index;
+    });
+
+  list.innerHTML = sortedPlaces.map(({ place, matchCount }) => createEatPlaceCardHtml(place, matchCount)).join("");
+  if (status) {
+    status.textContent = selectedCount
+      ? "選択した条件に近い飲食店カードを上に表示しています。"
+      : "条件を選ぶと、近い飲食店カードが上に表示されます。";
+  }
+}
+
+function getEatMatchCount(place) {
+  const regionMatches = (place.municipalities || []).filter((label) => selectedEatRegions.has(label)).length;
+  const sceneMatches = (place.sceneTags || []).filter((label) => selectedEatScenes.has(label)).length;
+  const farmerMatches = (place.connectedFarmers || []).filter((farmer) => selectedEatFarmers.has(farmer.name)).length;
+  return regionMatches + sceneMatches + farmerMatches;
+}
+
+function createEatPlaceCardHtml(place, matchCount) {
+  const usedItems = Array.isArray(place.usedItems) ? place.usedItems : [];
+  const connectedFarmers = Array.isArray(place.connectedFarmers) ? place.connectedFarmers : [];
+  const tags = Array.isArray(place.tags) ? place.tags : [];
+  const matchBadge = matchCount > 0
+    ? `<span class="eat-match-badge">一致 ${matchCount}</span>`
+    : "";
+
+  return `
+    <article class="eat-place-card">
+      <div class="eat-place-head">
+        <p class="place-kind">${escapeHtml(place.type)}</p>
+        <span class="place-status">${escapeHtml(place.statusLabel)}</span>
+      </div>
+      <h3>${escapeHtml(place.name)}</h3>
+      <p class="eat-place-region">${escapeHtml(place.region)} ${matchBadge}</p>
+      <p>${escapeHtml(place.description)}</p>
+      <dl class="eat-place-facts">
+        <div>
+          <dt>使っている野菜・食材</dt>
+          <dd>${escapeHtml(usedItems.join(" / "))}</dd>
+        </div>
+        <div>
+          <dt>つながりのある農家</dt>
+          <dd>${escapeHtml(connectedFarmers.map((farmer) => farmer.name).join(" / "))}</dd>
+        </div>
+        <div>
+          <dt>この店で見える背景</dt>
+          <dd>${escapeHtml(place.visibleBackground)}</dd>
+        </div>
+      </dl>
+      <div class="eat-card-tags">${tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+      <button class="button primary eat-detail-button" type="button" data-eat-detail-id="${escapeAttribute(place.id)}">詳しく見る</button>
+    </article>`;
+}
+
+function renderEatDetail(place) {
+  const panel = document.getElementById("eatDetailPanel");
+  if (!panel) return;
+  const usedItems = Array.isArray(place.usedItems) ? place.usedItems : [];
+  const connectedFarmers = Array.isArray(place.connectedFarmers) ? place.connectedFarmers : [];
+
+  panel.innerHTML = `
+    <article class="eat-detail-card">
+      <div>
+        <p class="section-eyebrow">${escapeHtml(place.statusLabel)}</p>
+        <h3>${escapeHtml(place.name)}</h3>
+        <p>${escapeHtml(place.description)}</p>
+      </div>
+      <dl class="eat-detail-list">
+        <div>
+          <dt>地域</dt>
+          <dd>${escapeHtml(place.region)}</dd>
+        </div>
+        <div>
+          <dt>種別</dt>
+          <dd>${escapeHtml(place.type)}</dd>
+        </div>
+        <div>
+          <dt>使っている野菜・食材</dt>
+          <dd>${escapeHtml(usedItems.join(" / "))}</dd>
+        </div>
+        <div>
+          <dt>つながりのある農家</dt>
+          <dd>${escapeHtml(connectedFarmers.map((farmer) => farmer.name).join(" / "))}</dd>
+        </div>
+        <div>
+          <dt>農家ページへのリンク</dt>
+          <dd>${connectedFarmers.map(createEatFarmerLinkHtml).join(" / ")}</dd>
+        </div>
+        <div>
+          <dt>この店で見える背景</dt>
+          <dd>${escapeHtml(place.visibleBackground)}</dd>
+        </div>
+        <div>
+          <dt>利用前の確認メモ</dt>
+          <dd>${escapeHtml(place.checkMemo)}</dd>
+        </div>
+        <div>
+          <dt>確認状態</dt>
+          <dd>${escapeHtml(place.statusLabel)}</dd>
+        </div>
+      </dl>
+    </article>`;
+}
+
+function createEatFarmerLinkHtml(farmer) {
+  if (!farmer || !farmer.farmerId) return escapeHtml(farmer && farmer.name ? farmer.name : "本人確認後に掲載");
+  return `<a href="farmer.html?id=${encodeURIComponent(farmer.farmerId)}">${escapeHtml(farmer.name)}</a>`;
 }
 
 function loadFarmersList() {
