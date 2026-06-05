@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>マイページ | 自然派やさいマップ</title>
+  <meta name="description" content="地域やさいポイントの将来構想を表示するデモページです。実際のポイント付与やログイン機能はまだありません。" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="logo-block">
+        <div class="logo-mark">P</div>
+        <div>
+          <p class="eyebrow">自然派やさいマップ</p>
+          <h1>マイページ</h1>
+        </div>
+      </div>
+      <nav class="site-nav" aria-label="サブナビゲーション">
+        <a href="places.html">地域の販売店</a>
+        <a href="farmers.html">農家と出会う</a>
+        <a href="seeds.html">たねを見る</a>
+        <a href="for-farmers.html">農家さんへ</a>
+        <a href="municipality.html">地域で使う</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="about.html">この活動について</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section-block mypage-hero-section" aria-labelledby="mypage-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">将来構想・工事中</p>
+          <h2 id="mypage-title">地域やさいポイント</h2>
+          <p>地域の販売店で買う、地元野菜を使う飲食店で食べる、農家イベントに参加する。こうした行動を記録し、将来的には自治体や地域団体と連携して、地産地消を応援するポイントとして使える仕組みを検討しています。</p>
+        </div>
+
+        <div class="mypage-layout">
+          <article class="point-card" aria-label="地域やさいポイント残高">
+            <p class="point-card-label">地域やさいポイント</p>
+            <p class="point-card-balance"><span>0</span> pt</p>
+            <dl class="point-status-list">
+              <div>
+                <dt>ステータス</dt>
+                <dd>工事中</dd>
+              </div>
+              <div>
+                <dt>現在の状態</dt>
+                <dd>構想デモ</dd>
+              </div>
+            </dl>
+            <p class="point-card-note">現在は構想デモです。実際のポイント付与や決済連携はまだありません。</p>
+            <button class="button tertiary concept-demo-button" type="button" data-concept-demo data-concept-title="地域やさいポイント">構想を見る</button>
+          </article>
+
+          <div class="mypage-notice">
+            <h3>まだ動作しないもの</h3>
+            <ul>
+              <li>実際のポイント付与はまだありません。</li>
+              <li>決済連携はまだありません。</li>
+              <li>QRコード読み取りやログイン機能もまだありません。</li>
+              <li>行動履歴や個人情報の保存は行いません。</li>
+              <li>将来、自治体や地域団体と連携して検討する想定です。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block future-section" aria-labelledby="point-future-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">将来の構想</p>
+          <h2 id="point-future-title">地域の買う・食べる・参加するを、静かに記録する</h2>
+        </div>
+        <div class="future-card-grid compact-future-grid">
+          <article class="future-card">
+            <span>構想</span>
+            <h3>地域の販売店で買う</h3>
+            <p>地域で買える野菜を扱う販売店での行動を、将来的に記録する仕組みを検討します。</p>
+          </article>
+          <article class="future-card">
+            <span>構想</span>
+            <h3>地元野菜を使う飲食店で食べる</h3>
+            <p>地元野菜を使う飲食店やカフェでの体験を、地域の応援につなげる構想です。</p>
+          </article>
+          <article class="future-card">
+            <span>構想</span>
+            <h3>農家イベントに参加する</h3>
+            <p>収穫体験やマルシェなど、農家と出会うきっかけを記録する想定です。</p>
+          </article>
+          <article class="future-card">
+            <span>工事中</span>
+            <h3>QRコード等で行動を記録する</h3>
+            <p>QRコード読み取りはまだありません。将来、地域団体と設計を検討します。</p>
+          </article>
+          <article class="future-card">
+            <span>検討中</span>
+            <h3>自治体や地域団体と連携する</h3>
+            <p>ポイント活用は、自治体や地域団体と連携して慎重に検討する想定です。</p>
+          </article>
+        </div>
+        <div class="cta-panel">
+          <h3>活動全体の考え方へ</h3>
+          <p>最後に、この取り組みの背景と運営方針を確認できます。</p>
+          <a class="button primary" href="about.html">この活動について見る</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-links footer-links-minimal">
+        <a href="places.html">地域の販売店</a>
+        <a href="farmers.html">農家と出会う</a>
+        <a href="seeds.html">たねを見る</a>
+        <a href="for-farmers.html">農家さんへ</a>
+        <a href="municipality.html">地域で使う</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="about.html">この活動について</a>
+      </div>
+    </footer>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>

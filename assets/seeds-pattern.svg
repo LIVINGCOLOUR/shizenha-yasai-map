@@ -1,0 +1,23 @@
+<svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="seedGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7efe4" />
+      <stop offset="100%" stop-color="#e7dfc9" />
+    </linearGradient>
+  </defs>
+  <rect width="360" height="360" rx="32" fill="url(#seedGrad)" />
+  <g fill="#8a6a45" opacity="0.65">
+    <ellipse cx="72" cy="82" rx="8" ry="14" transform="rotate(-15 72 82)" />
+    <ellipse cx="138" cy="40" rx="10" ry="18" transform="rotate(8 138 40)" />
+    <ellipse cx="250" cy="84" rx="7" ry="12" transform="rotate(-18 250 84)" />
+    <ellipse cx="310" cy="150" rx="9" ry="16" transform="rotate(24 310 150)" />
+    <ellipse cx="92" cy="220" rx="8" ry="14" transform="rotate(5 92 220)" />
+    <ellipse cx="178" cy="260" rx="10" ry="18" transform="rotate(-10 178 260)" />
+    <ellipse cx="240" cy="310" rx="8" ry="14" transform="rotate(16 240 310)" />
+  </g>
+  <g fill="#5f7f4f" opacity="0.38">
+    <circle cx="50" cy="160" r="18" />
+    <circle cx="140" cy="210" r="22" />
+    <circle cx="290" cy="210" r="16" />
+  </g>
+</svg>

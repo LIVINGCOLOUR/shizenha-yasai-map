@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>農家詳細 | 自然派やさいマップ</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="farmer-detail-page">
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="logo-block">
+        <div class="logo-mark">🌿</div>
+        <div>
+          <p class="eyebrow">自然派やさいマップ</p>
+          <h1 id="farmerName">農家詳細</h1>
+        </div>
+      </div>
+      <nav class="site-nav" aria-label="サブナビゲーション">
+        <a href="places.html">地域の販売店</a>
+        <a href="farmers.html">農家と出会う</a>
+        <a href="seeds.html">たねを見る</a>
+        <a href="for-farmers.html">農家さんへ</a>
+        <a href="municipality.html">地域で使う</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="about.html">この活動について</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section-block detail-section">
+        <div id="farmerDetail" class="detail-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-links footer-links-minimal">
+        <a href="places.html">地域の販売店</a>
+        <a href="farmers.html">農家と出会う</a>
+        <a href="seeds.html">たねを見る</a>
+        <a href="for-farmers.html">農家さんへ</a>
+        <a href="municipality.html">地域で使う</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="about.html">この活動について</a>
+      </div>
+    </footer>
+  </div>
+
+  <dialog id="demoActionDialog" class="demo-modal" aria-labelledby="demoModalTitle" aria-describedby="demoModalMessage">
+    <div class="demo-modal-card">
+      <button class="demo-modal-x" type="button" data-demo-close aria-label="モーダルを閉じる">×</button>
+      <p id="demoModalFarmer" class="demo-modal-farmer">農家名</p>
+      <h2 id="demoModalTitle">この農家とつながる</h2>
+      <p id="demoModalMessage" class="demo-modal-message"></p>
+      <div class="demo-modal-note">
+        <strong>この機能はデモです。</strong>
+        <p>将来的には、農家さんの直売情報・訪問可否・応援購入につなげる想定です。</p>
+      </div>
+      <button class="button demo-modal-confirm" type="button" data-demo-close>閉じる</button>
+    </div>
+  </dialog>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

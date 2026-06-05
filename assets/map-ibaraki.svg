@@ -1,0 +1,29 @@
+<svg viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="mapBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ece7d6" />
+      <stop offset="100%" stop-color="#dfe4c9" />
+    </linearGradient>
+  </defs>
+  <rect width="640" height="480" rx="36" fill="url(#mapBg)" />
+  <path d="M64 340 C120 280 170 260 220 250 C280 238 300 230 340 220 C380 210 420 210 470 190 C520 170 560 160 584 150" fill="none" stroke="#fff1de" stroke-width="22" stroke-linecap="round" opacity="0.65" />
+  <path d="M100 320 C160 280 210 270 250 260 C290 250 340 240 380 230 C420 220 470 215 520 200" fill="none" stroke="#8a6a45" stroke-width="10" stroke-linecap="round" opacity="0.6" />
+  <path d="M60 140 C110 120 170 105 220 120 C270 135 330 140 380 130 C430 120 480 135 530 130" fill="none" stroke="#5f7f4f" stroke-width="42" stroke-linecap="round" opacity="0.55" />
+  <circle cx="170" cy="280" r="24" fill="#23422f" />
+  <circle cx="390" cy="210" r="24" fill="#23422f" />
+  <circle cx="520" cy="165" r="24" fill="#23422f" />
+  <circle cx="540" cy="330" r="24" fill="#23422f" />
+  <circle cx="310" cy="360" r="24" fill="#23422f" />
+  <g fill="#fff">
+    <circle cx="170" cy="280" r="10" />
+    <circle cx="390" cy="210" r="10" />
+    <circle cx="520" cy="165" r="10" />
+    <circle cx="540" cy="330" r="10" />
+    <circle cx="310" cy="360" r="10" />
+  </g>
+  <text x="170" y="280" fill="#fff" text-anchor="middle" dominant-baseline="central" font-family="Yu Gothic UI, sans-serif" font-size="12">八郷</text>
+  <text x="390" y="210" fill="#fff" text-anchor="middle" dominant-baseline="central" font-family="Yu Gothic UI, sans-serif" font-size="12">内原町</text>
+  <text x="520" y="165" fill="#fff" text-anchor="middle" dominant-baseline="central" font-family="Yu Gothic UI, sans-serif" font-size="12">笠間</text>
+  <text x="540" y="330" fill="#fff" text-anchor="middle" dominant-baseline="central" font-family="Yu Gothic UI, sans-serif" font-size="12">つくば</text>
+  <text x="310" y="360" fill="#fff" text-anchor="middle" dominant-baseline="central" font-family="Yu Gothic UI, sans-serif" font-size="12">常陸大宮</text>
+</svg>
