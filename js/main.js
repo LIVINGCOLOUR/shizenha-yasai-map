@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isPage("farmer")) {
     loadFarmerDetail();
   }
-  if (isPage("index")) {
+  if (isPage("index") || isPage("learn")) {
     setupInterestFilters();
     loadHomepageFarmers();
   }
@@ -400,7 +400,7 @@ function createFarmerDetailHtml(farmer) {
 
       <section class="detail-notes">
         <div>
-          <p class="section-eyebrow">たねの情報</p>
+          <p class="section-eyebrow">地域に根差した野菜の情報</p>
           <h3>在来種・固定種・自家採種の扱い状況</h3>
           <p>${escapeHtml(farmer.seedTags)}</p>
         </div>
@@ -955,7 +955,7 @@ function loadSeedsMap() {
     .catch(() => {
       const panel = document.getElementById("seedInfoPanel");
       if (panel) {
-        panel.innerHTML = "<p>たね情報の読み込みに失敗しました。</p>";
+        panel.innerHTML = "<p>地域品種の情報の読み込みに失敗しました。</p>";
       }
     });
 }
@@ -966,7 +966,7 @@ function renderSeedMap(seeds) {
   if (!canvas || !list) return;
 
   canvas.innerHTML = `
-    <div class="seed-map-base" role="img" aria-label="茨城県全域に登録されたたねの地域目安を表示する地図">
+    <div class="seed-map-base" role="img" aria-label="茨城県全域に登録された地域品種の地域目安を表示する地図">
       <span class="seed-map-area-label label-north">県北</span>
       <span class="seed-map-area-label label-central">水戸周辺</span>
       <span class="seed-map-area-label label-south">県南</span>
@@ -1016,7 +1016,7 @@ function selectSeed(seed) {
   const sourceLabel = getSeedSourceLabel(seed);
 
   panel.innerHTML = `
-    <p class="section-eyebrow">選択中のたね</p>
+    <p class="section-eyebrow">選択中の地域品種</p>
     <h3>${escapeHtml(seed.name)}</h3>
     <dl class="seed-detail-list">
       <div>

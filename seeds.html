@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>たねを見る | 自然派やさいマップ</title>
+  <title>地域に根差した野菜 | 自然派やさいマップ</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="page-shell">
     <header class="site-header">
-      <div class="logo-block">
-        <div class="logo-mark">⌁</div>
-        <div>
-          <p class="eyebrow">自然派やさいマップ</p>
-          <h1>たねを見る</h1>
-        </div>
-      </div>
-      <nav class="site-nav" aria-label="サブナビゲーション">
+      <div class="header-top">
+        <a class="brand-link" href="index.html">
+          <span class="brand-mark" aria-hidden="true">⌁</span>
+          <div class="brand-copy">
+            <p class="brand-name">自然派やさいマップ</p>
+            <p class="brand-subtitle">自然に寄り添う農家をめぐる</p>
+          </div>
+        </a>
+        <nav class="main-nav" aria-label="メインナビゲーション">
           <a href="index.html">ホーム</a>
           <a href="places.html">食べる</a>
           <a href="places.html">買う</a>
@@ -26,13 +27,14 @@
           <a href="business.html">地域で使う</a>
           <a href="about.html">この活動について</a>
         </nav>
+      </div>
     </header>
 
     <main>
       <section class="section-block seed-map-section">
         <div class="section-intro">
           <p class="section-eyebrow">在来種・固定種・地域品種の入口</p>
-          <h2>たねを見る</h2>
+          <h2>地域に根差した野菜</h2>
           <p>茨城に伝わる在来種・固定種・地域で受け継がれてきた作物を、地図と出典つきで少しずつ整理します。公的DB、地域資料、農家さんや地域から寄せられた情報を分けて表示します。</p>
         </div>
 
@@ -51,8 +53,8 @@
                 <li><span class="seed-source-dot source-research_needed"></span>調査中・本人確認前</li>
               </ul>
             </div>
-            <div id="seedMapCanvas" class="seed-map-canvas" aria-label="たねの地図">
-              <p class="loading-text">たね情報を読み込んでいます...</p>
+            <div id="seedMapCanvas" class="seed-map-canvas" aria-label="地域に根差した野菜の地図">
+              <p class="loading-text">地域品種の情報を読み込んでいます...</p>
             </div>
             <p class="seed-location-note">位置は地域の目安です。正確な圃場所在地ではありません。</p>
             <p class="seed-map-attribution">地図表示：茨城県全域の概略座標表示。地図タイル導入時の出典想定：国土地理院。</p>
@@ -67,12 +69,12 @@
           <div class="section-head compact-head">
             <div>
               <p class="eyebrow">情報の種別を分けて見る</p>
-              <h2 id="seed-list-title">登録されているたね</h2>
+              <h2 id="seed-list-title">登録されている地域品種</h2>
               <p>品種名、別名、分類、地域、情報区分、出典を分けて表示します。詳しい特徴や来歴は、出典元や地域調査で確認していく想定です。</p>
             </div>
           </div>
           <div id="seedList" class="seed-list">
-            <p class="loading-text">たね情報を読み込んでいます...</p>
+            <p class="loading-text">地域品種の情報を読み込んでいます...</p>
           </div>
         </section>
 
