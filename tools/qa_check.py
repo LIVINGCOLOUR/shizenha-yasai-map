@@ -109,7 +109,7 @@ def load_json(path: Path):
 
 
 def check_required_files() -> None:
-    for relative in REQUIRED_HTML + REQUIRED_JSON + ["css/styles.css", "js/main.js"]:
+    for relative in REQUIRED_HTML + REQUIRED_JSON + ["css/styles.css", "js/main.js", "functions/api/profile-draft.js"]:
         path = ROOT / relative
         if not path.exists():
             add_error(f"Missing required file: {relative}")

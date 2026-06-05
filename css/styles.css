@@ -731,6 +731,25 @@ button { font: inherit; }
   color: var(--earth);
   font-weight: 800;
 }
+.profile-api-status {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  margin: 14px 0 0;
+  padding: 10px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(53,100,65,.16);
+  background: rgba(235,241,216,.78);
+  color: var(--forest);
+  font-size: .82rem;
+  font-weight: 900;
+  line-height: 1.55;
+}
+.profile-api-status.is-fallback {
+  border-color: rgba(146,114,79,.2);
+  background: rgba(255,253,247,.86);
+  color: var(--earth);
+}
 .profile-mode-intro .section-intro {
   max-width: 920px;
 }

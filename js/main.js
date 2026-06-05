@@ -576,8 +576,10 @@ function setupProfileInterviewDemo() {
   const preview = document.querySelector("[data-answer-preview]");
   const buildButton = document.querySelector("[data-build-profile-draft]");
   const draftSection = document.querySelector("[data-profile-draft-section]");
+  const draftStatus = document.querySelector("[data-profile-draft-status]");
   const tagContainer = document.querySelector("[data-draft-tags]");
   const memoContainer = document.querySelector("[data-expression-memo]");
+  const checklistContainer = document.querySelector("[data-draft-checklist]");
   const editButton = document.querySelector("[data-draft-edit-note]");
   const resetButton = document.querySelector("[data-reset-profile-interview]");
   if (!questionText || !nextButton || !prevButton || !answerInput || !listItems.length) return;
@@ -655,9 +657,21 @@ function setupProfileInterviewDemo() {
   });
 
   if (buildButton) {
-    buildButton.addEventListener("click", () => {
+    buildButton.addEventListener("click", async () => {
       saveCurrentAnswer();
-      renderProfileDraft(answers, questions, draftSection, tagContainer, memoContainer);
+      const originalLabel = buildButton.textContent;
+      buildButton.disabled = true;
+      buildButton.textContent = "下書きを作成中...";
+      let draftResult;
+      try {
+        draftResult = await requestProfileDraft(answers);
+      } catch (error) {
+        draftResult = createFallbackProfileDraftResult(answers);
+      }
+      renderProfileDraft(draftResult.draft, draftSection, tagContainer, memoContainer, checklistContainer);
+      updateProfileDraftStatus(draftStatus, draftResult);
+      buildButton.disabled = false;
+      buildButton.textContent = originalLabel;
       if (draftSection) {
         draftSection.hidden = false;
         draftSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -678,6 +692,7 @@ function setupProfileInterviewDemo() {
       answers.fill("");
       index = 0;
       if (draftSection) draftSection.hidden = true;
+      updateProfileDraftStatus(draftStatus, null);
       renderQuestion();
       if (workspace) workspace.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -686,30 +701,129 @@ function setupProfileInterviewDemo() {
   renderQuestion();
 }
 
-function renderProfileDraft(answers, questions, draftSection, tagContainer, memoContainer) {
-  if (!draftSection) return;
+async function requestProfileDraft(answers) {
+  const response = await fetch("/api/profile-draft", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      answers: createProfileDraftAnswersPayload(answers),
+    }),
+  });
+  if (!response.ok) {
+    throw new Error("profile draft api failed");
+  }
+  const result = await response.json();
+  if (!result || !result.ok || !result.draft) {
+    throw new Error("profile draft api returned invalid response");
+  }
+  return {
+    source: "api",
+    mode: result.mode || "mock",
+    note: result.note || "現在はデモ版です。OpenAI API連携はまだ行っていません。",
+    draft: normalizeProfileDraft(result.draft),
+  };
+}
+
+function createProfileDraftAnswersPayload(answers) {
+  return {
+    farmName: answers[0] || "",
+    area: answers[1] || "",
+    crops: answers[2] || "",
+    values: answers[3] || "",
+    cultivation: answers[4] || "",
+    localConnection: answers[5] || "",
+    future: answers[6] || "",
+    message: answers[7] || "",
+  };
+}
+
+function createFallbackProfileDraftResult(answers) {
+  return {
+    source: "fallback",
+    mode: "browser-mock",
+    note: "API接続に失敗したため、ブラウザ内のデモ生成で表示しています。",
+    draft: buildProfileDraftFromAnswers(answers),
+  };
+}
+
+function buildProfileDraftFromAnswers(answers) {
   const getAnswer = (position, fallback) => answers[position] || fallback;
   const farmName = getAnswer(0, "〇〇農園");
-  const region = getAnswer(1, "地域未入力");
-  const products = getAnswer(2, "育てているものは未入力です。");
-  const values = [answers[3], answers[7]].filter(Boolean).join("\n\n") || "作物を育てるうえで大切にしていることは、本人確認時に追記します。";
+  const area = getAnswer(1, "地域未入力");
+  const crops = getAnswer(2, "育てているものは未入力です。");
+  const importantThings = [answers[3], answers[7]].filter(Boolean).join("\n\n") || "作物を育てるうえで大切にしていることは、本人確認時に追記します。";
   const cultivation = answers[4] || "栽培方法については、農家さん本人の確認後に掲載します。";
-  const community = answers[5] || "地域との関わりについては、本人確認時に整理します。";
+  const localConnection = answers[5] || "地域との関わりについては、本人確認時に整理します。";
   const future = answers[6] || "これから目指したいことは、本人確認時に整理します。";
   const message = answers[7] || "農家さんの想いは、本人確認時に追記します。";
-  const businessCopy = `${farmName}は、${region}で${products}を育てる農園です。${values.replace(/\n+/g, " ")} 販売店・飲食店で紹介する際は、栽培方法や販売方法を農家さん本人に確認したうえで掲載します。`;
+  const restaurantMaterial = `${farmName}は、${area}で${crops}を育てる農園です。${importantThings.replace(/\n+/g, " ")} 販売店・飲食店で紹介する際は、栽培方法や販売方法を農家さん本人に確認したうえで掲載します。`;
 
-  setDraftField("farmName", farmName);
-  setDraftField("region", region);
-  setDraftField("products", products);
-  setDraftField("values", values);
-  setDraftField("cultivation", cultivation);
-  setDraftField("community", community);
-  setDraftField("future", future);
-  setDraftField("message", message);
-  setDraftField("businessCopy", businessCopy);
+  return {
+    status: "下書き・本人確認前",
+    farmName,
+    area,
+    crops,
+    importantThings,
+    cultivation,
+    localConnection,
+    future,
+    message,
+    restaurantMaterial,
+    tagCandidates: createProfileTagCandidates(answers),
+    expressionMemo: createExpressionMemos(answers.join("\n")),
+    checklist: getDefaultProfileDraftChecklist(),
+  };
+}
 
-  const tags = createProfileTagCandidates(answers);
+function normalizeProfileDraft(draft) {
+  return {
+    status: draft.status || "下書き・本人確認前",
+    farmName: draft.farmName || "〇〇農園",
+    area: draft.area || "地域未入力",
+    crops: draft.crops || "育てているものは未入力です。",
+    importantThings: draft.importantThings || "作物を育てるうえで大切にしていることは、本人確認時に追記します。",
+    cultivation: draft.cultivation || "栽培方法については、農家さん本人の確認後に掲載します。",
+    localConnection: draft.localConnection || "地域との関わりについては、本人確認時に整理します。",
+    future: draft.future || "これから目指したいことは、本人確認時に整理します。",
+    message: draft.message || "農家さんの想いは、本人確認時に追記します。",
+    restaurantMaterial: draft.restaurantMaterial || "販売店・飲食店向け紹介素材は、本人確認後に整理します。",
+    tagCandidates: Array.isArray(draft.tagCandidates) ? draft.tagCandidates : [],
+    expressionMemo: Array.isArray(draft.expressionMemo) ? draft.expressionMemo : [],
+    checklist: Array.isArray(draft.checklist) ? draft.checklist : [],
+  };
+}
+
+function updateProfileDraftStatus(statusElement, result) {
+  if (!statusElement) return;
+  if (!result) {
+    statusElement.hidden = true;
+    statusElement.textContent = "";
+    statusElement.classList.remove("is-fallback", "is-api");
+    return;
+  }
+  statusElement.hidden = false;
+  statusElement.textContent = result.note;
+  statusElement.classList.toggle("is-api", result.source === "api");
+  statusElement.classList.toggle("is-fallback", result.source === "fallback");
+}
+
+function renderProfileDraft(draft, draftSection, tagContainer, memoContainer, checklistContainer) {
+  if (!draftSection) return;
+  const normalizedDraft = normalizeProfileDraft(draft);
+
+  setDraftField("farmName", normalizedDraft.farmName);
+  setDraftField("region", normalizedDraft.area);
+  setDraftField("products", normalizedDraft.crops);
+  setDraftField("values", normalizedDraft.importantThings);
+  setDraftField("cultivation", normalizedDraft.cultivation);
+  setDraftField("community", normalizedDraft.localConnection);
+  setDraftField("future", normalizedDraft.future);
+  setDraftField("message", normalizedDraft.message);
+  setDraftField("businessCopy", normalizedDraft.restaurantMaterial);
+
+  const tags = normalizedDraft.tagCandidates;
   if (tagContainer) {
     tagContainer.innerHTML = tags.length
       ? tags.map((tag) => `<span>${escapeHtml(tag)}<small>候補</small></span>`).join("")
@@ -717,7 +831,12 @@ function renderProfileDraft(answers, questions, draftSection, tagContainer, memo
   }
 
   if (memoContainer) {
-    memoContainer.innerHTML = createExpressionMemoHtml(answers.join("\n"));
+    memoContainer.innerHTML = createExpressionMemoHtml(normalizedDraft.expressionMemo);
+  }
+
+  if (checklistContainer) {
+    const checklist = normalizedDraft.checklist.length ? normalizedDraft.checklist : getDefaultProfileDraftChecklist();
+    checklistContainer.innerHTML = checklist.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
   }
 }
 
@@ -753,7 +872,7 @@ function isMultipleVegetableAnswer(products) {
   return /野菜|葉物|根菜|豆|なす|トマト|きゅうり|大根|かぼちゃ|米/.test(products) && separators >= 1;
 }
 
-function createExpressionMemoHtml(text) {
+function createExpressionMemos(text) {
   const memos = [];
   if (text.includes("無農薬")) {
     memos.push("「無農薬」という表現は、掲載時には慎重に扱う必要があります。必要に応じて「栽培期間中、農薬を使わない栽培に取り組んでいます」のような表現に整えます。");
@@ -767,7 +886,23 @@ function createExpressionMemoHtml(text) {
   if (!memos.length) {
     memos.push("現時点で大きな注意表現は見つかっていません。ただし、掲載前には農家さん本人と運営側で最終確認します。");
   }
+  return memos;
+}
+
+function createExpressionMemoHtml(memosOrText) {
+  const memos = Array.isArray(memosOrText) ? memosOrText : createExpressionMemos(String(memosOrText || ""));
   return memos.map((memo) => `<p>${escapeHtml(memo)}</p>`).join("");
+}
+
+function getDefaultProfileDraftChecklist() {
+  return [
+    "農家さん本人が内容を確認する",
+    "栽培方法の表現を確認する",
+    "販売方法・連絡方法を確認する",
+    "訪問・体験の可否を確認する",
+    "公開してよい写真やURLを確認する",
+    "本人確認後に掲載する",
+  ];
 }
 
 function getDemoActionContent(action, farmer) {
