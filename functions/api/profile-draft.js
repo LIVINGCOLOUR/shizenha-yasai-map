@@ -12,6 +12,8 @@ const RESPONSE_HEADERS = {
   "cache-control": "no-store",
 };
 
+const DEFAULT_MODEL = "gpt-4o-mini";
+
 export async function onRequest(context) {
   const request = context.request;
 
@@ -44,12 +46,24 @@ export async function onRequest(context) {
 
   const answers = normalizeAnswers(payload && payload.answers);
   const apiKey = context.env && context.env.OPENAI_API_KEY;
+  const model = (context.env && context.env.OPENAI_MODEL) || DEFAULT_MODEL;
   if (!apiKey) {
-    return jsonResponse(createMockResponse(answers, "mock", "OPENAI_API_KEY が未設定のため、デモ生成で表示しています。"));
+    return jsonResponse(createMockResponse(
+      answers,
+      "mock",
+      "OPENAI_API_KEY が未設定のため、デモ生成で表示しています。",
+      createDiagnostics({
+        hasApiKey: false,
+        model,
+        errorStatus: null,
+        errorType: "missing_api_key",
+        errorMessage: "OPENAI_API_KEY is not configured.",
+      })
+    ));
   }
 
   try {
-    const draft = await createDraftWithOpenAI(answers, apiKey, context.env && context.env.OPENAI_MODEL);
+    const draft = await createDraftWithOpenAI(answers, apiKey, model);
     return jsonResponse({
       ok: true,
       mode: "openai",
@@ -57,7 +71,12 @@ export async function onRequest(context) {
       draft,
     });
   } catch (error) {
-    return jsonResponse(createMockResponse(answers, "mock-fallback", "OpenAI API接続に失敗したため、デモ生成で表示しています。"));
+    return jsonResponse(createMockResponse(
+      answers,
+      "mock-fallback",
+      "OpenAI API接続に失敗したため、デモ生成で表示しています。",
+      createDiagnosticsFromError(error, { model, apiKey })
+    ));
   }
 }
 
@@ -86,17 +105,20 @@ function cleanText(value) {
   return String(value || "").trim();
 }
 
-function createMockResponse(answers, mode, note) {
-  return {
+function createMockResponse(answers, mode, note, diagnostics) {
+  const response = {
     ok: true,
     mode,
     note,
     draft: buildMockDraft(answers),
   };
+  if (diagnostics) {
+    response.diagnostics = diagnostics;
+  }
+  return response;
 }
 
-async function createDraftWithOpenAI(answers, apiKey, configuredModel) {
-  const model = configuredModel || "gpt-4.1-mini";
+async function createDraftWithOpenAI(answers, apiKey, model) {
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: {
@@ -119,13 +141,89 @@ async function createDraftWithOpenAI(answers, apiKey, configuredModel) {
   });
 
   if (!response.ok) {
-    throw new Error("OpenAI request failed");
+    throw await createOpenAIHttpError(response, apiKey);
   }
 
-  const data = await response.json();
-  const text = extractResponseText(data);
-  const draft = parseDraftJson(text);
-  return validateDraft(draft, answers);
+  try {
+    const data = await response.json();
+    const text = extractResponseText(data);
+    const draft = parseDraftJson(text);
+    return validateDraft(draft, answers);
+  } catch (error) {
+    throw createOpenAIError("invalid_openai_response", "OpenAI response could not be parsed as the expected draft JSON.");
+  }
+}
+
+async function createOpenAIHttpError(response, apiKey) {
+  const status = response.status || null;
+  let errorType = "openai_http_error";
+  let errorMessage = `OpenAI API returned HTTP ${status || "unknown"}.`;
+
+  try {
+    const bodyText = await response.text();
+    if (bodyText) {
+      try {
+        const body = JSON.parse(bodyText);
+        if (body && body.error && typeof body.error === "object") {
+          errorType = cleanDiagnosticType(body.error.type || errorType);
+          errorMessage = cleanText(body.error.message) || errorMessage;
+        } else {
+          errorMessage = bodyText.slice(0, 240);
+        }
+      } catch (parseError) {
+        errorMessage = bodyText.slice(0, 240);
+      }
+    }
+  } catch (readError) {
+    errorMessage = "OpenAI API returned an error response, but the error body could not be read.";
+  }
+
+  return createOpenAIError(errorType, errorMessage, status, apiKey);
+}
+
+function createOpenAIError(errorType, message, status = null, apiKey = "") {
+  const error = new Error(sanitizeDiagnosticMessage(message, apiKey));
+  error.safeType = cleanDiagnosticType(errorType);
+  error.safeStatus = Number.isInteger(status) ? status : null;
+  error.safeMessage = sanitizeDiagnosticMessage(message, apiKey);
+  return error;
+}
+
+function createDiagnosticsFromError(error, context) {
+  return createDiagnostics({
+    hasApiKey: true,
+    model: context.model,
+    errorStatus: Number.isInteger(error && error.safeStatus) ? error.safeStatus : null,
+    errorType: cleanDiagnosticType((error && error.safeType) || (error && error.name) || "openai_error"),
+    errorMessage: sanitizeDiagnosticMessage(
+      (error && (error.safeMessage || error.message)) || "OpenAI API request failed.",
+      context.apiKey
+    ),
+  });
+}
+
+function createDiagnostics(values) {
+  return {
+    hasApiKey: Boolean(values.hasApiKey),
+    model: cleanText(values.model) || DEFAULT_MODEL,
+    errorStatus: Number.isInteger(values.errorStatus) ? values.errorStatus : null,
+    errorType: cleanDiagnosticType(values.errorType || "unknown_error"),
+    errorMessage: sanitizeDiagnosticMessage(values.errorMessage || "OpenAI API request failed."),
+  };
+}
+
+function cleanDiagnosticType(value) {
+  return cleanText(value).replace(/[^a-zA-Z0-9_.-]/g, "_").slice(0, 80) || "unknown_error";
+}
+
+function sanitizeDiagnosticMessage(value, apiKey = "") {
+  let message = cleanText(value)
+    .replace(/Bearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [redacted]")
+    .replace(/sk-[A-Za-z0-9_-]+/g, "[redacted]");
+  if (apiKey) {
+    message = message.split(apiKey).join("[redacted]");
+  }
+  return message.slice(0, 240) || "OpenAI API request failed.";
 }
 
 function buildSystemPrompt() {

@@ -199,6 +199,20 @@ def check_openai_key_scope() -> None:
         if "context.env" not in function_text or "OPENAI_API_KEY" not in function_text:
             add_warning("functions/api/profile-draft.js: OPENAI_API_KEY lookup via context.env not found")
 
+    text_suffixes = {".html", ".js", ".json", ".md", ".py", ".css"}
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or path.suffix not in text_suffixes:
+            continue
+        if ".git" in path.parts:
+            continue
+        text = read_text(path)
+        if re.search(r"sk-[A-Za-z0-9_-]{8,}", text):
+            add_error(f"{path.relative_to(ROOT)}: possible OpenAI API key literal found")
+
+    for path in [ROOT / "functions" / "api" / "profile-draft.js", ROOT / "js" / "main.js"]:
+        if path.exists() and "console.log" in read_text(path):
+            add_warning(f"{path.relative_to(ROOT)}: console.log found; ensure secrets are not logged")
+
 
 def check_data() -> None:
     farmers = load_json(ROOT / "data" / "farmers.json")
