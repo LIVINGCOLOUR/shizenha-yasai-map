@@ -43,12 +43,22 @@ export async function onRequest(context) {
   }
 
   const answers = normalizeAnswers(payload && payload.answers);
-  return jsonResponse({
-    ok: true,
-    mode: "mock",
-    note: "現在はデモ版です。OpenAI API連携はまだ行っていません。",
-    draft: buildMockDraft(answers),
-  });
+  const apiKey = context.env && context.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return jsonResponse(createMockResponse(answers, "mock", "OPENAI_API_KEY が未設定のため、デモ生成で表示しています。"));
+  }
+
+  try {
+    const draft = await createDraftWithOpenAI(answers, apiKey, context.env && context.env.OPENAI_MODEL);
+    return jsonResponse({
+      ok: true,
+      mode: "openai",
+      note: "OpenAI APIでプロフィール下書きを生成しました。実際の掲載前には農家さん本人の確認が必要です。",
+      draft,
+    });
+  } catch (error) {
+    return jsonResponse(createMockResponse(answers, "mock-fallback", "OpenAI API接続に失敗したため、デモ生成で表示しています。"));
+  }
 }
 
 function jsonResponse(body, status = 200) {
@@ -74,6 +84,153 @@ function normalizeAnswers(rawAnswers) {
 
 function cleanText(value) {
   return String(value || "").trim();
+}
+
+function createMockResponse(answers, mode, note) {
+  return {
+    ok: true,
+    mode,
+    note,
+    draft: buildMockDraft(answers),
+  };
+}
+
+async function createDraftWithOpenAI(answers, apiKey, configuredModel) {
+  const model = configuredModel || "gpt-4.1-mini";
+  const response = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      input: [
+        {
+          role: "system",
+          content: buildSystemPrompt(),
+        },
+        {
+          role: "user",
+          content: JSON.stringify({ answers }, null, 2),
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("OpenAI request failed");
+  }
+
+  const data = await response.json();
+  const text = extractResponseText(data);
+  const draft = parseDraftJson(text);
+  return validateDraft(draft, answers);
+}
+
+function buildSystemPrompt() {
+  return [
+    "あなたは、自然派やさいマップの農家プロフィール下書きを手伝う編集者です。",
+    "農家さんの回答をもとに、必ずJSONだけを返してください。JSON以外の説明文、Markdown、コードブロックは返さないでください。",
+    "返すJSON形式は次のキーだけです。",
+    '{"status":"下書き・本人確認前","farmName":"","area":"","crops":"","importantThings":"","cultivation":"","localConnection":"","future":"","message":"","restaurantMaterial":"","tagCandidates":[],"expressionMemo":[],"checklist":[]}',
+    "ルール:",
+    "- 日本語で出力する",
+    "- 農家さんの言葉を尊重する",
+    "- 誇張しすぎない",
+    "- 断定しすぎない",
+    "- 「無農薬」「安心安全」「有機」「オーガニック」などは慎重に扱う",
+    "- 有機JAS認証が確認できない場合、「有機農家です」と断定しない",
+    "- 未入力項目がある場合は自然に省略する",
+    "- 農家本人が確認・修正する前提の下書きにする",
+    "- tagCandidates は候補であり、断定しない",
+    "- expressionMemo には注意が必要な表現があれば入れる",
+    "- checklist には掲載前確認事項を入れる",
+    "checklist には最低限、次の6項目を含めてください。",
+    CHECKLIST.map((item) => `- ${item}`).join("\n"),
+  ].join("\n");
+}
+
+function extractResponseText(data) {
+  if (typeof data.output_text === "string" && data.output_text.trim()) {
+    return data.output_text;
+  }
+
+  const parts = [];
+  const output = Array.isArray(data.output) ? data.output : [];
+  for (const item of output) {
+    const content = Array.isArray(item.content) ? item.content : [];
+    for (const contentItem of content) {
+      if (typeof contentItem.text === "string") {
+        parts.push(contentItem.text);
+      }
+    }
+  }
+
+  const text = parts.join("\n").trim();
+  if (!text) {
+    throw new Error("OpenAI response text missing");
+  }
+  return text;
+}
+
+function parseDraftJson(text) {
+  const cleaned = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");
+  try {
+    return JSON.parse(cleaned);
+  } catch (error) {
+    const firstBrace = cleaned.indexOf("{");
+    const lastBrace = cleaned.lastIndexOf("}");
+    if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+      throw error;
+    }
+    return JSON.parse(cleaned.slice(firstBrace, lastBrace + 1));
+  }
+}
+
+function validateDraft(draft, answers) {
+  if (!draft || typeof draft !== "object" || Array.isArray(draft)) {
+    throw new Error("Invalid draft shape");
+  }
+
+  const fallback = buildMockDraft(answers);
+  const normalized = {
+    status: cleanText(draft.status) || "下書き・本人確認前",
+    farmName: cleanText(draft.farmName) || fallback.farmName,
+    area: cleanText(draft.area) || fallback.area,
+    crops: cleanText(draft.crops) || fallback.crops,
+    importantThings: cleanText(draft.importantThings) || fallback.importantThings,
+    cultivation: cleanText(draft.cultivation) || fallback.cultivation,
+    localConnection: cleanText(draft.localConnection) || fallback.localConnection,
+    future: cleanText(draft.future) || fallback.future,
+    message: cleanText(draft.message) || fallback.message,
+    restaurantMaterial: cleanText(draft.restaurantMaterial) || fallback.restaurantMaterial,
+    tagCandidates: normalizeStringArray(draft.tagCandidates),
+    expressionMemo: normalizeStringArray(draft.expressionMemo),
+    checklist: mergeChecklist(normalizeStringArray(draft.checklist)),
+  };
+
+  if (!normalized.tagCandidates.length) {
+    normalized.tagCandidates = fallback.tagCandidates;
+  }
+  if (!normalized.expressionMemo.length) {
+    normalized.expressionMemo = fallback.expressionMemo;
+  }
+
+  return normalized;
+}
+
+function normalizeStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => cleanText(item)).filter(Boolean);
+}
+
+function mergeChecklist(items) {
+  const merged = [...items];
+  for (const item of CHECKLIST) {
+    if (!merged.includes(item)) merged.push(item);
+  }
+  return merged;
 }
 
 function buildMockDraft(answers) {

@@ -718,10 +718,11 @@ async function requestProfileDraft(answers) {
   if (!result || !result.ok || !result.draft) {
     throw new Error("profile draft api returned invalid response");
   }
+  const mode = result.mode || "mock";
   return {
-    source: "api",
-    mode: result.mode || "mock",
-    note: result.note || "現在はデモ版です。OpenAI API連携はまだ行っていません。",
+    source: mode === "openai" ? "api" : mode === "mock-fallback" ? "fallback" : "mock",
+    mode,
+    note: getProfileDraftStatusNote(mode, result.note),
     draft: normalizeProfileDraft(result.draft),
   };
 }
@@ -807,6 +808,19 @@ function updateProfileDraftStatus(statusElement, result) {
   statusElement.textContent = result.note;
   statusElement.classList.toggle("is-api", result.source === "api");
   statusElement.classList.toggle("is-fallback", result.source === "fallback");
+}
+
+function getProfileDraftStatusNote(mode, fallbackNote) {
+  if (mode === "openai") {
+    return "プロフィール下書きを生成しました。掲載前に農家さん本人の確認が必要です。";
+  }
+  if (mode === "mock") {
+    return "現在はデモ生成で表示しています。";
+  }
+  if (mode === "mock-fallback") {
+    return "API接続に失敗したため、デモ生成で表示しています。";
+  }
+  return fallbackNote || "現在はデモ生成で表示しています。";
 }
 
 function renderProfileDraft(draft, draftSection, tagContainer, memoContainer, checklistContainer) {

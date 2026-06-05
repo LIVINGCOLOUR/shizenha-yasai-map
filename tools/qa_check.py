@@ -184,6 +184,22 @@ def check_dangerous_terms() -> None:
                 start = index + len(term)
 
 
+def check_openai_key_scope() -> None:
+    forbidden_targets = list(ROOT.glob("*.html")) + [ROOT / "js" / "main.js"]
+    for path in forbidden_targets:
+        if not path.exists():
+            continue
+        text = read_text(path)
+        if "OPENAI_API_KEY" in text:
+            add_error(f"{path.relative_to(ROOT)}: OPENAI_API_KEY must not be exposed to the browser")
+
+    function_path = ROOT / "functions" / "api" / "profile-draft.js"
+    if function_path.exists():
+        function_text = read_text(function_path)
+        if "context.env" not in function_text or "OPENAI_API_KEY" not in function_text:
+            add_warning("functions/api/profile-draft.js: OPENAI_API_KEY lookup via context.env not found")
+
+
 def check_data() -> None:
     farmers = load_json(ROOT / "data" / "farmers.json")
     places = load_json(ROOT / "data" / "places.json")
@@ -258,6 +274,7 @@ def main() -> int:
     check_local_references()
     check_data()
     check_dangerous_terms()
+    check_openai_key_scope()
     write_report()
 
     errors = [item for item in findings if item.level == "ERROR"]
