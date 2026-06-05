@@ -62,6 +62,8 @@ BAD_TERMS = [
 
 ALLOWED_BAD_TERM_SNIPPETS = [
     "無農薬で安心安全な野菜です",
+    "「無農薬」という表現は、掲載時には慎重に扱う必要があります",
+    "「安心安全」は受け取り方に個人差があるため",
 ]
 
 ALLOWED_SOURCE_TYPES = {

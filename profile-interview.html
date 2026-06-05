@@ -29,58 +29,197 @@
       </nav>
     </header>
 
-    <main class="profile-demo-page">
+    <main class="profile-demo-page voice-profile-page">
       <section class="profile-mode-hero" aria-labelledby="profile-interview-title">
         <p class="section-eyebrow">構想デモ・工事中</p>
         <h2 id="profile-interview-title">会話でプロフィールを作る</h2>
-        <p>AIが質問し、農家さんが答えていくことで、プロフィールの下書きを作る想定のデモ画面です。</p>
-        <p class="profile-demo-note">現在は構想デモのため、実際の音声入力・AI生成・保存は行いません。</p>
+        <p>AIが質問し、農家さんが話すように答えていくことで、農園紹介の下書きを作る構想デモです。</p>
+        <p class="profile-demo-note">現在は構想デモです。実際の音声入力・AI生成・送信・保存・登録はまだ行いません。</p>
+      </section>
+
+      <section class="section-block interview-flow-section" aria-labelledby="interview-flow-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">利用イメージ</p>
+          <h2 id="interview-flow-title">話すように答えて、掲載前の下書きへ</h2>
+        </div>
+        <div class="interview-step-grid">
+          <article>
+            <span>1</span>
+            <h3>AIが質問する</h3>
+            <p>農園名、地域、作物、栽培のこだわりなどを、AIが1つずつ聞き取ります。</p>
+          </article>
+          <article>
+            <span>2</span>
+            <h3>農家さんが話して答える</h3>
+            <p>将来的には音声入力で回答できる想定です。現在はデモのため、テキスト入力で回答します。</p>
+          </article>
+          <article>
+            <span>3</span>
+            <h3>プロフィール下書きを確認する</h3>
+            <p>回答内容をもとに、農家詳細ページに掲載するプロフィール下書きを作成し、確認・修正できます。</p>
+          </article>
+        </div>
+        <div class="interview-start-panel">
+          <div>
+            <h3>ヒアリングを始める</h3>
+            <p>質問は全部で8問です。入力内容はこのページ内だけで保持され、送信・保存はされません。</p>
+          </div>
+          <button class="button primary" type="button" data-start-profile-interview>ヒアリングを開始する</button>
+        </div>
       </section>
 
       <section class="section-block profile-interview-section" aria-labelledby="interview-ui-title">
         <div class="section-intro">
           <p class="section-eyebrow">AI聞き取りモード・将来実装</p>
           <h2 id="interview-ui-title">質問に答えるように、想いを整理する</h2>
-          <p>この画面では質問文の切り替えだけを試せます。回答内容は送信・保存されません。</p>
+          <p>この画面では、回答の入力・質問切り替え・下書き生成の流れだけを試せます。実際の音声入力、AI API連携、送信、保存、登録は行いません。</p>
         </div>
 
-        <div class="profile-interview-layout">
+        <div class="profile-interview-layout" data-interview-workspace hidden>
           <article class="conversation-card" aria-live="polite">
             <div class="conversation-status">
-              <span>現在の質問</span>
-              <strong><span data-question-current>1</span> / <span data-question-total>8</span></strong>
+              <span>質問 <span data-question-current>1</span> / <span data-question-total>8</span></span>
+              <strong>AIが質問中</strong>
             </div>
-            <p class="conversation-question" data-profile-question>農園名を教えてください</p>
-            <label class="conversation-answer">
-              <span>回答入力欄</span>
-              <textarea rows="7" placeholder="ここに話すように入力してください。このデモでは保存されません。"></textarea>
-            </label>
-            <div class="conversation-actions">
-              <button class="button secondary" type="button" data-next-profile-question>次の質問へ</button>
+            <div class="ai-question-bubble">
+              <span>AI</span>
+              <p data-profile-question>農園名を教えてください</p>
+            </div>
+            <div class="voice-future-box">
+              <span class="voice-icon" aria-hidden="true">mic</span>
+              <div>
+                <strong>音声入力は将来実装予定です。</strong>
+                <p>現在はテキストで入力してください。録音や音声認識は行いません。</p>
+              </div>
               <button
-                class="button primary"
+                class="button tertiary"
                 type="button"
                 data-concept-demo
-                data-concept-title="会話でプロフィールを作る"
-                data-concept-message="現在は構想デモです。実際の音声入力・AI生成・送信・保存はまだ行いません。"
-              >下書きを作る</button>
+                data-concept-title="音声で答える"
+                data-concept-message="現在は構想デモです。実際の音声入力はまだ行いません。"
+              >音声で答える（将来実装）</button>
             </div>
-            <p class="profile-demo-note">音声入力、AI生成、送信、保存はまだ動作しません。</p>
+            <label class="conversation-answer">
+              <span>農家さんの回答</span>
+              <textarea rows="7" data-profile-answer placeholder="ここに話すように入力してください。このデモでは送信・保存されません。"></textarea>
+            </label>
+            <div class="conversation-actions">
+              <button class="button secondary" type="button" data-prev-profile-question>前の質問へ</button>
+              <button class="button secondary" type="button" data-next-profile-question>次の質問へ</button>
+              <button class="button primary" type="button" data-build-profile-draft hidden>プロフィール下書きを作る</button>
+            </div>
+            <p class="profile-demo-note">この画面では、音声入力・AI生成・送信・保存・登録はまだ行いません。</p>
           </article>
 
-          <aside class="question-list-card" aria-labelledby="question-list-title">
+          <aside class="answer-preview-card" aria-labelledby="answer-preview-title">
+            <h3 id="answer-preview-title">入力済みの内容</h3>
+            <dl data-answer-preview></dl>
+          </aside>
+
+          <aside class="question-list-card profile-question-overview" aria-labelledby="question-list-title">
             <h3 id="question-list-title">質問一覧</h3>
             <ol data-profile-question-list>
-              <li class="is-active">農園名を教えてください</li>
-              <li>どの地域で農業をしていますか</li>
-              <li>育てている主な作物は何ですか</li>
-              <li>作物を育てるうえでのこだわりはありますか</li>
-              <li>化学肥料や農薬は利用していますか</li>
-              <li>地域との関わり方について教えてください</li>
-              <li>将来どんな農業を目指したいですか</li>
-              <li>最後に、思いの丈を自由に話してください</li>
+              <li class="is-active" data-question-label="農園名">農園名を教えてください</li>
+              <li data-question-label="地域">どの地域で農業をしていますか</li>
+              <li data-question-label="主な作物">育てている主な作物は何ですか</li>
+              <li data-question-label="栽培のこだわり">作物を育てるうえでのこだわりはありますか</li>
+              <li data-question-label="栽培方法">化学肥料や農薬は利用していますか</li>
+              <li data-question-label="地域との関わり">地域との関わり方について教えてください</li>
+              <li data-question-label="目指したい農業">将来どんな農業を目指したいですか</li>
+              <li data-question-label="農家さんの想い">最後に、思いの丈を自由に話してください</li>
             </ol>
           </aside>
+        </div>
+      </section>
+
+      <section class="section-block profile-draft-section" data-profile-draft-section hidden aria-labelledby="profile-draft-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">下書き・本人確認前</p>
+          <h2 id="profile-draft-title">プロフィール下書き</h2>
+          <p>下書き内容を確認し、必要に応じて修正してください。実際の掲載前には、農家さん本人の確認を行う想定です。</p>
+        </div>
+
+        <div class="profile-draft-layout">
+          <article class="profile-draft-card">
+            <div class="draft-status-row">
+              <span class="status-pill">下書き・本人確認前</span>
+              <span class="status-pill">構想デモ・登録前</span>
+            </div>
+            <div class="draft-field-grid">
+              <label>
+                <span>農園名</span>
+                <input type="text" data-draft-field="farmName" />
+              </label>
+              <label>
+                <span>地域</span>
+                <input type="text" data-draft-field="region" />
+              </label>
+              <label class="profile-field-wide">
+                <span>育てているもの</span>
+                <textarea rows="3" data-draft-field="products"></textarea>
+              </label>
+              <label class="profile-field-wide">
+                <span>大切にしていること</span>
+                <textarea rows="4" data-draft-field="values"></textarea>
+              </label>
+              <label class="profile-field-wide">
+                <span>栽培方法について</span>
+                <textarea rows="4" data-draft-field="cultivation"></textarea>
+              </label>
+              <label class="profile-field-wide">
+                <span>地域との関わり</span>
+                <textarea rows="4" data-draft-field="community"></textarea>
+              </label>
+              <label class="profile-field-wide">
+                <span>これから目指したいこと</span>
+                <textarea rows="4" data-draft-field="future"></textarea>
+              </label>
+              <label class="profile-field-wide">
+                <span>農家さんの想い</span>
+                <textarea rows="4" data-draft-field="message"></textarea>
+              </label>
+              <label class="profile-field-wide">
+                <span>販売店・飲食店向け紹介素材</span>
+                <textarea rows="5" data-draft-field="businessCopy"></textarea>
+              </label>
+            </div>
+          </article>
+
+          <aside class="draft-side-panel">
+            <section>
+              <h3>価値観タグ候補</h3>
+              <p>回答内容から簡易ルールで出した候補です。断定ではなく、本人確認後に調整する想定です。</p>
+              <div class="draft-tag-list" data-draft-tags></div>
+            </section>
+            <section>
+              <h3>表現チェックメモ</h3>
+              <div class="expression-memo" data-expression-memo></div>
+            </section>
+            <section>
+              <h3>掲載前の確認事項</h3>
+              <ul class="draft-checklist">
+                <li>農家さん本人が内容を確認する</li>
+                <li>栽培方法の表現を確認する</li>
+                <li>販売方法・連絡方法を確認する</li>
+                <li>訪問・体験の可否を確認する</li>
+                <li>公開してよい写真やURLを確認する</li>
+                <li>本人確認後に掲載する</li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+
+        <div class="draft-action-panel">
+          <button class="button secondary" type="button" data-draft-edit-note>修正する</button>
+          <button
+            class="button primary"
+            type="button"
+            data-concept-demo
+            data-concept-title="この内容で登録する"
+            data-concept-message="現在は構想デモです。実際の登録・送信・保存はまだ行いません。実運用では、本人確認後に掲載する想定です。"
+          >この内容で登録する</button>
+          <button class="button tertiary" type="button" data-reset-profile-interview>最初からやり直す</button>
+          <a class="button tertiary" href="for-farmers.html">農家さんへ戻る</a>
         </div>
       </section>
 

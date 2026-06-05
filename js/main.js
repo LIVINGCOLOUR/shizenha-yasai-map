@@ -504,21 +504,27 @@ function setupConceptDemoDialog() {
   document.addEventListener("click", (event) => {
     const trigger = event.target.closest("[data-concept-demo]");
     if (!trigger) return;
-    const dialog = getConceptDemoDialog();
-    const title = dialog.querySelector("[data-concept-demo-title]");
-    const message = dialog.querySelector("[data-concept-demo-message]");
-    if (title) title.textContent = trigger.dataset.conceptTitle || "将来構想";
-    if (message) {
-      message.textContent = trigger.dataset.conceptMessage || "現在は構想デモです。実際のAI機能、フォーム送信、ポイント付与、QR読み取り、ログイン、決済連携、DB保存はまだ動作しません。";
-    }
-    lastConceptDemoTrigger = trigger;
-    document.body.classList.add("modal-open");
-    if (typeof dialog.showModal === "function") {
-      dialog.showModal();
-    } else {
-      dialog.setAttribute("open", "");
-    }
+    openConceptDemo(
+      trigger.dataset.conceptTitle || "将来構想",
+      trigger.dataset.conceptMessage || "現在は構想デモです。実際のAI機能、フォーム送信、ポイント付与、QR読み取り、ログイン、決済連携、DB保存はまだ動作しません。",
+      trigger
+    );
   });
+}
+
+function openConceptDemo(titleText, messageText, trigger) {
+  const dialog = getConceptDemoDialog();
+  const title = dialog.querySelector("[data-concept-demo-title]");
+  const message = dialog.querySelector("[data-concept-demo-message]");
+  if (title) title.textContent = titleText;
+  if (message) message.textContent = messageText;
+  lastConceptDemoTrigger = trigger || null;
+  document.body.classList.add("modal-open");
+  if (typeof dialog.showModal === "function") {
+    dialog.showModal();
+  } else {
+    dialog.setAttribute("open", "");
+  }
 }
 
 function getConceptDemoDialog() {
@@ -560,29 +566,208 @@ function getConceptDemoDialog() {
 function setupProfileInterviewDemo() {
   const questionText = document.querySelector("[data-profile-question]");
   const nextButton = document.querySelector("[data-next-profile-question]");
+  const prevButton = document.querySelector("[data-prev-profile-question]");
+  const answerInput = document.querySelector("[data-profile-answer]");
+  const startButton = document.querySelector("[data-start-profile-interview]");
+  const workspace = document.querySelector("[data-interview-workspace]");
   const current = document.querySelector("[data-question-current]");
   const total = document.querySelector("[data-question-total]");
   const listItems = Array.from(document.querySelectorAll("[data-profile-question-list] li"));
-  if (!questionText || !nextButton || !listItems.length) return;
+  const preview = document.querySelector("[data-answer-preview]");
+  const buildButton = document.querySelector("[data-build-profile-draft]");
+  const draftSection = document.querySelector("[data-profile-draft-section]");
+  const tagContainer = document.querySelector("[data-draft-tags]");
+  const memoContainer = document.querySelector("[data-expression-memo]");
+  const editButton = document.querySelector("[data-draft-edit-note]");
+  const resetButton = document.querySelector("[data-reset-profile-interview]");
+  if (!questionText || !nextButton || !prevButton || !answerInput || !listItems.length) return;
 
-  const questions = listItems.map((item) => item.textContent.trim()).filter(Boolean);
+  const questions = listItems
+    .map((item) => ({
+      label: item.dataset.questionLabel || item.textContent.trim(),
+      question: item.textContent.trim(),
+    }))
+    .filter((item) => item.question);
+  const answers = new Array(questions.length).fill("");
   let index = 0;
   if (total) total.textContent = String(questions.length);
 
-  const renderQuestion = () => {
-    questionText.textContent = questions[index];
-    if (current) current.textContent = String(index + 1);
-    listItems.forEach((item, itemIndex) => {
-      item.classList.toggle("is-active", itemIndex === index);
-    });
+  const saveCurrentAnswer = () => {
+    answers[index] = answerInput.value.trim();
   };
 
-  nextButton.addEventListener("click", () => {
-    index = (index + 1) % questions.length;
+  const renderQuestion = () => {
+    questionText.textContent = questions[index].question;
+    answerInput.value = answers[index] || "";
+    if (current) current.textContent = String(index + 1);
+    prevButton.disabled = index === 0;
+    nextButton.hidden = index === questions.length - 1;
+    if (buildButton) buildButton.hidden = index !== questions.length - 1;
+    listItems.forEach((item, itemIndex) => {
+      item.classList.toggle("is-active", itemIndex === index);
+      item.classList.toggle("is-answered", Boolean(answers[itemIndex]));
+    });
+    renderAnswerPreview();
+  };
+
+  const renderAnswerPreview = () => {
+    if (!preview) return;
+    preview.innerHTML = questions
+      .map((item, itemIndex) => {
+        const answer = answers[itemIndex];
+        return `
+          <div class="${answer ? "is-answered" : "is-empty"}">
+            <dt>${escapeHtml(item.label)}</dt>
+            <dd>${answer ? escapeHtml(answer) : "未回答"}</dd>
+          </div>`;
+      })
+      .join("");
+  };
+
+  const showWorkspace = () => {
+    if (workspace) workspace.hidden = false;
+    renderQuestion();
+    answerInput.focus();
+  };
+
+  if (startButton) {
+    startButton.addEventListener("click", showWorkspace);
+  } else {
+    showWorkspace();
+  }
+
+  answerInput.addEventListener("input", () => {
+    saveCurrentAnswer();
+    renderAnswerPreview();
+    listItems[index].classList.toggle("is-answered", Boolean(answers[index]));
+  });
+
+  prevButton.addEventListener("click", () => {
+    saveCurrentAnswer();
+    index = Math.max(0, index - 1);
     renderQuestion();
   });
 
+  nextButton.addEventListener("click", () => {
+    saveCurrentAnswer();
+    index = Math.min(questions.length - 1, index + 1);
+    renderQuestion();
+  });
+
+  if (buildButton) {
+    buildButton.addEventListener("click", () => {
+      saveCurrentAnswer();
+      renderProfileDraft(answers, questions, draftSection, tagContainer, memoContainer);
+      if (draftSection) {
+        draftSection.hidden = false;
+        draftSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
+  if (editButton) {
+    editButton.addEventListener("click", () => {
+      const firstField = document.querySelector("[data-draft-field]");
+      if (firstField) firstField.focus();
+      openConceptDemo("下書きを修正する", "下書き欄を直接修正できます。このデモでは修正内容の送信・保存はまだ行いません。", editButton);
+    });
+  }
+
+  if (resetButton) {
+    resetButton.addEventListener("click", () => {
+      answers.fill("");
+      index = 0;
+      if (draftSection) draftSection.hidden = true;
+      renderQuestion();
+      if (workspace) workspace.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   renderQuestion();
+}
+
+function renderProfileDraft(answers, questions, draftSection, tagContainer, memoContainer) {
+  if (!draftSection) return;
+  const getAnswer = (position, fallback) => answers[position] || fallback;
+  const farmName = getAnswer(0, "〇〇農園");
+  const region = getAnswer(1, "地域未入力");
+  const products = getAnswer(2, "育てているものは未入力です。");
+  const values = [answers[3], answers[7]].filter(Boolean).join("\n\n") || "作物を育てるうえで大切にしていることは、本人確認時に追記します。";
+  const cultivation = answers[4] || "栽培方法については、農家さん本人の確認後に掲載します。";
+  const community = answers[5] || "地域との関わりについては、本人確認時に整理します。";
+  const future = answers[6] || "これから目指したいことは、本人確認時に整理します。";
+  const message = answers[7] || "農家さんの想いは、本人確認時に追記します。";
+  const businessCopy = `${farmName}は、${region}で${products}を育てる農園です。${values.replace(/\n+/g, " ")} 販売店・飲食店で紹介する際は、栽培方法や販売方法を農家さん本人に確認したうえで掲載します。`;
+
+  setDraftField("farmName", farmName);
+  setDraftField("region", region);
+  setDraftField("products", products);
+  setDraftField("values", values);
+  setDraftField("cultivation", cultivation);
+  setDraftField("community", community);
+  setDraftField("future", future);
+  setDraftField("message", message);
+  setDraftField("businessCopy", businessCopy);
+
+  const tags = createProfileTagCandidates(answers);
+  if (tagContainer) {
+    tagContainer.innerHTML = tags.length
+      ? tags.map((tag) => `<span>${escapeHtml(tag)}<small>候補</small></span>`).join("")
+      : '<span>価値観タグ候補なし<small>候補</small></span>';
+  }
+
+  if (memoContainer) {
+    memoContainer.innerHTML = createExpressionMemoHtml(answers.join("\n"));
+  }
+}
+
+function setDraftField(name, value) {
+  const field = document.querySelector(`[data-draft-field="${name}"]`);
+  if (field) field.value = value;
+}
+
+function createProfileTagCandidates(answers) {
+  const text = answers.join(" ");
+  const products = answers[2] || "";
+  const tags = [];
+  const add = (condition, label) => {
+    if (condition && !tags.includes(label)) tags.push(label);
+  };
+
+  add(/土|堆肥|微生物/.test(text), "土づくりを大切にする");
+  add(/農薬を使わない|使っていない|不使用/.test(text), "栽培期間中、農薬を使わない");
+  add(/減農薬|少なく|最低限/.test(text), "農薬や化学肥料に頼りすぎない");
+  add(/地域|地元|学校|子ども|マルシェ/.test(text), "地域とのつながりを大切にする");
+  add(/直売|定期便|販売店/.test(text), "直売・定期便で買える");
+  add(/飲食店|レストラン|カフェ|仕入れ/.test(text), "飲食店・販売店が相談しやすい");
+  add(/在来|固定種|自家採種|たね/.test(text), "在来種・固定種に関心がある");
+  add(/見学|体験|収穫/.test(text), "体験・見学につながる");
+  add(/米/.test(products), "米づくり");
+  add(isMultipleVegetableAnswer(products), "多品目野菜");
+
+  return tags;
+}
+
+function isMultipleVegetableAnswer(products) {
+  const separators = (products.match(/[、,／/・]/g) || []).length;
+  return /野菜|葉物|根菜|豆|なす|トマト|きゅうり|大根|かぼちゃ|米/.test(products) && separators >= 1;
+}
+
+function createExpressionMemoHtml(text) {
+  const memos = [];
+  if (text.includes("無農薬")) {
+    memos.push("「無農薬」という表現は、掲載時には慎重に扱う必要があります。必要に応じて「栽培期間中、農薬を使わない栽培に取り組んでいます」のような表現に整えます。");
+  }
+  if (text.includes("安心安全")) {
+    memos.push("「安心安全」は受け取り方に個人差があるため、掲載時には断定を避け、育て方や確認情報を具体的に伝える表現に整えます。");
+  }
+  if (/有機|オーガニック/.test(text)) {
+    memos.push("有機JAS認証の有無を確認したうえで、表現を調整します。");
+  }
+  if (!memos.length) {
+    memos.push("現時点で大きな注意表現は見つかっていません。ただし、掲載前には農家さん本人と運営側で最終確認します。");
+  }
+  return memos.map((memo) => `<p>${escapeHtml(memo)}</p>`).join("");
 }
 
 function getDemoActionContent(action, farmer) {
