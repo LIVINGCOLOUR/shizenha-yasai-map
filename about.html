@@ -28,62 +28,257 @@
       </nav>
     </header>
 
-    <main>
-      <section class="section-block">
+    <main class="about-page">
+      <section class="about-hero-section" aria-labelledby="about-title">
+        <p class="section-eyebrow">BootCamp共有用・構想デモ</p>
+        <h2 id="about-title">この活動について</h2>
+        <p class="about-lead">自然派やさいマップは、地域で買える野菜を入口に、農家・販売店・飲食店・たね・自治体をゆるやかにつなぐ構想デモです。</p>
+        <p>表向きには、地域で自然派の野菜を買える場所を探す地図。裏側では、地産地消を促進し、農薬や化学肥料に頼りすぎない農家を応援するための地域農業の関係性マップを目指しています。</p>
+      </section>
+
+      <section class="section-block about-text-section" aria-labelledby="why-title">
         <div class="section-intro">
-          <p class="section-eyebrow">この活動について</p>
-          <h2>農家と地域のつながりをひらくための入り口</h2>
-          <p>このサイトは、地域で買える野菜を入口に、消費者、販売店、飲食店、自治体が農家とつながるための静かな応援の場です。旧構想名「たねと畑の地図プロジェクト」で整理してきた、農家・たね・地域のつながりを土台にしています。</p>
+          <p class="section-eyebrow">背景</p>
+          <h2 id="why-title">なぜ作るのか</h2>
         </div>
-        <div class="info-grid">
-          <article>
-            <h3>目的</h3>
-            <p>農業を商品ではなく、生き方として伝え、自然に向き合う農家やたねの選択肢を見える化します。</p>
+        <div class="about-two-column">
+          <div>
+            <p>自然派の野菜や、農薬に頼りすぎない農家に関心があっても、一般ユーザーには探しにくいという課題があります。Google検索やSNSでは情報が分散し、どこで買えるのか、どこで食べられるのかが分かりにくいです。</p>
+            <p>また、魅力的な農家ほど、SNSやホームページを頻繁に更新しているとは限りません。発信量だけでは、農家の考え方や地域とのつながりが見えにくいことがあります。</p>
+          </div>
+          <div>
+            <p>一方で、販売店や飲食店も、地域の農家を「作物」だけでなく、「栽培方針」「価値観」「背景」から探すことは難しいです。</p>
+            <p>このサービスは、地域の販売店・農家・たね・飲食店・自治体をひとつの関係性として見える化することを目指します。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block" aria-labelledby="entry-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">入口設計</p>
+          <h2 id="entry-title">まずは、買える場所から</h2>
+          <p>一般ユーザーにとって、最初に知りたいのは「どこで買えるか」です。そのため、自然派やさいマップでは、最初の入口を「地域の販売店」にしています。</p>
+        </div>
+        <div class="about-entry-grid">
+          <article class="about-card">
+            <span class="about-card-mark">1</span>
+            <h3>地域の販売店</h3>
+            <p>自然食品店、直売所、道の駅、マルシェ、飲食店、カフェなど、地域で自然派の野菜と出会える場所を探します。</p>
+            <a class="card-link" href="places.html">販売店を見る</a>
           </article>
-          <article>
-            <h3>対象</h3>
-            <p>消費者、販売店、飲食店、自治体、そして農家同士のつながりを支援します。</p>
+          <article class="about-card">
+            <span class="about-card-mark">2</span>
+            <h3>農家と出会う</h3>
+            <p>自然に向き合う農家の考え方、育てているもの、販売方法、つながり方を知ります。</p>
+            <a class="card-link" href="farmers.html">農家を見る</a>
           </article>
-          <article>
-            <h3>表現の方針</h3>
-            <p>過激な表現や断定的な語り口は避け、農家の実践と地域の文化を丁寧に伝えます。</p>
-          </article>
-          <article>
-            <h3>本人確認について</h3>
-            <p>現在の情報は公開情報をもとに作成しています。本人確認済みの情報は今後順次追加していきます。</p>
-          </article>
-          <article>
-            <h3>AIの位置づけ</h3>
-            <p>AIは農家を評価するためではなく、農家さん本人が確認して直せるプロフィール下書きを手伝うために使います。</p>
-          </article>
-          <article>
-            <h3>更新負担を増やさない</h3>
-            <p>SNSやホームページを頻繁に更新していない農家でも、最初の登録だけで想いが伝わるページを持てることを目指します。</p>
+          <article class="about-card">
+            <span class="about-card-mark">3</span>
+            <h3>たねを見る</h3>
+            <p>茨城に伝わる在来種・固定種・地域品種を、地図と出典つきで知ります。</p>
+            <a class="card-link" href="seeds.html">たねを見る</a>
           </article>
         </div>
       </section>
 
-      <section class="section-block future-section operator-future-section" aria-labelledby="operator-ai-title">
+      <section class="section-block" aria-labelledby="goal-title">
         <div class="section-intro">
-          <p class="section-eyebrow">運営者向け・将来構想</p>
-          <h2 id="operator-ai-title">更新負担を下げるためのAI活用</h2>
-          <p>一般ユーザー向けの主機能ではなく、運営側が掲載候補を整理し、人間が確認してから進めるための控えめな構想です。</p>
+          <p class="section-eyebrow">目指す姿</p>
+          <h2 id="goal-title">目指していること</h2>
         </div>
-        <div class="future-card-grid compact-future-grid">
-          <article class="future-card subtle-future-card">
-            <span>運営者向け・将来構想</span>
-            <h3>AI地域農業レーダー</h3>
-            <p>公開情報や地域資料から、農家・販売店・たね・イベントの掲載候補を整理します。</p>
-            <button class="button tertiary concept-demo-button" type="button" data-concept-demo data-concept-title="AI地域農業レーダー">構想を見る</button>
+        <div class="info-grid">
+          <article>
+            <h3>一般ユーザーには入りやすく</h3>
+            <p>農業に詳しくなくても、まずは近くで買える場所から入れるようにする。</p>
           </article>
-          <article class="future-card subtle-future-card">
-            <span>運営者向け・将来構想</span>
-            <h3>AI掲載候補ボード</h3>
-            <p>AIが見つけた候補を、人間が確認し、本人確認後に掲載するための管理画面を想定しています。</p>
-            <button class="button tertiary concept-demo-button" type="button" data-concept-demo data-concept-title="AI掲載候補ボード">構想を見る</button>
+          <article>
+            <h3>農家には負担を少なく</h3>
+            <p>発信が苦手な農家でも、本人確認を前提に、想いや栽培方針を伝えられるようにする。</p>
+          </article>
+          <article>
+            <h3>販売店・飲食店には伝えやすく</h3>
+            <p>野菜や農家の背景を、売場やメニューで伝えやすくする。</p>
+          </article>
+          <article>
+            <h3>自治体・地域団体には見える化を</h3>
+            <p>地域の農家・販売店・飲食店・たねを、地域農業資源として整理できるようにする。</p>
           </article>
         </div>
-        <p class="future-caution">この段階では、Webクローリング、外部検索、AI分析、管理画面、DB保存は実装していません。</p>
+      </section>
+
+      <section class="section-block about-compare-section" aria-labelledby="compare-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">位置づけ</p>
+          <h2 id="compare-title">競合・類似サービスと差別化</h2>
+          <p>既存には、自治体の有機農産物マップ、地産地消マップ、オーガニックビレッジ関連サイト、産直EC、在来品種データベースなどがあります。</p>
+        </div>
+        <div class="about-list-grid">
+          <article>
+            <h3>有機・オーガニック販売店マップ</h3>
+            <p>有機農産物を買える店・食べられる飲食店を地図化する取り組み。</p>
+            <small>類似点：販売店・飲食店を入口にしている。</small>
+          </article>
+          <article>
+            <h3>地産地消マップ・直売所マップ</h3>
+            <p>地元農産物を買える直売所、庭先販売、協力店を紹介する自治体マップ。</p>
+            <small>類似点：地域で買える場所を見える化している。</small>
+          </article>
+          <article>
+            <h3>オーガニックビレッジ関連サイト</h3>
+            <p>自治体主導で有機農業・食育・学校給食・地域振興を進める取り組み。</p>
+            <small>類似点：地域ぐるみで農業を支える思想が近い。</small>
+          </article>
+          <article>
+            <h3>産直EC・宅配サービス</h3>
+            <p>農家から直接買えるEC・宅配サービス。</p>
+            <small>類似点：顔の見える農家と消費者をつなぐ。</small>
+          </article>
+          <article>
+            <h3>在来品種データベース</h3>
+            <p>地域に残る在来種・伝統野菜の情報を整理した公的DB。</p>
+            <small>類似点：地域のたね・在来種を扱う。</small>
+          </article>
+        </div>
+        <div class="about-note-panel">
+          <h3>置き換えるのではなく、つなぐ</h3>
+          <p>既存サービスは「販売店一覧」「直売所マップ」「EC」「品種DB」「自治体施策紹介」など、単独機能に分かれています。自然派やさいマップは、地域で買える場所を入口に、農家・販売店・飲食店・たね・自治体をつなぐ関係性マップを目指します。</p>
+          <ul class="about-check-list">
+            <li>販売店起点でライト層が入りやすい</li>
+            <li>有機JASだけに限定しない</li>
+            <li>農家の思想や栽培方針まで見える</li>
+            <li>AIで農家や販売店の発信負担を下げる</li>
+            <li>たね・在来種・固定種と接続する</li>
+            <li>B2CだけでなくB2B/B2Gにも展開できる</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section-block future-section about-ai-section" aria-labelledby="ai-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">AI活用・将来構想</p>
+          <h2 id="ai-title">AIでやりたいこと</h2>
+          <p>AIは、農家を評価・採点するものではありません。農家本人の言葉や公開情報を整理し、本人確認後に掲載するための下書きや素材を作る補助として使います。</p>
+        </div>
+
+        <div class="about-ai-group">
+          <h3>農家向け</h3>
+          <div class="future-card-grid">
+            <article class="future-card">
+              <span>将来構想</span>
+              <h4>AI聞き取りモード</h4>
+              <p>フォーム入力ではなく、会話形式で農家さんの想いや栽培方針を聞き取り、農園紹介の下書きを作る。</p>
+            </article>
+            <article class="future-card">
+              <span>将来構想</span>
+              <h4>AI表現チェック</h4>
+              <p>断定的な栽培表現や、安全性を保証するような言い方を、掲載に適した誤解の少ない言葉へ整える。</p>
+            </article>
+            <article class="future-card">
+              <span>将来構想</span>
+              <h4>AI価値観タグ付け</h4>
+              <p>農家さんの話から、検索に使える価値観タグを提案する。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="about-ai-group">
+          <h3>販売店・飲食店向け</h3>
+          <div class="future-card-grid">
+            <article class="future-card subtle-future-card">
+              <span>将来構想</span>
+              <h4>AI売り場POP・商品紹介文生成</h4>
+              <p>農家や野菜の背景をもとに、店頭POPやSNS投稿文の素材を作る。</p>
+            </article>
+            <article class="future-card subtle-future-card">
+              <span>将来構想</span>
+              <h4>AI農家紹介素材生成</h4>
+              <p>レストランがメニュー説明や店内紹介に使えるよう、農家の魅力を整理した素材文を作る。</p>
+            </article>
+            <article class="future-card subtle-future-card">
+              <span>将来構想</span>
+              <h4>AI仕入れ相談メモ生成</h4>
+              <p>少量・単発仕入れを相談しやすい文面を作る。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="about-ai-group">
+          <h3>運営者向け</h3>
+          <div class="future-card-grid compact-future-grid">
+            <article class="future-card subtle-future-card">
+              <span>運営者向け・将来構想</span>
+              <h4>AI地域農業レーダー</h4>
+              <p>公開情報や地域資料から、農家・販売店・たね・イベントの掲載候補を整理する。</p>
+            </article>
+            <article class="future-card subtle-future-card">
+              <span>運営者向け・将来構想</span>
+              <h4>AI掲載候補ボード</h4>
+              <p>AIが見つけた候補を、人間が確認し、本人確認後に掲載するための管理画面を想定する。</p>
+            </article>
+          </div>
+        </div>
+
+        <p class="future-caution">現在のAI機能はすべて構想デモです。実際のAI API連携、チャット、音声入力、フォーム送信、DB保存、QR読み取り、ポイント付与、決済連携はまだ実装していません。</p>
+      </section>
+
+      <section class="section-block about-point-section" aria-labelledby="point-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">将来構想</p>
+          <h2 id="point-title">地域やさいポイント</h2>
+          <p>将来構想として、地域やさいポイントを検討しています。</p>
+        </div>
+        <div class="about-note-panel">
+          <p>地域の販売店で買う、地元野菜を使う飲食店で食べる、農家イベントに参加する。こうした行動を記録し、将来的には自治体や地域団体と連携して、地産地消を応援するポイントとして使える仕組みを検討しています。</p>
+          <p class="about-caution-text">現在は構想デモです。実際のポイント付与、QR読み取り、ログイン、決済連携はまだありません。</p>
+          <a class="card-link" href="mypage.html">マイページの構想を見る</a>
+        </div>
+      </section>
+
+      <section class="section-block" aria-labelledby="next-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">検証方針</p>
+          <h2 id="next-title">今後の進め方</h2>
+          <p>まずは完成版を目指すのではなく、小さなWebデモとして見せ、反応を得ながら改善します。</p>
+        </div>
+        <ol class="about-step-list">
+          <li>構想デモをBootCampで見せる</li>
+          <li>一般ユーザーに入りやすいか確認する</li>
+          <li>農家に嫌がられない表現か確認する</li>
+          <li>販売店・飲食店に価値があるか確認する</li>
+          <li>自治体・地域団体に可能性を感じてもらえるか確認する</li>
+          <li>茨城県内、特に石岡・八郷・笠間・つくば・水戸周辺で小さく検証する</li>
+        </ol>
+      </section>
+
+      <section class="section-block" aria-labelledby="feedback-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">BootCampで聞きたいこと</p>
+          <h2 id="feedback-title">フィードバックしてほしいこと</h2>
+          <p>BootCampで見てもらう際に、以下の観点でフィードバックをもらいたいです。</p>
+        </div>
+        <ul class="about-feedback-grid">
+          <li>一般ユーザーに入りやすいか</li>
+          <li>マニアックすぎないか</li>
+          <li>競合との差別化が伝わるか</li>
+          <li>AI機能が将来構想として自然か</li>
+          <li>農家や販売店に嫌がられない表現か</li>
+          <li>自治体・地域団体に見せられるか</li>
+          <li>Webデモとして、どこを最初に改善すべきか</li>
+        </ul>
+      </section>
+
+      <section class="section-block" aria-labelledby="reference-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">参考リンク</p>
+          <h2 id="reference-title">競合・類似サービスの参考</h2>
+        </div>
+        <div class="about-reference-list">
+          <a href="https://www.pref.gunma.jp/page/607993.html" target="_blank" rel="noopener noreferrer">ぐんま有機JAS農産物等デジタルマップ</a>
+          <a href="https://www.city.soka.saitama.jp/cont/s1406/020/040/PAGE000000000000052473.html" target="_blank" rel="noopener noreferrer">草加市 地産地消マップ</a>
+          <a href="https://www.maff.go.jp/j/seisan/kankyo/yuuki/organic_village.html" target="_blank" rel="noopener noreferrer">農林水産省 オーガニックビレッジ</a>
+          <a href="https://www.tabechoku.com/" target="_blank" rel="noopener noreferrer">食べチョク</a>
+          <a href="https://www.gene.affrc.go.jp/databases-traditional_varieties.php" target="_blank" rel="noopener noreferrer">農研機構 在来品種データベース</a>
+        </div>
       </section>
     </main>
 
