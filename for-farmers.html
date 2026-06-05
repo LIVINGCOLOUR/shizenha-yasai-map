@@ -29,90 +29,93 @@
       </nav>
     </header>
 
-    <main>
-      <section class="section-block">
+    <main class="farmer-profile-page">
+      <section class="profile-mode-hero" aria-labelledby="farmer-profile-title">
+        <p class="section-eyebrow">農家さんへ・構想デモ</p>
+        <h2 id="farmer-profile-title">農家さんの想いを、伝わるプロフィールにする</h2>
+        <p>自然派やさいマップでは、農家さんの想いや栽培方針を、一般ユーザー・販売店・飲食店に伝わるプロフィールとして整理します。</p>
+        <p class="profile-demo-note">現在は構想デモです。実際のAI連携や送信機能はまだありません。</p>
+      </section>
+
+      <section class="section-block profile-mode-intro" aria-labelledby="ai-profile-summary-title">
         <div class="section-intro">
-          <p class="section-eyebrow">掲載を検討している農家さんへ</p>
-          <h2>SNSやホームページを更新していなくても大丈夫です。</h2>
-          <p>URL、写真、農業への想いをもとに、農園紹介の下書きを整理します。作成された内容は、農家さん本人が確認・修正してから掲載する想定です。</p>
+          <p class="section-eyebrow">AIプロフィール下書き</p>
+          <h2 id="ai-profile-summary-title">AIは、下書きを整えるための補助です。</h2>
+          <p>AIは農家さんを評価・採点するものではありません。入力された文章や会話内容をもとに、農園紹介・大切にしていること・販売店向け紹介文・価値観タグなどの下書きを作る想定です。掲載前には、必ず農家さん本人が確認・修正する前提です。</p>
         </div>
       </section>
 
-      <section class="section farmer-ai-section" aria-labelledby="farmer-ai-title">
-        <div class="farmer-ai-layout">
-          <div>
-            <p class="eyebrow">AIプロフィール下書き</p>
-            <h2 id="farmer-ai-title">想いを、そのまま伝わるプロフィールへ。</h2>
-            <p>写真を数枚と、農業への想いをそのまま入力してください。AIが、農園紹介・大切にしていること・買える場所・つながり方を整理し、プロフィール下書きを作成します。</p>
-            <p>すでにホームページやSNSがある場合は、URLを貼るだけでも始められます。AIが公開情報や入力内容をもとに下書きし、作成された内容は農家さん本人が確認・修正してから掲載します。</p>
-            <p>AIが勝手に断定するのではなく、本人が確認して直せる下書きとして使います。定期的な更新作業は必要ありません。</p>
-            <button class="button primary" type="button" data-ai-profile-demo>AIプロフィール下書きのデモを見る</button>
-          </div>
-          <div class="farmer-ai-card" aria-label="掲載準備でできること">
-            <span>掲載準備でできること</span>
-            <ul>
-              <li>公式サイトやSNSのURLを貼る</li>
-              <li>畑や野菜の写真を数枚添付する</li>
-              <li>農業への想いをそのまま書く</li>
-              <li>販売方法や連絡方法を選ぶ</li>
-            </ul>
-            <p class="farmer-ai-card-note">URLや入力内容は、プロフィール下書きの材料として使います。掲載前には必ず農家さん本人が確認します。</p>
-          </div>
+      <section class="section-block" aria-labelledby="profile-mode-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">プロフィールの作り方</p>
+          <h2 id="profile-mode-title">プロフィールの作り方を選ぶ</h2>
+          <p>最初は、入力しやすい方法を選ぶだけで大丈夫です。どちらも今はUIだけの構想デモです。</p>
         </div>
-        <div class="ai-before-after" aria-labelledby="ai-before-after-title">
-          <div class="ai-before-after-head">
-            <p class="eyebrow">Before / After</p>
-            <h3 id="ai-before-after-title">まとまっていない想いを、伝わるプロフィールへ</h3>
-            <p>入力された言葉をもとに、農家さん本人が確認して直せるプロフィール下書きに整えるデモです。</p>
-          </div>
-          <div class="ai-before-after-grid">
-            <article class="ai-draft-card before-card">
-              <span>Before</span>
-              <p>「米と季節の野菜を作っています。農薬や化学肥料にはなるべく頼らず、土を見ながら無理なく続けています。直売は知人中心で、詳しいことは相談してください。」</p>
-            </article>
-            <article class="ai-draft-card after-card">
-              <span>After</span>
-              <p>〇〇農園は、地域の自然と向き合いながら、米や季節の野菜を育てる農園です。土の状態を見ながら、農薬や化学肥料に頼りすぎない農を大切にしています。購入や訪問については、農家さん本人の確認後に掲載します。</p>
-            </article>
-          </div>
+        <div class="profile-mode-grid">
+          <article class="profile-mode-card">
+            <span class="status-pill">構想デモ・工事中</span>
+            <p class="profile-mode-label">手書き入力・参考URL投入</p>
+            <h3>URL・文章から作る</h3>
+            <p>既存のホームページ、Instagram、販売ページ、紹介記事などのURLや、農家さん自身が書いた文章をもとに、AIがプロフィールの下書きを作る想定です。</p>
+            <div class="profile-mode-list">
+              <h4>想定入力</h4>
+              <ul>
+                <li>公式サイトURL</li>
+                <li>Instagram URL</li>
+                <li>既存の紹介文</li>
+                <li>育てている作物</li>
+                <li>栽培で大切にしていること</li>
+                <li>販売方法や連絡方法</li>
+              </ul>
+            </div>
+            <a class="button primary" href="profile-input.html">この方法で作る</a>
+          </article>
+
+          <article class="profile-mode-card featured-profile-mode">
+            <span class="status-pill">構想デモ・工事中</span>
+            <p class="profile-mode-label">音声入力・会話形式</p>
+            <h3>会話で聞き取って作る</h3>
+            <p>AIが質問し、農家さんが話すように答えていくことで、プロフィールの下書きを作る想定です。パソコン入力が苦手な人でも、会話形式で想いやこだわりを整理できます。</p>
+            <div class="profile-mode-list">
+              <h4>想定質問</h4>
+              <ul>
+                <li>農園名を教えてください</li>
+                <li>どの地域で農業をしていますか</li>
+                <li>育てている主な作物は何ですか</li>
+                <li>作物を育てるうえでのこだわりはありますか</li>
+                <li>化学肥料や農薬は利用していますか</li>
+                <li>地域との関わり方について教えてください</li>
+                <li>将来どんな農業を目指したいですか</li>
+                <li>最後に、思いの丈を自由に話してください</li>
+              </ul>
+            </div>
+            <a class="button primary" href="profile-interview.html">会話で作る</a>
+          </article>
         </div>
       </section>
 
       <section class="section-block future-section" aria-labelledby="farmer-future-ai-title">
         <div class="section-intro">
-          <p class="section-eyebrow">将来実装の構想</p>
-          <h2 id="farmer-future-ai-title">AIで、掲載準備の負担を少し軽くする</h2>
-          <p>この段階では、実際のAI聞き取り、音声入力、チャット、API連携は実装していません。農家さん本人が確認・修正してから掲載するための下書き補助として使う想定です。</p>
+          <p class="section-eyebrow">短く残すAI構想</p>
+          <h2 id="farmer-future-ai-title">掲載前に、本人確認して整える</h2>
+          <p>既存のAI構想は、プロフィール作成の補助として残します。実際のAI処理、音声入力、送信、保存はまだ行いません。</p>
         </div>
         <div class="future-card-grid">
           <article class="future-card">
             <span>将来実装</span>
             <h3>AI聞き取りモード</h3>
-            <p>フォーム入力ではなく、会話形式で農家さんの想いや栽培方針を聞き取り、農園紹介の下書きを作ります。</p>
-            <button class="button tertiary concept-demo-button" type="button" data-concept-demo data-concept-title="AI聞き取りモード">構想を見る</button>
+            <p>会話形式で農家さんの想いや栽培方針を聞き取り、農園紹介の下書きを作る想定です。</p>
           </article>
           <article class="future-card">
             <span>将来実装</span>
             <h3>AI表現チェック</h3>
             <p>誤解を招きやすい表現を、掲載に適した言葉へ整えます。農家の実践を決めつけるものではありません。</p>
-            <button class="button tertiary concept-demo-button" type="button" data-concept-demo data-concept-title="AI表現チェック">構想を見る</button>
           </article>
           <article class="future-card">
             <span>将来実装</span>
             <h3>AI価値観タグ付け</h3>
             <p>農家さんの話から、検索に使える価値観タグを提案します。タグは本人確認後に掲載する想定です。</p>
-            <button class="button tertiary concept-demo-button" type="button" data-concept-demo data-concept-title="AI価値観タグ付け">構想を見る</button>
           </article>
-        </div>
-        <div class="future-example-box" aria-label="AI表現チェックの例">
-          <div>
-            <span>入力例</span>
-            <p>無農薬で安心安全な野菜です</p>
-          </div>
-          <div>
-            <span>AI提案例</span>
-            <p>栽培期間中、農薬を使わない栽培に取り組んでいます。詳しい栽培方法や販売方法は、農家本人の確認後に掲載します。</p>
-          </div>
         </div>
         <p class="future-caution">AIは農家を評価・採点するものではありません。農家本人が確認・修正してから掲載するための下書き補助として使う想定です。</p>
       </section>
@@ -124,22 +127,17 @@
         </div>
         <div class="info-grid">
           <article>
-            <h3>1. 情報を送る</h3>
-            <p>URL、写真、育てているもの、農業への想い、販売方法などを送ります。</p>
+            <h3>1. 方法を選ぶ</h3>
+            <p>URLや文章から作るか、会話で聞き取って作るかを選びます。</p>
           </article>
           <article>
-            <h3>2. 下書きを作る</h3>
-            <p>入力内容をもとに、農園紹介・大切にしていること・つながり方を整理します。</p>
+            <h3>2. 下書きを整える</h3>
+            <p>入力内容をもとに、農園紹介・大切にしていること・つながり方を整理する想定です。</p>
           </article>
           <article>
             <h3>3. 本人確認</h3>
-            <p>農家さん本人が内容を確認し、必要な修正をしてから掲載します。</p>
+            <p>農家さん本人が内容を確認し、必要な修正をしてから掲載する前提です。</p>
           </article>
-        </div>
-        <div class="cta-panel">
-          <h3>販売店・飲食店での使い方へ</h3>
-          <p>次は、農家の背景を売場やメニューに伝える構想を確認できます。</p>
-          <a class="button primary" href="business.html">販売店・飲食店向けを見る</a>
         </div>
       </section>
     </main>
@@ -156,34 +154,6 @@
       </div>
     </footer>
   </div>
-
-  <dialog id="aiProfileDemoDialog" class="demo-modal ai-demo-modal" aria-labelledby="aiDemoTitle">
-    <div class="demo-modal-card">
-      <button class="demo-modal-x" type="button" data-ai-demo-close aria-label="モーダルを閉じる">×</button>
-      <p class="demo-modal-farmer">AIプロフィール下書きデモ</p>
-      <h2 id="aiDemoTitle">入力した想いを、農園紹介の下書きに整える</h2>
-      <div class="ai-demo-grid">
-        <section>
-          <h3>入力例</h3>
-          <ul>
-            <li>畑の写真3枚</li>
-            <li>育てているもの：米、季節の野菜</li>
-            <li>大切にしていること：土の状態を見ながら、無理なく続ける農業をしたい</li>
-            <li>買える場所：直売、知人経由、イベント出店</li>
-          </ul>
-        </section>
-        <section>
-          <h3>AI下書き例</h3>
-          <p>〇〇農園は、地域の自然と向き合いながら、米や季節の野菜を育てる農園です。農薬や化学肥料に頼りすぎず、土の状態を見ながら、無理なく続けられる農を大切にしています。購入や訪問については、農家さん本人の確認後に掲載します。</p>
-        </section>
-      </div>
-      <div class="demo-modal-note">
-        <strong>この機能はデモです。</strong>
-        <p>実際のAI処理はまだ行いません。農家さん本人が確認して直せるプロフィール下書きを想定しています。</p>
-      </div>
-      <button class="button demo-modal-confirm" type="button" data-ai-demo-close>閉じる</button>
-    </div>
-  </dialog>
 
   <script src="js/main.js"></script>
 </body>

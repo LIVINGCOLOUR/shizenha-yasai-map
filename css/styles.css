@@ -696,6 +696,262 @@ button { font: inherit; }
   box-shadow: none;
 }
 
+.farmer-profile-page,
+.profile-demo-page {
+  display: grid;
+  gap: 4px;
+}
+.profile-mode-hero {
+  margin-top: 42px;
+  padding: 34px;
+  border-radius: 28px;
+  border: 1px solid rgba(32,57,42,.1);
+  background:
+    radial-gradient(circle at 92% 12%, rgba(174,191,132,.28), transparent 34%),
+    linear-gradient(135deg, rgba(255,253,247,.96), rgba(235,241,216,.58));
+  box-shadow: var(--soft-shadow);
+}
+.profile-mode-hero h2 {
+  max-width: 880px;
+  margin: 10px 0 14px;
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  line-height: 1.16;
+}
+.profile-mode-hero p {
+  max-width: 880px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.9;
+}
+.profile-mode-hero .profile-demo-note,
+.profile-demo-note {
+  margin-top: 12px;
+  color: var(--earth);
+  font-weight: 800;
+}
+.profile-mode-intro .section-intro {
+  max-width: 920px;
+}
+.profile-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.profile-mode-card {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 26px;
+  border-radius: 24px;
+  border: 1px solid rgba(32,57,42,.1);
+  background: rgba(255,253,247,.88);
+  box-shadow: 0 12px 30px rgba(32,57,42,.06);
+}
+.featured-profile-mode {
+  background: linear-gradient(135deg, rgba(255,253,247,.92), rgba(235,241,216,.72));
+  border-color: rgba(53,100,65,.2);
+}
+.profile-mode-label {
+  margin: 0;
+  color: var(--earth);
+  font-size: .78rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+.profile-mode-card h3 {
+  margin: 0;
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  line-height: 1.25;
+}
+.profile-mode-card p:not(.profile-mode-label) {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: .92rem;
+}
+.profile-mode-list {
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(32,57,42,.09);
+  background: rgba(255,255,255,.62);
+}
+.profile-mode-list h4 {
+  margin: 0 0 8px;
+  color: var(--forest);
+  font-size: .88rem;
+}
+.profile-mode-list ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  font-size: .85rem;
+  line-height: 1.8;
+}
+.profile-mode-card .button {
+  width: fit-content;
+  margin-top: 4px;
+}
+.profile-form-card,
+.conversation-card,
+.question-list-card {
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(32,57,42,.1);
+  background: rgba(255,253,247,.9);
+  box-shadow: var(--soft-shadow);
+}
+.profile-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.profile-field-wide {
+  grid-column: 1 / -1;
+}
+.profile-field-grid label,
+.conversation-answer {
+  display: grid;
+  gap: 8px;
+  color: var(--forest);
+  font-size: .86rem;
+  font-weight: 900;
+}
+.profile-field-grid input,
+.profile-field-grid textarea,
+.conversation-answer textarea {
+  width: 100%;
+  border: 1px solid rgba(32,57,42,.14);
+  border-radius: 14px;
+  background: rgba(255,255,255,.78);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.7;
+}
+.profile-field-grid input {
+  min-height: 46px;
+  padding: 0 14px;
+}
+.profile-field-grid textarea,
+.conversation-answer textarea {
+  resize: vertical;
+  min-height: 150px;
+  padding: 12px 14px;
+}
+.profile-field-grid input:focus,
+.profile-field-grid textarea:focus,
+.conversation-answer textarea:focus {
+  outline: 3px solid rgba(53,100,65,.12);
+  border-color: rgba(53,100,65,.42);
+}
+.profile-form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
+.profile-form-actions p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .82rem;
+  line-height: 1.7;
+}
+.profile-back-link {
+  margin-top: 26px;
+}
+.profile-back-link a {
+  display: inline-flex;
+  color: var(--forest);
+  border-bottom: 1px solid rgba(32,57,42,.24);
+  padding-bottom: 3px;
+  font-size: .9rem;
+  font-weight: 900;
+}
+.profile-interview-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+  gap: 18px;
+  align-items: start;
+}
+.conversation-card {
+  display: grid;
+  gap: 18px;
+}
+.conversation-status {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--earth);
+  font-size: .82rem;
+  font-weight: 900;
+}
+.conversation-status strong {
+  color: var(--forest);
+}
+.conversation-question {
+  margin: 0;
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(235,241,216,.72), rgba(255,253,247,.92));
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+  font-weight: 900;
+  line-height: 1.45;
+}
+.conversation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.question-list-card h3 {
+  margin: 0 0 14px;
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+}
+.question-list-card ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: question;
+}
+.question-list-card li {
+  counter-increment: question;
+  position: relative;
+  padding: 10px 12px 10px 38px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.58);
+  color: var(--muted);
+  font-size: .84rem;
+  line-height: 1.6;
+}
+.question-list-card li::before {
+  content: counter(question);
+  position: absolute;
+  left: 11px;
+  top: 11px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(53,100,65,.12);
+  color: var(--forest);
+  font-size: .72rem;
+  font-weight: 900;
+}
+.question-list-card li.is-active {
+  background: rgba(53,100,65,.1);
+  color: var(--forest);
+  font-weight: 900;
+}
+
 .about-page {
   display: grid;
   gap: 4px;
@@ -1719,7 +1975,7 @@ button { font: inherit; }
   .section { margin-top: 48px; }
   .discovery-section { margin-top: 46px; }
   .section-head, .horizontal-head { display: grid; align-items: start; }
-  .home-farm-grid, .seed-grid, .feature-grid, .footer-top, .footer-links, .community-items, .ai-demo-grid, .seed-list, .card-grid, .info-grid, .ai-before-after-grid, .place-guide-grid, .place-grid, .next-link-grid, .future-card-grid, .compact-future-grid, .future-example-box, .mypage-layout, .about-two-column, .about-entry-grid, .about-list-grid, .about-check-list, .about-feedback-grid, .about-reference-list { grid-template-columns: 1fr; }
+  .home-farm-grid, .seed-grid, .feature-grid, .footer-top, .footer-links, .community-items, .ai-demo-grid, .seed-list, .card-grid, .info-grid, .ai-before-after-grid, .place-guide-grid, .place-grid, .next-link-grid, .future-card-grid, .compact-future-grid, .future-example-box, .mypage-layout, .profile-mode-grid, .profile-field-grid, .profile-interview-layout, .about-two-column, .about-entry-grid, .about-list-grid, .about-check-list, .about-feedback-grid, .about-reference-list { grid-template-columns: 1fr; }
   .interest-section, .farmer-ai-section { padding: 22px; border-radius: 20px; }
   .future-section, .mypage-hero-section { padding: 22px; border-radius: 20px; }
   .point-card, .mypage-notice { padding: 20px; }

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>会話でプロフィールを作る | 自然派やさいマップ</title>
+  <meta name="description" content="AI聞き取りモードで農家プロフィール下書きを作る構想デモ画面です。実際の音声入力やAI生成は行いません。" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="logo-block">
+        <div class="logo-mark">畑</div>
+        <div>
+          <p class="eyebrow">自然派やさいマップ</p>
+          <h1>会話で作る</h1>
+        </div>
+      </div>
+      <nav class="site-nav" aria-label="サブナビゲーション">
+        <a href="places.html">地域の販売店</a>
+        <a href="farmers.html">農家と出会う</a>
+        <a href="seeds.html">たねを見る</a>
+        <a href="for-farmers.html">農家さんへ</a>
+        <a href="municipality.html">地域で使う</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="about.html">この活動について</a>
+      </nav>
+    </header>
+
+    <main class="profile-demo-page">
+      <section class="profile-mode-hero" aria-labelledby="profile-interview-title">
+        <p class="section-eyebrow">構想デモ・工事中</p>
+        <h2 id="profile-interview-title">会話でプロフィールを作る</h2>
+        <p>AIが質問し、農家さんが答えていくことで、プロフィールの下書きを作る想定のデモ画面です。</p>
+        <p class="profile-demo-note">現在は構想デモのため、実際の音声入力・AI生成・保存は行いません。</p>
+      </section>
+
+      <section class="section-block profile-interview-section" aria-labelledby="interview-ui-title">
+        <div class="section-intro">
+          <p class="section-eyebrow">AI聞き取りモード・将来実装</p>
+          <h2 id="interview-ui-title">質問に答えるように、想いを整理する</h2>
+          <p>この画面では質問文の切り替えだけを試せます。回答内容は送信・保存されません。</p>
+        </div>
+
+        <div class="profile-interview-layout">
+          <article class="conversation-card" aria-live="polite">
+            <div class="conversation-status">
+              <span>現在の質問</span>
+              <strong><span data-question-current>1</span> / <span data-question-total>8</span></strong>
+            </div>
+            <p class="conversation-question" data-profile-question>農園名を教えてください</p>
+            <label class="conversation-answer">
+              <span>回答入力欄</span>
+              <textarea rows="7" placeholder="ここに話すように入力してください。このデモでは保存されません。"></textarea>
+            </label>
+            <div class="conversation-actions">
+              <button class="button secondary" type="button" data-next-profile-question>次の質問へ</button>
+              <button
+                class="button primary"
+                type="button"
+                data-concept-demo
+                data-concept-title="会話でプロフィールを作る"
+                data-concept-message="現在は構想デモです。実際の音声入力・AI生成・送信・保存はまだ行いません。"
+              >下書きを作る</button>
+            </div>
+            <p class="profile-demo-note">音声入力、AI生成、送信、保存はまだ動作しません。</p>
+          </article>
+
+          <aside class="question-list-card" aria-labelledby="question-list-title">
+            <h3 id="question-list-title">質問一覧</h3>
+            <ol data-profile-question-list>
+              <li class="is-active">農園名を教えてください</li>
+              <li>どの地域で農業をしていますか</li>
+              <li>育てている主な作物は何ですか</li>
+              <li>作物を育てるうえでのこだわりはありますか</li>
+              <li>化学肥料や農薬は利用していますか</li>
+              <li>地域との関わり方について教えてください</li>
+              <li>将来どんな農業を目指したいですか</li>
+              <li>最後に、思いの丈を自由に話してください</li>
+            </ol>
+          </aside>
+        </div>
+      </section>
+
+      <div class="profile-back-link">
+        <a href="for-farmers.html">← 農家さんへ戻る</a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-links footer-links-minimal">
+        <a href="places.html">地域の販売店</a>
+        <a href="farmers.html">農家と出会う</a>
+        <a href="seeds.html">たねを見る</a>
+        <a href="for-farmers.html">農家さんへ</a>
+        <a href="municipality.html">地域で使う</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="about.html">この活動について</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -28,6 +28,8 @@ REQUIRED_HTML = [
     "farmer.html",
     "seeds.html",
     "for-farmers.html",
+    "profile-input.html",
+    "profile-interview.html",
     "business.html",
     "municipality.html",
     "farmer-network.html",

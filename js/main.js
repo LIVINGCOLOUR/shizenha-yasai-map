@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setupDemoActionDialog();
   setupAiProfileDemoDialog();
   setupConceptDemoDialog();
+  setupProfileInterviewDemo();
 
   if (isPage("farmers")) {
     loadFarmersList();
@@ -508,7 +509,7 @@ function setupConceptDemoDialog() {
     const message = dialog.querySelector("[data-concept-demo-message]");
     if (title) title.textContent = trigger.dataset.conceptTitle || "将来構想";
     if (message) {
-      message.textContent = "現在は構想デモです。実際のAI機能、フォーム送信、ポイント付与、QR読み取り、ログイン、決済連携、DB保存はまだ動作しません。";
+      message.textContent = trigger.dataset.conceptMessage || "現在は構想デモです。実際のAI機能、フォーム送信、ポイント付与、QR読み取り、ログイン、決済連携、DB保存はまだ動作しません。";
     }
     lastConceptDemoTrigger = trigger;
     document.body.classList.add("modal-open");
@@ -554,6 +555,34 @@ function getConceptDemoDialog() {
     document.body.classList.remove("modal-open");
   });
   return dialog;
+}
+
+function setupProfileInterviewDemo() {
+  const questionText = document.querySelector("[data-profile-question]");
+  const nextButton = document.querySelector("[data-next-profile-question]");
+  const current = document.querySelector("[data-question-current]");
+  const total = document.querySelector("[data-question-total]");
+  const listItems = Array.from(document.querySelectorAll("[data-profile-question-list] li"));
+  if (!questionText || !nextButton || !listItems.length) return;
+
+  const questions = listItems.map((item) => item.textContent.trim()).filter(Boolean);
+  let index = 0;
+  if (total) total.textContent = String(questions.length);
+
+  const renderQuestion = () => {
+    questionText.textContent = questions[index];
+    if (current) current.textContent = String(index + 1);
+    listItems.forEach((item, itemIndex) => {
+      item.classList.toggle("is-active", itemIndex === index);
+    });
+  };
+
+  nextButton.addEventListener("click", () => {
+    index = (index + 1) % questions.length;
+    renderQuestion();
+  });
+
+  renderQuestion();
 }
 
 function getDemoActionContent(action, farmer) {
