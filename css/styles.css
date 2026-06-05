@@ -301,6 +301,7 @@ button { font: inherit; }
 .feature-card h3 { margin: 0 0 11px; color: var(--forest); font-size: 1rem; line-height: 1.45; font-family: "Yu Mincho", "Hiragino Mincho ProN", serif; }
 .feature-card p { margin: 0; color: var(--muted); line-height: 1.7; font-size: .86rem; }
 .feature-card a { display: inline-flex; margin-top: 14px; color: var(--forest); font-size: .82rem; font-weight: 900; border-bottom: 1px solid rgba(32,57,42,.22); }
+.feature-card .feature-sub-link { margin-top: 8px; color: var(--earth); }
 
 .places-intro-section {
   padding: 28px;
