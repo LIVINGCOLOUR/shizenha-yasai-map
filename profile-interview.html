@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>会話でプロフィールを作る | 自然派やさいマップ</title>
-  <meta name="description" content="AI聞き取りモードで農家プロフィール下書きを作る構想デモ画面です。実際の音声入力やAI生成は行いません。" />
+  <meta name="description" content="AI聞き取りモードで農家プロフィール下書きを作るデモ画面です。実際の音声入力やAI生成は行いません。" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -31,10 +31,10 @@
 
     <main class="profile-demo-page voice-profile-page">
       <section class="profile-mode-hero" aria-labelledby="profile-interview-title">
-        <p class="section-eyebrow">構想デモ・工事中</p>
-        <h2 id="profile-interview-title">会話でプロフィールを作る</h2>
+        <p class="section-eyebrow">デモ版・工事中</p>
+        <h2 id="profile-interview-title">AI聞き取りで、農家プロフィールの下書きを作る</h2>
         <p>AIが質問し、農家さんが話すように答えていくことで、農園紹介の下書きを作る構想デモです。</p>
-        <p class="profile-demo-note">現在は構想デモです。実際の音声入力・AI生成・送信・保存・登録はまだ行いません。</p>
+        <p class="profile-demo-note">現在はデモ版です。実際の音声入力・AI生成・送信・保存・登録はまだ行いません。</p>
       </section>
 
       <section class="section-block interview-flow-section" aria-labelledby="interview-flow-title">
@@ -55,7 +55,7 @@
           </article>
           <article>
             <span>3</span>
-            <h3>プロフィール下書きを確認する</h3>
+            <h3>下書きを確認・修正する</h3>
             <p>回答内容をもとに、農家詳細ページに掲載するプロフィール下書きを作成し、確認・修正できます。</p>
           </article>
         </div>
@@ -72,7 +72,7 @@
         <div class="section-intro">
           <p class="section-eyebrow">AI聞き取りモード・将来実装</p>
           <h2 id="interview-ui-title">質問に答えるように、想いを整理する</h2>
-          <p>この画面では、回答の入力・質問切り替え・下書き生成の流れだけを試せます。実際の音声入力、AI API連携、送信、保存、登録は行いません。</p>
+          <p>この画面では、回答の入力・質問切り替え・下書き生成の流れだけを試せます。実際の音声入力、OpenAI API連携、送信、保存、登録は行いません。</p>
         </div>
 
         <div class="profile-interview-layout" data-interview-workspace hidden>
@@ -95,9 +95,9 @@
                 class="button tertiary"
                 type="button"
                 data-concept-demo
-                data-concept-title="音声で答える"
-                data-concept-message="現在は構想デモです。実際の音声入力はまだ行いません。"
-              >音声で答える（将来実装）</button>
+                data-concept-title="音声入力を試す"
+                data-concept-message="現在はデモ版です。実際の音声入力はまだ行いません。"
+              >音声入力を試す（準備中）</button>
             </div>
             <label class="conversation-answer">
               <span>農家さんの回答</span>
@@ -143,7 +143,7 @@
           <article class="profile-draft-card">
             <div class="draft-status-row">
               <span class="status-pill">下書き・本人確認前</span>
-              <span class="status-pill">構想デモ・登録前</span>
+              <span class="status-pill">デモ版・登録前</span>
             </div>
             <div class="draft-field-grid">
               <label>
@@ -216,12 +216,17 @@
             type="button"
             data-concept-demo
             data-concept-title="この内容で登録する"
-            data-concept-message="現在は構想デモです。実際の登録・送信・保存はまだ行いません。実運用では、本人確認後に掲載する想定です。"
+            data-concept-message="現在はデモ版です。実際の登録・送信・保存はまだ行いません。実運用では、本人確認後に掲載する想定です。"
           >この内容で登録する</button>
           <button class="button tertiary" type="button" data-reset-profile-interview>最初からやり直す</button>
           <a class="button tertiary" href="for-farmers.html">農家さんへ戻る</a>
         </div>
       </section>
+
+      <aside class="api-implementation-note" aria-label="今後の実装メモ">
+        <h3>今後の実装メモ</h3>
+        <p>実運用では、ブラウザから直接OpenAI APIを呼ばず、Cloudflare Pages Functionsなどのサーバー側処理を経由してプロフィール下書きを生成する想定です。</p>
+      </aside>
 
       <div class="profile-back-link">
         <a href="for-farmers.html">← 農家さんへ戻る</a>

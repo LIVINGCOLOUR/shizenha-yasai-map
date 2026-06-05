@@ -1161,6 +1161,12 @@ button { font: inherit; }
   color: var(--earth);
   font-size: .66rem;
 }
+.draft-empty-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: .84rem;
+  line-height: 1.7;
+}
 .expression-memo {
   display: grid;
   gap: 8px;
@@ -1209,6 +1215,25 @@ button { font: inherit; }
   border-radius: 18px;
   border: 1px solid rgba(32,57,42,.1);
   background: rgba(255,253,247,.72);
+}
+.api-implementation-note {
+  margin-top: 28px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px dashed rgba(32,57,42,.16);
+  background: rgba(255,253,247,.58);
+}
+.api-implementation-note h3 {
+  margin: 0 0 6px;
+  color: var(--earth);
+  font-size: .82rem;
+  letter-spacing: .05em;
+}
+.api-implementation-note p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.75;
 }
 
 .about-page {

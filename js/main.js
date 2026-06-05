@@ -713,7 +713,7 @@ function renderProfileDraft(answers, questions, draftSection, tagContainer, memo
   if (tagContainer) {
     tagContainer.innerHTML = tags.length
       ? tags.map((tag) => `<span>${escapeHtml(tag)}<small>候補</small></span>`).join("")
-      : '<span>価値観タグ候補なし<small>候補</small></span>';
+      : '<p class="draft-empty-note">回答内容を確認したうえで、運営側が手動でタグを調整します。</p>';
   }
 
   if (memoContainer) {
