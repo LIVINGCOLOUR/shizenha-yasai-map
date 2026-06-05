@@ -19,124 +19,48 @@
             <p class="brand-subtitle">自然に寄り添う農家をめぐる</p>
           </div>
         </a>
-      <nav class="main-nav" aria-label="メインナビゲーション">
+        <nav class="main-nav" aria-label="メインナビゲーション">
           <a href="index.html">ホーム</a>
-          <a href="places.html">地域の販売店</a>
-          <a href="farmers.html">農家と出会う</a>
-          <a href="seeds.html">地域の野菜</a>
+          <a href="places.html">食べる</a>
+          <a href="places.html">買う</a>
+          <a href="learn.html">農を知る</a>
           <a href="for-farmers.html">農家さんへ</a>
           <a href="business.html">地域で使う</a>
-          <a href="mypage.html">マイページ</a>
           <a href="about.html">この活動について</a>
         </nav>
       </div>
 
       <section class="hero-section" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="hero-kicker"><span aria-hidden="true"></span>地域の畑から</p>
+        <img class="hero-bg-image" src="assets/hero-farmer-field.png" alt="里山の畑で収穫した野菜を抱える農家" />
+        <div class="hero-copy hero-glass-panel">
+          <p class="hero-app-name">自然派やさいマップ</p>
           <h1 id="hero-title">自然に寄り添う農家と、地域の食をつなぐ地図</h1>
-          <p class="hero-subtitle-main">地域の野菜を、食べる・買う・知るところからたどれる入口です。</p>
-          <p class="hero-text">自然に向き合う農家、地元野菜を使う飲食店、地域で買える場所をつなぎます。</p>
-        </div>
-        <div class="hero-visual">
-          <img src="assets/hero-farmer-field.png" alt="里山の畑で収穫した野菜を抱える農家" />
-          <div class="hero-map-note">
-            <span class="hero-map-pin" aria-hidden="true"></span>
-            <div>
-              <strong>食べる・買う・知る入口</strong>
-              <span>地域の食と畑をたどる</span>
-            </div>
+          <p class="hero-text">食べる・買う・知るところから、地域の農とのつながりをたどれます。</p>
+          <div class="hero-entry-grid" aria-label="3つの入口">
+            <article class="hero-entry-card">
+              <span class="hero-entry-label">食べる</span>
+              <h2>地域の飲食店で食べる</h2>
+              <p>地元野菜を使う飲食店やカフェから、地域の農と出会います。</p>
+              <a class="entry-link" href="places.html">食べる</a>
+            </article>
+            <article class="hero-entry-card">
+              <span class="hero-entry-label">買う</span>
+              <h2>地域の販売店で買う</h2>
+              <p>自然食品店、直売所、道の駅など、地域の野菜を買える場所を探します。</p>
+              <a class="entry-link" href="places.html">買う</a>
+            </article>
+            <article class="hero-entry-card">
+              <span class="hero-entry-label">知る</span>
+              <h2>農家と野菜の背景を知る</h2>
+              <p>自然に向き合う農家や、地域に根差した野菜の背景を知ります。</p>
+              <a class="entry-link" href="learn.html">農を知る</a>
+            </article>
           </div>
-          <p class="hero-photo-caption">里山と畑が続く地域の風景</p>
         </div>
       </section>
     </header>
 
     <main>
-      <section class="entry-section" aria-labelledby="entry-title">
-        <div class="entry-head">
-          <p class="eyebrow">このサイトでできること</p>
-          <h2 id="entry-title">3つの入口から探す。</h2>
-          <p>食べる・買う・知るところから、地域の農とのつながりをたどれます。</p>
-        </div>
-        <div class="entry-grid">
-          <article class="entry-card">
-            <span class="entry-number">1</span>
-            <h3>地域の飲食店で食べる</h3>
-            <p>地元野菜を使う飲食店やカフェから、地域の農と出会います。</p>
-            <a class="entry-link" href="places.html">飲食店を探す</a>
-          </article>
-          <article class="entry-card">
-            <span class="entry-number">2</span>
-            <h3>地域の販売店で買う</h3>
-            <p>自然食品店、直売所、道の駅など、地域の野菜を買える場所を探します。</p>
-            <a class="entry-link" href="places.html">販売店を探す</a>
-          </article>
-          <article class="entry-card">
-            <span class="entry-number">3</span>
-            <h3>農家と野菜の背景を知る</h3>
-            <p>農家の考え方、育てているもの、地域に根差した野菜の背景を知ります。</p>
-            <a class="entry-link" href="farmers.html">農を知る</a>
-          </article>
-        </div>
-      </section>
-
-      <section id="find-farmers" class="section interest-section" aria-labelledby="interest-title">
-        <div class="section-head horizontal-head">
-          <div>
-            <p class="eyebrow">農家と出会う</p>
-            <h2 id="interest-title">気になる考え方から、農家を見てみる</h2>
-            <p>土づくり、在来種・固定種、直売、見学・体験など、関心のある切り口から農家を探せます。</p>
-          </div>
-        </div>
-        <div id="interestFilterOptions" class="interest-filter-options" aria-label="出会いたい農の選択肢"></div>
-        <div class="interest-feedback">
-          <p id="interestFilterStatus" class="interest-filter-status">関心を選ぶと、近い農家が上に表示されます。</p>
-          <a id="interestFarmersLink" class="interest-scroll-link" href="#farmer-results" hidden>近い農家を見る</a>
-        </div>
-      </section>
-
-      <section id="farmer-results" class="section discovery-section">
-        <div class="section-head compact-head">
-          <div>
-            <p class="eyebrow">おすすめ農家</p>
-            <h2>地域の農家を少し見てみる</h2>
-            <p>育て方や考え方を知ることで、地域の野菜が少し身近になります。</p>
-          </div>
-          <a class="more-link" href="farmers.html">すべての農家を見る →</a>
-        </div>
-        <div id="homepageFarmers" class="farm-grid home-farm-grid">
-          <p class="loading-text">農家情報を読み込んでいます...</p>
-        </div>
-      </section>
-
-      <section class="section next-links-section" aria-labelledby="next-links-title">
-        <div class="section-head compact-head">
-          <div>
-            <p class="eyebrow">さらに探す</p>
-            <h2 id="next-links-title">地域の野菜と、買える場所へ</h2>
-          </div>
-        </div>
-        <div class="next-link-grid">
-          <article class="next-link-card">
-            <img src="assets/seeds-cover.png" alt="地域に根差した野菜" />
-            <div>
-              <p class="eyebrow">地域に根差した野菜を見る</p>
-              <h3>茨城県内に残る在来種・固定種・地域品種の分布や背景を少しずつ整理しています。</h3>
-              <a class="button tertiary" href="seeds.html">地域の野菜を見る</a>
-            </div>
-          </article>
-          <article class="next-link-card">
-            <img src="assets/local-food-cover.png" alt="地域の野菜を扱う場所" />
-            <div>
-              <p class="eyebrow">地域の販売店を探す</p>
-              <h3>自然食品店、直売所、飲食店など、地域の野菜を買える・食べられる場所を探せます。</h3>
-              <a class="button tertiary" href="places.html">販売店を見る</a>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <section class="section feature-section region-links-section" aria-labelledby="region-links-title">
         <div class="section-head center-head">
           <p class="eyebrow">地域でつながる</p>
@@ -157,8 +81,8 @@
           </article>
           <article class="feature-card">
             <div class="feature-mark">✎</div>
-            <h3>農家さんへ</h3>
-            <p>話す・書く・URLを渡すだけで、掲載前のプロフィール下書きを作れます。内容は農家さん本人が確認・修正してから掲載する想定です。</p>
+            <h3>農家さん向けデモ</h3>
+            <p>短く話す・書くだけでも、掲載前のプロフィール下書きとして整えます。内容は農家さん本人が確認・修正してから掲載する想定です。</p>
             <a href="for-farmers.html">農家さん向けを見る →</a>
             <a class="feature-sub-link" href="profile-interview.html">プロフィール下書きを試す →</a>
           </article>
@@ -169,12 +93,11 @@
     <footer class="site-footer">
       <div class="footer-links footer-links-minimal">
         <a href="index.html">ホーム</a>
-        <a href="places.html">地域の販売店</a>
-        <a href="farmers.html">農家と出会う</a>
-        <a href="seeds.html">地域の野菜</a>
+        <a href="places.html">食べる</a>
+        <a href="places.html">買う</a>
+        <a href="learn.html">農を知る</a>
         <a href="for-farmers.html">農家さんへ</a>
         <a href="business.html">地域で使う</a>
-        <a href="mypage.html">マイページ</a>
         <a href="about.html">この活動について</a>
       </div>
     </footer>

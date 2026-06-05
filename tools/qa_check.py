@@ -13,17 +13,17 @@ REPORT_PATH = ROOT / "reports" / "qa_report.md"
 
 EXPECTED_NAV = [
     "ホーム",
-    "地域の販売店",
-    "農家と出会う",
-    "地域の野菜",
+    "食べる",
+    "買う",
+    "農を知る",
     "農家さんへ",
     "地域で使う",
-    "マイページ",
     "この活動について",
 ]
 
 REQUIRED_HTML = [
     "index.html",
+    "learn.html",
     "places.html",
     "farmers.html",
     "farmer.html",
