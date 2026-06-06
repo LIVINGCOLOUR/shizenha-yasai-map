@@ -1715,6 +1715,7 @@ button { font: inherit; }
     linear-gradient(135deg, rgba(255,253,247,.96), rgba(235,241,216,.62));
   box-shadow: var(--soft-shadow);
 }
+.about-hero-section h1,
 .about-hero-section h2 {
   margin: 10px 0 14px;
   color: var(--forest);
@@ -1879,6 +1880,7 @@ button { font: inherit; }
   margin-bottom: 12px;
   font-size: 1.25rem;
 }
+.future-card h3,
 .future-card h4 {
   margin: 0;
   color: var(--forest);

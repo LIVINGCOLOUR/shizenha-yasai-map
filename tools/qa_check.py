@@ -66,6 +66,7 @@ ALLOWED_BAD_TERM_SNIPPETS = [
     "無農薬で安心安全な野菜です",
     "「無農薬」という表現は、掲載時には慎重に扱う必要があります",
     "「安心安全」は受け取り方に個人差があるため",
+    "「自然派」「無農薬」といった大きな言葉だけでまとめず",
 ]
 
 ALLOWED_SOURCE_TYPES = {
@@ -266,6 +267,42 @@ def check_data() -> None:
         add_info("farmer.html?id=model-nouen alias found")
 
 
+def check_about_page() -> None:
+    about_path = ROOT / "about.html"
+    if not about_path.exists():
+        return
+    html = read_text(about_path)
+    required_headings = [
+        "この活動について",
+        "なぜ作るのか",
+        "大切にする考え方",
+        "掲載と確認について",
+        "機能特徴",
+        "事業としての考え方",
+        "需要検証上の懸念",
+        "今後の進め方",
+        "補足：地域に根差した野菜を守る意味",
+        "補足：競合・類似サービスとの差別化",
+        "参考リンク",
+    ]
+    for heading in required_headings:
+        if heading not in html:
+            add_error(f"about.html: missing required heading '{heading}'")
+    required_links = [
+        "https://www.maff.go.jp/j/jas/jas_kikaku/yuuki.html",
+        "https://www.maff.go.jp/j/jas/jas_kikaku/tokusai_a.html",
+        "https://www.maff.go.jp/j/seisan/kankyo/yuuki/organic_village.html",
+        "https://www.pref.gunma.jp/page/607993.html",
+        "https://www.city.soka.saitama.jp/cont/s1406/020/040/PAGE000000000000052473.html",
+        "https://www.tabechoku.com/",
+        "https://www.gene.affrc.go.jp/databases-traditional_varieties.php",
+    ]
+    for url in required_links:
+        if url not in html:
+            add_error(f"about.html: missing reference URL {url}")
+    add_info("about.html heading/link check completed")
+
+
 def write_report() -> None:
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     errors = [item for item in findings if item.level == "ERROR"]
@@ -296,6 +333,7 @@ def main() -> int:
     check_nav()
     check_local_references()
     check_data()
+    check_about_page()
     check_dangerous_terms()
     check_openai_key_scope()
     write_report()
