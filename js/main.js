@@ -39,7 +39,7 @@ const EAT_SCENE_LABELS = [
   "予約して行きたい",
 ];
 
-const EAT_FARMER_LABELS = ["やまだ農園", "〇〇自然農園"];
+const EAT_FARMER_LABELS = ["笠間農園", "〇〇自然農園"];
 
 const EAT_DEMO_PLACES = [
   {
@@ -48,10 +48,10 @@ const EAT_DEMO_PLACES = [
     type: "飲食店・ランチ",
     region: "石岡市八郷周辺",
     municipalities: ["石岡市"],
-    description: "地元農家の季節野菜を使った食事を楽しめるお店です。食べることをきっかけに、地域の農や野菜の背景に出会える場所です。",
+    description: "地元農家の季節野菜を使った食事を楽しめるお店です。地域の農や野菜の背景に触れられる場所です。",
     usedItems: ["季節の野菜", "米", "だいこん"],
-    connectedFarmers: [{ name: "やまだ農園", farmerId: "yamada-nouen" }],
-    visibleBackground: "やまだ農園の季節野菜を使ったメニューを通じて、八郷周辺の農の営みを感じられます。",
+    connectedFarmers: [{ name: "笠間農園", farmerId: "yamada-nouen" }],
+    visibleBackground: "笠間農園の季節野菜を使ったメニューを通じて、八郷周辺の農の営みを感じられます。",
     statusLabel: "デモ表示・店舗確認前",
     sceneTags: ["ランチ", "季節の野菜を楽しめる", "地域に根差した野菜を楽しめる", "農家の背景が見える", "予約して行きたい"],
     tags: ["地元野菜を使う店", "農家の背景が見える店", "ランチ", "季節の野菜を楽しめる"],
@@ -80,7 +80,7 @@ const EAT_DEMO_PLACES = [
     municipalities: ["水戸市", "茨城町"],
     description: "地元野菜を使った食事を通じて、作り手の背景を少し知るためのサンプル店舗です。",
     usedItems: ["季節の野菜", "米", "根菜"],
-    connectedFarmers: [{ name: "やまだ農園", farmerId: "yamada-nouen" }],
+    connectedFarmers: [{ name: "笠間農園", farmerId: "yamada-nouen" }],
     visibleBackground: "季節の野菜や米を使った料理から、地域の農家が続けている日々の営みに目を向けられます。",
     statusLabel: "デモ表示・店舗確認前",
     sceneTags: ["ディナー", "予約して行きたい", "地域に根差した野菜を楽しめる", "農家の背景が見える"],
@@ -267,6 +267,7 @@ function setupEatPage() {
   renderEatFilterButtons("eatFarmerFilters", EAT_FARMER_LABELS, selectedEatFarmers, "eat-farmer", "eatFarmer");
   renderEatPlaces();
   setupEatLocationButton();
+  setupEatPrefectureSelect();
 
   if (list.dataset.ready === "true") return;
   list.dataset.ready = "true";
@@ -278,6 +279,18 @@ function setupEatPage() {
     renderEatDetail(place);
     const panel = document.getElementById("eatDetailPanel");
     if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function setupEatPrefectureSelect() {
+  const select = document.getElementById("eatPrefectureSelect");
+  const note = document.getElementById("eatPrefectureNote");
+  if (!select || select.dataset.ready === "true") return;
+  select.dataset.ready = "true";
+  select.addEventListener("change", () => {
+    if (note) {
+      note.hidden = select.value === "茨城県";
+    }
   });
 }
 
@@ -985,6 +998,9 @@ function setupProfileInterviewDemo() {
 }
 
 async function requestProfileDraft(answers) {
+  if (!shouldRequestProfileDraftApi()) {
+    throw new Error("profile draft api is not available on local static server");
+  }
   const response = await fetch("/api/profile-draft", {
     method: "POST",
     headers: {
@@ -1008,6 +1024,11 @@ async function requestProfileDraft(answers) {
     note: getProfileDraftStatusNote(mode, result.note),
     draft: normalizeProfileDraft(result.draft),
   };
+}
+
+function shouldRequestProfileDraftApi() {
+  const staticServerPorts = new Set(["8000", "8010", "8020"]);
+  return !(["localhost", "127.0.0.1"].includes(window.location.hostname) && staticServerPorts.has(window.location.port));
 }
 
 function createProfileDraftAnswersPayload(answers) {

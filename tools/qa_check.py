@@ -17,7 +17,7 @@ EXPECTED_NAV = [
     "買う",
     "農を知る",
     "農家さんへ",
-    "地域で使う",
+    "飲食店・販売店の方へ",
     "この活動について",
 ]
 
@@ -144,6 +144,18 @@ def check_nav() -> None:
                 add_error(f"{relative}: nav '食べる' must link to eat.html")
             if '<a href="places.html">買う</a>' not in nav_html:
                 add_error(f"{relative}: nav '買う' must link to places.html")
+            if '<a href="business.html">飲食店・販売店の方へ</a>' not in nav_html:
+                add_error(f"{relative}: nav business label/link mismatch")
+
+
+def check_footer_nav_removed() -> None:
+    for relative in REQUIRED_HTML:
+        path = ROOT / relative
+        if not path.exists():
+            continue
+        html = read_text(path)
+        if 'class="footer-links' in html:
+            add_error(f"{relative}: footer navigation should be removed")
 
 
 def is_external_or_anchor(value: str) -> bool:
@@ -236,6 +248,9 @@ def check_data() -> None:
         for required_id in {"yamada-nouen", "model-shizen-nouen"}:
             if required_id not in ids:
                 add_error(f"data/farmers.json: missing farmer id {required_id}")
+        first = next((item for item in farmers if isinstance(item, dict) and item.get("id") == "yamada-nouen"), None)
+        if first and first.get("name") != "笠間農園":
+            add_error("data/farmers.json: yamada-nouen display name should be 笠間農園")
         add_info(f"data/farmers.json count: {len(farmers)}")
 
     if isinstance(places, list):
@@ -303,6 +318,30 @@ def check_about_page() -> None:
     add_info("about.html heading/link check completed")
 
 
+def check_polished_wording() -> None:
+    eat_html = read_text(ROOT / "eat.html") if (ROOT / "eat.html").exists() else ""
+    if '<select id="eatPrefectureSelect"' not in eat_html:
+        add_error("eat.html: prefecture select not found")
+    if "食べることをきっかけに、育てている農家や野菜の背景にも少しずつ出会える入口です。" in eat_html:
+        add_error("eat.html: removed hero note still found")
+
+    for relative in ["business.html", "for-farmers.html"]:
+        path = ROOT / relative
+        if path.exists() and "AI" in read_text(path):
+            add_error(f"{relative}: visible wording should not include 'AI'")
+
+    text_targets = list(ROOT.glob("*.html")) + list((ROOT / "data").glob("*.json")) + [ROOT / "js" / "main.js"]
+    for path in text_targets:
+        text = read_text(path)
+        if "やまだ農園" in text:
+            add_error(f"{path.relative_to(ROOT)}: display name やまだ農園 remains")
+
+    index_html = read_text(ROOT / "index.html") if (ROOT / "index.html").exists() else ""
+    for removed in ["地域で使う入口", "農家さん向けデモ"]:
+        if removed in index_html:
+            add_error(f"index.html: removed wording still found: {removed}")
+
+
 def write_report() -> None:
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     errors = [item for item in findings if item.level == "ERROR"]
@@ -331,9 +370,11 @@ def write_report() -> None:
 def main() -> int:
     check_required_files()
     check_nav()
+    check_footer_nav_removed()
     check_local_references()
     check_data()
     check_about_page()
+    check_polished_wording()
     check_dangerous_terms()
     check_openai_key_scope()
     write_report()

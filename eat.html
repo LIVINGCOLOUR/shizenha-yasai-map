@@ -25,7 +25,7 @@
           <a href="places.html">買う</a>
           <a href="learn.html">農を知る</a>
           <a href="for-farmers.html">農家さんへ</a>
-          <a href="business.html">地域で使う</a>
+          <a href="business.html">飲食店・販売店の方へ</a>
           <a href="about.html">この活動について</a>
         </nav>
       </div>
@@ -37,7 +37,6 @@
           <p class="section-eyebrow">地域で食べる</p>
           <h1 id="eat-title">地元野菜を使う飲食店やカフェを探す</h1>
           <p>このサイトに掲載されている農家の野菜を使う飲食店やカフェを、地域や利用シーンから探せます。</p>
-          <p class="eat-hero-note">食べることをきっかけに、育てている農家や野菜の背景にも少しずつ出会える入口です。</p>
         </div>
       </section>
 
@@ -51,10 +50,19 @@
           <button class="button secondary eat-location-button" type="button" data-eat-location-button>現在地から近い地域を表示する</button>
         </div>
         <p id="eatLocationStatus" class="eat-filter-status">位置情報は地域の候補表示にのみ使います。</p>
-        <div class="eat-prefecture-box">
-          <span class="eat-prefecture-label">県表示</span>
-          <strong>茨城県</strong>
-        </div>
+        <label class="eat-prefecture-select">
+          <span>都道府県を選ぶ：</span>
+          <select id="eatPrefectureSelect" name="prefecture">
+            <option value="茨城県" selected>茨城県</option>
+            <option value="栃木県">栃木県</option>
+            <option value="群馬県">群馬県</option>
+            <option value="千葉県">千葉県</option>
+            <option value="埼玉県">埼玉県</option>
+            <option value="東京都">東京都</option>
+            <option value="神奈川県">神奈川県</option>
+          </select>
+        </label>
+        <p id="eatPrefectureNote" class="eat-prefecture-note" hidden>現在は茨城県の市町村タグをデモ表示しています。</p>
         <div id="eatRegionFilters" class="eat-filter-tags" aria-label="市町村で絞り込む"></div>
       </section>
 
@@ -103,17 +111,6 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-links footer-links-minimal">
-        <a href="index.html">ホーム</a>
-        <a href="eat.html">食べる</a>
-        <a href="places.html">買う</a>
-        <a href="learn.html">農を知る</a>
-        <a href="for-farmers.html">農家さんへ</a>
-        <a href="business.html">地域で使う</a>
-        <a href="about.html">この活動について</a>
-      </div>
-    </footer>
   </div>
   <script src="js/main.js"></script>
 </body>
