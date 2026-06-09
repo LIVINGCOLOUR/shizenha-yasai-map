@@ -738,7 +738,7 @@ function createYamadaFarmerDetailHtml(farmer) {
   const supportItems = (Array.isArray(farmer.supportWays) ? farmer.supportWays : [])
     .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join("");
-  const sourceNote = farmer.profileSummary || farmer.sourceNotes || "公開情報をもとに作成しています。最新情報は公式情報をご確認ください。";
+  const sourceNote = farmer.profileSummary || "";
 
   return `
     <div class="yamada-profile-shell">
@@ -803,7 +803,7 @@ function createYamadaFarmerDetailHtml(farmer) {
         <p class="section-eyebrow">農園の想い</p>
         <h2>${escapeHtml(farmer.philosophyTitle)}</h2>
         <p>${escapeHtml(farmer.description)}</p>
-        <p class="yamada-source-note">${escapeHtml(sourceNote)}</p>
+        ${sourceNote ? `<p class="yamada-source-note">${escapeHtml(sourceNote)}</p>` : ""}
       </section>
 
       <section class="yamada-info-card">
