@@ -728,6 +728,7 @@ function createYamadaFarmerDetailHtml(farmer) {
   const statusText = getFarmerStatusText(farmer);
   const video = farmer.harvestVideo || {};
   const imageSrc = getFarmerImageSrc(farmer);
+  const contact = farmer.contact || {};
   const externalLinks = (Array.isArray(farmer.externalLinks) ? farmer.externalLinks : [])
     .map((link) => {
       const key = Object.keys(link)[0];
@@ -761,7 +762,6 @@ function createYamadaFarmerDetailHtml(farmer) {
 
       <section class="yamada-harvest-card" aria-labelledby="yamada-video-title">
         <div class="yamada-section-head">
-          <p class="section-eyebrow">QRコードから見る入口</p>
           <h2 id="yamada-video-title">最近の収穫動画</h2>
         </div>
         <div class="harvest-video-shell" data-video-shell>
@@ -822,11 +822,23 @@ function createYamadaFarmerDetailHtml(farmer) {
             <dd>${escapeHtml(farmer.mainProducts)}</dd>
           </div>
           <div>
-            <dt>直販</dt>
+            <dt>販売</dt>
             <dd>${escapeHtml(summarizeSalesChannels(farmer))}</dd>
           </div>
+          <div>
+            <dt>住所</dt>
+            <dd>${escapeHtml(contact.address || "公式情報で確認")}</dd>
+          </div>
+          <div>
+            <dt>TEL</dt>
+            <dd>${contact.tel ? `<a href="tel:${escapeAttribute(contact.tel.replace(/-/g, ""))}">${escapeHtml(contact.tel)}</a>` : "公式情報で確認"}</dd>
+          </div>
+          <div>
+            <dt>MAIL</dt>
+            <dd>${contact.mail ? `<a href="mailto:${escapeAttribute(contact.mail)}">${escapeHtml(contact.mail)}</a>` : "公式情報で確認"}</dd>
+          </div>
         </dl>
-        <ul>${supportItems}</ul>
+        ${supportItems ? `<ul>${supportItems}</ul>` : ""}
       </section>
 
       <section class="yamada-links-card">
@@ -837,11 +849,6 @@ function createYamadaFarmerDetailHtml(farmer) {
         </div>
       </section>
 
-      <section class="yamada-future-card">
-        <p class="section-eyebrow">将来の導線</p>
-        <h2>今日の一皿カードへつなげる構想</h2>
-        <p>メニュー表のQRから収穫動画、農家プロフィール、今日の一皿カードへ進む流れを想定しています。プレート名、店名、農園名、店主の想い、ハッシュタグ、農家ページへのQRを、あとから追加できるようにします。</p>
-      </section>
     </div>
   `;
 }
@@ -1610,10 +1617,10 @@ function summarizeVisitOptions(farmer) {
 
 function getFarmerImageSrc(farmer) {
   const imageMap = {
-    "yamada-nouen": "assets/farm-yamada-cover.png",
+    "yamada-nouen": "assets/images/yamada/yamada01.jpg",
     "model-shizen-nouen": "assets/seedlings-cover.png",
   };
-  return imageMap[farmer.id] || "assets/farm-yamada-cover.png";
+  return farmer.image || imageMap[farmer.id] || "assets/farm-yamada-cover.png";
 }
 
 function getFarmerStatusText(farmer) {
