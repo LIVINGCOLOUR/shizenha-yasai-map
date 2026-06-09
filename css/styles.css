@@ -2440,6 +2440,14 @@ button { font: inherit; }
   border-radius: 14px;
   background: #20392a;
 }
+.harvest-video-warning {
+  margin: 8px 0 0;
+  color: #8b5a21;
+  font-size: .76rem;
+  font-weight: 900;
+  line-height: 1.7;
+}
+.harvest-video-warning[hidden] { display: none; }
 .harvest-photo-preview-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

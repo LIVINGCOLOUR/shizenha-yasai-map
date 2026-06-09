@@ -57,7 +57,7 @@
             <div class="harvest-field">
               <label for="harvestVideo">収穫動画</label>
               <input id="harvestVideo" type="file" accept="video/*" data-harvest-video-input />
-              <p class="harvest-field-note">動画はこのブラウザ内のデモ保存だけです。実運用では、権限確認とクラウド保存が必要です。</p>
+              <p class="harvest-field-note">動画はこのブラウザ内のデモ保存だけです。iPhoneの.movも選択できますが、ブラウザによっては再生できない場合があります。</p>
               <div class="harvest-video-preview" data-harvest-video-preview>
                 <p class="harvest-empty-preview">動画を選ぶと、ここにプレビューが表示されます。</p>
               </div>
@@ -88,14 +88,14 @@
           <div class="harvest-admin-card harvest-admin-notice">
             <h2>現在の保存について</h2>
             <p>
-              保存先は <code>shizenha_yasai_harvest_records_v1</code> です。
-              このデモでは、同じブラウザで確認するためにlocalStorageを使っています。
+              保存先は、このブラウザ内の <code>IndexedDB</code> です。
+              このデモでは、同じブラウザで確認するために動画・写真を一時保存しています。
             </p>
             <ul>
+              <li>この画面はデモ用です。動画・写真はこのブラウザ内に保存されます。</li>
               <li>ログインや権限管理はまだありません。</li>
-              <li>動画・写真のサーバー保存はまだありません。</li>
               <li>別の端末やブラウザには共有されません。</li>
-              <li>将来は、管理権限とクラウド保存を組み合わせる想定です。</li>
+              <li>本番では、ログイン機能とクラウド保存に置き換える想定です。</li>
             </ul>
           </div>
         </div>
