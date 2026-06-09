@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>収穫動画 | 自然派やさいマップ</title>
+  <meta name="description" content="QRコードから開く収穫動画ページのデモです。動画のあと、農園プロフィールへ進みます。" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="farmer-detail-page harvest-video-page">
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="header-top">
+        <a class="brand-link" href="index.html">
+          <span class="brand-mark" aria-hidden="true">⌁</span>
+          <div class="brand-copy">
+            <p class="brand-name">自然派やさいマップ</p>
+            <p class="brand-subtitle">自然に寄り添う農家をめぐる</p>
+          </div>
+        </a>
+        <nav class="main-nav" aria-label="メインナビゲーション">
+          <a href="index.html">ホーム</a>
+          <a href="eat.html">食べる</a>
+          <a href="places.html">買う</a>
+          <a href="learn.html">農を知る</a>
+          <a href="for-farmers.html">農家さんへ</a>
+          <a href="business.html">飲食店・販売店の方へ</a>
+          <a href="about.html">この活動について</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section-block detail-section">
+        <div class="harvest-page-shell">
+          <div class="detail-back-links yamada-detail-back">
+            <a href="farmer.html?id=yamada-nouen">← やまだ農園へ戻る</a>
+            <a href="harvest-yamada-2025-06-16.html">写真ギャラリーを見る →</a>
+          </div>
+
+          <section class="yamada-harvest-card">
+            <div class="harvest-page-intro">
+              <p class="section-eyebrow">QRコードから見る収穫動画</p>
+              <h1>今朝の収穫の様子</h1>
+              <p>2025年6月16日。八郷の畑から、農園プロフィールへ進むための短い入口です。</p>
+            </div>
+            <div class="harvest-video-shell" data-video-shell>
+              <video
+                class="harvest-video"
+                data-harvest-video
+                data-video-src="assets/videos/yamada-harvest-2025-06-16.mp4"
+                poster="assets/farm-yamada-cover.png"
+                controls
+                muted
+                playsinline
+                preload="none"
+                hidden
+              ></video>
+              <div class="harvest-video-placeholder" data-video-placeholder>
+                <span>動画差し替え待ち</span>
+                <p>収穫動画を配置すると、この画面で再生できます。</p>
+                <small>assets/videos/yamada-harvest-2025-06-16.mp4</small>
+              </div>
+            </div>
+            <p class="harvest-page-note">動画のあと、農園プロフィールへ進みます。自動遷移しない場合は、下のボタンから進んでください。</p>
+          </section>
+
+          <a class="harvest-profile-button" href="farmer.html?id=yamada-nouen" data-harvest-profile-link>
+            <span>動画を見たあとに</span>
+            <strong>今すぐ農園プロフィールを見る</strong>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>

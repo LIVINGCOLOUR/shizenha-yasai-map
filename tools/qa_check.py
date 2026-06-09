@@ -38,6 +38,9 @@ REQUIRED_HTML = [
     "mypage.html",
     "about.html",
     "map.html",
+    "harvest-video.html",
+    "harvest-yamada-2025-06-16.html",
+    "harvest-archive.html",
 ]
 
 REQUIRED_JSON = [
@@ -169,7 +172,7 @@ def is_external_or_anchor(value: str) -> bool:
 
 
 def check_local_references() -> None:
-    attr_pattern = re.compile(r"""(?:href|src)=["']([^"']+)["']""", re.IGNORECASE)
+    attr_pattern = re.compile(r"""(?<![\w-])(?:href|src)=["']([^"']+)["']""", re.IGNORECASE)
     for path in sorted(ROOT.glob("*.html")):
         html = read_text(path)
         for match in attr_pattern.finditer(html):
@@ -249,8 +252,8 @@ def check_data() -> None:
             if required_id not in ids:
                 add_error(f"data/farmers.json: missing farmer id {required_id}")
         first = next((item for item in farmers if isinstance(item, dict) and item.get("id") == "yamada-nouen"), None)
-        if first and first.get("name") != "笠間農園":
-            add_error("data/farmers.json: yamada-nouen display name should be 笠間農園")
+        if first and first.get("name") != "やまだ農園":
+            add_error("data/farmers.json: yamada-nouen display name should be やまだ農園")
         add_info(f"data/farmers.json count: {len(farmers)}")
 
     if isinstance(places, list):
@@ -333,8 +336,8 @@ def check_polished_wording() -> None:
     text_targets = list(ROOT.glob("*.html")) + list((ROOT / "data").glob("*.json")) + [ROOT / "js" / "main.js"]
     for path in text_targets:
         text = read_text(path)
-        if "やまだ農園" in text:
-            add_error(f"{path.relative_to(ROOT)}: display name やまだ農園 remains")
+        if "笠間農園" in text:
+            add_error(f"{path.relative_to(ROOT)}: old display name 笠間農園 remains")
 
     index_html = read_text(ROOT / "index.html") if (ROOT / "index.html").exists() else ""
     for removed in ["地域で使う入口", "農家さん向けデモ"]:

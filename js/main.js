@@ -39,7 +39,7 @@ const EAT_SCENE_LABELS = [
   "予約して行きたい",
 ];
 
-const EAT_FARMER_LABELS = ["笠間農園", "〇〇自然農園"];
+const EAT_FARMER_LABELS = ["やまだ農園", "〇〇自然農園"];
 
 const EAT_DEMO_PLACES = [
   {
@@ -50,8 +50,8 @@ const EAT_DEMO_PLACES = [
     municipalities: ["石岡市"],
     description: "地元農家の季節野菜を使った食事を楽しめるお店です。地域の農や野菜の背景に触れられる場所です。",
     usedItems: ["季節の野菜", "米", "だいこん"],
-    connectedFarmers: [{ name: "笠間農園", farmerId: "yamada-nouen" }],
-    visibleBackground: "笠間農園の季節野菜を使ったメニューを通じて、八郷周辺の農の営みを感じられます。",
+    connectedFarmers: [{ name: "やまだ農園", farmerId: "yamada-nouen" }],
+    visibleBackground: "やまだ農園の季節野菜を使ったメニューを通じて、八郷周辺の農の営みを感じられます。",
     statusLabel: "デモ表示・店舗確認前",
     sceneTags: ["ランチ", "季節の野菜を楽しめる", "地域に根差した野菜を楽しめる", "農家の背景が見える", "予約して行きたい"],
     tags: ["地元野菜を使う店", "農家の背景が見える店", "ランチ", "季節の野菜を楽しめる"],
@@ -80,7 +80,7 @@ const EAT_DEMO_PLACES = [
     municipalities: ["水戸市", "茨城町"],
     description: "地元野菜を使った食事を通じて、作り手の背景を少し知るためのサンプル店舗です。",
     usedItems: ["季節の野菜", "米", "根菜"],
-    connectedFarmers: [{ name: "笠間農園", farmerId: "yamada-nouen" }],
+    connectedFarmers: [{ name: "やまだ農園", farmerId: "yamada-nouen" }],
     visibleBackground: "季節の野菜や米を使った料理から、地域の農家が続けている日々の営みに目を向けられます。",
     statusLabel: "デモ表示・店舗確認前",
     sceneTags: ["ディナー", "予約して行きたい", "地域に根差した野菜を楽しめる", "農家の背景が見える"],
@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setupAiProfileDemoDialog();
   setupConceptDemoDialog();
   setupProfileInterviewDemo();
+  setupDeferredHarvestVideos();
 
   if (isPage("farmers")) {
     loadFarmersList();
@@ -127,6 +128,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   if (isPage("seeds")) {
     loadSeedsMap();
+  }
+  if (isPage("harvest-video")) {
+    setupHarvestVideoPage();
   }
 });
 
@@ -599,6 +603,7 @@ function loadFarmerDetail() {
       document.title = `${farmer.name} | 自然派やさいマップ`;
       currentDetailFarmer = farmer;
       container.innerHTML = createFarmerDetailHtml(farmer);
+      setupDeferredHarvestVideos();
     })
     .catch(() => {
       const container = document.getElementById("farmerDetail");
@@ -609,6 +614,10 @@ function loadFarmerDetail() {
 }
 
 function createFarmerDetailHtml(farmer) {
+  if (farmer.id === "yamada-nouen") {
+    return createYamadaFarmerDetailHtml(farmer);
+  }
+
   const supportWays = Array.isArray(farmer.supportWays) ? farmer.supportWays : [];
   const supportItems = supportWays
     .map((item) => `<li>${escapeHtml(item)}</li>`)
@@ -710,6 +719,128 @@ function createFarmerDetailHtml(farmer) {
           <h3>${escapeHtml(statusText)}</h3>
           <p>${escapeHtml(farmer.sourceNotes)}</p>
         </div>
+      </section>
+    </div>
+  `;
+}
+
+function createYamadaFarmerDetailHtml(farmer) {
+  const statusText = getFarmerStatusText(farmer);
+  const video = farmer.harvestVideo || {};
+  const imageSrc = getFarmerImageSrc(farmer);
+  const externalLinks = (Array.isArray(farmer.externalLinks) ? farmer.externalLinks : [])
+    .map((link) => {
+      const key = Object.keys(link)[0];
+      return `<a class="yamada-link-chip" href="${escapeAttribute(link[key])}" target="_blank" rel="noopener noreferrer">${escapeHtml(key)}</a>`;
+    })
+    .join("");
+  const supportItems = (Array.isArray(farmer.supportWays) ? farmer.supportWays : [])
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join("");
+  const sourceNote = farmer.profileSummary || farmer.sourceNotes || "公開情報をもとに作成しています。最新情報は公式情報をご確認ください。";
+
+  return `
+    <div class="yamada-profile-shell">
+      <div class="detail-back-links yamada-detail-back">
+        <a href="index.html">← トップへ戻る</a>
+        <a href="map.html#${encodeURIComponent(farmer.id)}">地域マップで見る →</a>
+      </div>
+
+      <article class="yamada-hero-card">
+        <div class="yamada-hero-image">
+          <img src="${escapeAttribute(imageSrc)}" alt="${escapeAttribute(farmer.name)}の畑イメージ" />
+          <span class="status-pill">${escapeHtml(statusText)}</span>
+        </div>
+        <div class="yamada-hero-copy">
+          <p class="section-eyebrow">農家プロフィール</p>
+          <h1>${escapeHtml(farmer.name)}</h1>
+          <p class="yamada-area">${escapeHtml(farmer.area)}</p>
+          <p>${escapeHtml(farmer.shortDescription)}</p>
+        </div>
+      </article>
+
+      <section class="yamada-harvest-card" aria-labelledby="yamada-video-title">
+        <div class="yamada-section-head">
+          <p class="section-eyebrow">QRコードから見る入口</p>
+          <h2 id="yamada-video-title">最近の収穫動画</h2>
+        </div>
+        <div class="harvest-video-shell" data-video-shell>
+          <video
+            class="harvest-video"
+            data-harvest-video
+            data-video-src="${escapeAttribute(video.src || "assets/videos/yamada-harvest-2025-06-16.mp4")}"
+            poster="${escapeAttribute(imageSrc)}"
+            controls
+            muted
+            playsinline
+            preload="none"
+            hidden
+          ></video>
+          <div class="harvest-video-placeholder" data-video-placeholder>
+            <span>動画差し替え待ち</span>
+            <p>動画ファイルを配置すると、ここに収穫の様子が表示されます。</p>
+            <small>${escapeHtml(video.src || "assets/videos/yamada-harvest-2025-06-16.mp4")}</small>
+          </div>
+        </div>
+        <div class="harvest-video-caption">
+          <strong>${escapeHtml(video.title || "今朝の収穫の様子")}</strong>
+          <span>${escapeHtml(video.dateLabel || "2025年6月16日")}</span>
+        </div>
+      </section>
+
+      <div class="yamada-harvest-links">
+        <a class="yamada-large-link" href="${escapeAttribute(video.galleryUrl || "harvest-yamada-2025-06-16.html")}">
+          <span>2025年6月16日の収穫風景</span>
+          <strong>写真ギャラリーを見る</strong>
+        </a>
+        <a class="yamada-archive-link" href="${escapeAttribute(video.archiveUrl || "harvest-archive.html")}">
+          <span>過去の収穫風景</span>
+          <strong>これまでの記録を見る</strong>
+        </a>
+      </div>
+
+      <section class="yamada-story-card">
+        <p class="section-eyebrow">農園の想い</p>
+        <h2>${escapeHtml(farmer.philosophyTitle)}</h2>
+        <p>${escapeHtml(farmer.description)}</p>
+        <p class="yamada-source-note">${escapeHtml(sourceNote)}</p>
+      </section>
+
+      <section class="yamada-info-card">
+        <p class="section-eyebrow">基本情報</p>
+        <dl>
+          <div>
+            <dt>地域</dt>
+            <dd>${escapeHtml(farmer.area)}</dd>
+          </div>
+          <div>
+            <dt>作り手</dt>
+            <dd>${escapeHtml(farmer.ownerName || "山田晃太郎さん")}</dd>
+          </div>
+          <div>
+            <dt>主な作物</dt>
+            <dd>${escapeHtml(farmer.mainProducts)}</dd>
+          </div>
+          <div>
+            <dt>直販</dt>
+            <dd>${escapeHtml(summarizeSalesChannels(farmer))}</dd>
+          </div>
+        </dl>
+        <ul>${supportItems}</ul>
+      </section>
+
+      <section class="yamada-links-card">
+        <p class="section-eyebrow">関連リンク</p>
+        <h2>最新情報は公式情報へ</h2>
+        <div class="yamada-link-list">
+          ${externalLinks || "<span>関連リンクは準備中です。</span>"}
+        </div>
+      </section>
+
+      <section class="yamada-future-card">
+        <p class="section-eyebrow">将来の導線</p>
+        <h2>今日の一皿カードへつなげる構想</h2>
+        <p>メニュー表のQRから収穫動画、農家プロフィール、今日の一皿カードへ進む流れを想定しています。プレート名、店名、農園名、店主の想い、ハッシュタグ、農家ページへのQRを、あとから追加できるようにします。</p>
       </section>
     </div>
   `;
@@ -857,6 +988,59 @@ function getConceptDemoDialog() {
     document.body.classList.remove("modal-open");
   });
   return dialog;
+}
+
+function setupDeferredHarvestVideos() {
+  const videos = Array.from(document.querySelectorAll("[data-video-src]"));
+  videos.forEach((video) => {
+    if (video.dataset.videoReady === "true") return;
+    video.dataset.videoReady = "true";
+    const src = video.dataset.videoSrc;
+    const shell = video.closest("[data-video-shell]");
+    const placeholder = shell ? shell.querySelector("[data-video-placeholder]") : null;
+    if (!src || video.dataset.videoAvailable !== "true") {
+      showVideoPlaceholder(video, placeholder);
+      return;
+    }
+
+    fetch(src, { method: "HEAD" })
+      .then((response) => {
+        if (!response.ok) {
+          showVideoPlaceholder(video, placeholder);
+          return;
+        }
+        video.src = src;
+        video.hidden = false;
+        if (placeholder) placeholder.hidden = true;
+        video.load();
+      })
+      .catch(() => {
+        showVideoPlaceholder(video, placeholder);
+      });
+  });
+}
+
+function showVideoPlaceholder(video, placeholder) {
+  video.hidden = true;
+  video.removeAttribute("src");
+  if (placeholder) placeholder.hidden = false;
+}
+
+function setupHarvestVideoPage() {
+  const profileLink = document.querySelector("[data-harvest-profile-link]");
+  const video = document.querySelector("[data-harvest-video]");
+  const params = new URLSearchParams(window.location.search);
+  const farmerId = params.get("farmer") || "yamada-nouen";
+  const profileUrl = `farmer.html?id=${encodeURIComponent(farmerId)}`;
+
+  if (profileLink) {
+    profileLink.setAttribute("href", profileUrl);
+  }
+  if (video) {
+    video.addEventListener("ended", () => {
+      window.location.href = profileUrl;
+    });
+  }
 }
 
 function setupProfileInterviewDemo() {

@@ -1,29 +1,59 @@
 [
   {
     "id": "yamada-nouen",
-    "name": "笠間農園",
-    "area": "茨城県石岡市八郷周辺",
-    "regionLabel": "石岡市八郷周辺",
-    "farmingStyle": "土とたねを大切にする農 / 米 / 多品目野菜",
-    "mainProducts": "米 / 多品目野菜",
-    "seedTags": "在来種・固定種・自家採種：公開情報では未確認",
-    "philosophyTitle": "農業が持つ豊かな世界を分かち合う",
-    "shortDescription": "茨城県石岡市八郷周辺で、米や多品目の野菜を育てる農園。公開情報をもとに、地域の自然や季節とともにある農の営みを紹介します。",
-    "description": "地域の自然や季節とともにある農の営みを伝え、土やたねをつなぐ暮らしを紹介することを大切にしています。購入・定期便・訪問・体験については、農家さんの公式情報を確認してください。",
+    "name": "やまだ農園",
+    "area": "茨城県石岡市八郷",
+    "regionLabel": "石岡市八郷",
+    "ownerName": "山田晃太郎さん・麻衣子さん",
+    "farmingStyle": "自然に寄り添う農 / 米 / 多品目野菜",
+    "mainProducts": "米 / 季節の野菜 / 多品目野菜",
+    "seedTags": "地域に根差した野菜への関心：公開情報をもとに確認中",
+    "philosophyTitle": "八郷の里山で、農のある暮らしを続ける",
+    "shortDescription": "朝の澄んだ空気の中で、その季節の野菜を丁寧に育てています。八郷の里山で、自然のリズムに寄り添う農のある暮らしを続けています。",
+    "description": "やまだ農園は、八郷の里山で、米や季節の野菜を育てています。野菜を届けるだけでなく、畑の様子やその時々の想いも一緒に届けることを大切にしています。食べる人が、野菜の向こうにある朝の畑や作り手の姿を少し感じられるようなつながりを目指しています。",
+    "profileSummary": "公式プロフィールでは、2017年秋に旧八郷町で有機農業を始め、笠間市の有機農業研修所で学んだ後に独立したことが紹介されています。現在の詳しい栽培方法や販売方法は、公式情報をご確認ください。",
+    "harvestVideo": {
+      "title": "今朝の収穫の様子",
+      "dateLabel": "2025年6月16日",
+      "src": "assets/videos/yamada-harvest-2025-06-16.mp4",
+      "profileUrl": "farmer.html?id=yamada-nouen",
+      "galleryUrl": "harvest-yamada-2025-06-16.html",
+      "archiveUrl": "harvest-archive.html"
+    },
+    "galleryHighlights": [
+      "朝の畑",
+      "季節の野菜",
+      "収穫後の手元"
+    ],
     "supportWays": [
       "公式サイトで情報を確認する",
-      "活動を知る",
-      "購入・定期便・訪問・体験は公式情報を確認する"
+      "旬の野菜セットを確認する",
+      "地域での活動を知る"
     ],
     "salesChannels": [
-      "購入・定期便・訪問・体験は公式情報を確認"
+      "旬の野菜セットの直販：公式情報で確認"
     ],
     "externalLinks": [
       {
         "公式サイト": "https://yasatoyamadanouen.amebaownd.com/"
+      },
+      {
+        "Instagram": "https://www.instagram.com/yamadanouen/"
+      },
+      {
+        "八郷・かや屋根みんなの広場": "https://www.yasato-kayayaneminnnanohiroba.com/"
+      },
+      {
+        "茨城アグリサポート（農園紹介）": "https://i-agri-support.jp/?p=360"
+      },
+      {
+        "茨城アグリサポート（5年の軌跡）": "https://i-agri-support.jp/?p=671"
+      },
+      {
+        "農と自然のさんぽみち": "https://ami2.exblog.jp/"
       }
     ],
-    "sourceNotes": "公式サイトなどの公開情報をもとに作成。本人確認前のため、購入・定期便・訪問・体験の可否は公式情報を確認してください。",
+    "sourceNotes": "公式サイト、公式プロフィール、農産物のご案内、茨城アグリサポート記事などの公開情報をもとに作成。本人確認前のため、最新の販売方法・訪問可否・体験情報は公式情報をご確認ください。",
     "verifiedByFarmer": false,
     "isModel": false,
     "interestLabels": [
