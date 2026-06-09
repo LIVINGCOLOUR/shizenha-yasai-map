@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>収穫記録を登録する | 自然派やさいマップ</title>
+  <meta name="description" content="やまだ農園の収穫動画と写真を登録する構想デモです。実際のサーバー保存は行いません。" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="farmer-detail-page harvest-admin-page">
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="header-top">
+        <a class="brand-link" href="index.html">
+          <span class="brand-mark" aria-hidden="true">⌁</span>
+          <div class="brand-copy">
+            <p class="brand-name">自然派やさいマップ</p>
+            <p class="brand-subtitle">自然に寄り添う農家をめぐる</p>
+          </div>
+        </a>
+        <nav class="main-nav" aria-label="メインナビゲーション">
+          <a href="index.html">ホーム</a>
+          <a href="eat.html">食べる</a>
+          <a href="places.html">買う</a>
+          <a href="learn.html">農を知る</a>
+          <a href="for-farmers.html">農家さんへ</a>
+          <a href="business.html">飲食店・販売店の方へ</a>
+          <a href="about.html">この活動について</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section-block detail-section">
+        <div class="harvest-page-shell">
+          <div class="detail-back-links yamada-detail-back">
+            <a href="farmer.html?id=yamada-nouen">← やまだ農園へ戻る</a>
+            <a href="harvest-yamada-2025-06-16.html">収穫写真を見る →</a>
+          </div>
+
+          <div class="harvest-admin-card">
+            <p class="section-eyebrow">構想デモ</p>
+            <h1>収穫記録を登録する</h1>
+            <p>
+              やまだ農園の収穫動画、写真、ひとことを登録する画面イメージです。
+              現在はブラウザ内だけに保存され、サーバー保存やファイル送信は行いません。
+            </p>
+          </div>
+
+          <form class="harvest-admin-form harvest-admin-card" data-harvest-admin-form>
+            <div class="harvest-field">
+              <label for="harvestDate">投稿日</label>
+              <input id="harvestDate" type="date" data-harvest-date required />
+            </div>
+
+            <div class="harvest-field">
+              <label for="harvestVideo">収穫動画</label>
+              <input id="harvestVideo" type="file" accept="video/*" data-harvest-video-input />
+              <p class="harvest-field-note">動画はこのブラウザ内のデモ保存だけです。実運用では、権限確認とクラウド保存が必要です。</p>
+              <div class="harvest-video-preview" data-harvest-video-preview>
+                <p class="harvest-empty-preview">動画を選ぶと、ここにプレビューが表示されます。</p>
+              </div>
+            </div>
+
+            <div class="harvest-field">
+              <label for="harvestPhotos">収穫写真</label>
+              <input id="harvestPhotos" type="file" accept="image/*" multiple data-harvest-photo-input />
+              <p class="harvest-field-note">複数枚を選べます。保存容量を超える大きなファイルは、実運用の保存方式に差し替える想定です。</p>
+              <div class="harvest-photo-preview-grid" data-harvest-photo-preview>
+                <p class="harvest-empty-preview">写真を選ぶと、ここにサムネイルが表示されます。</p>
+              </div>
+            </div>
+
+            <div class="harvest-field">
+              <label for="harvestNote">ひとこと</label>
+              <textarea id="harvestNote" data-harvest-note maxlength="140" rows="4" placeholder="例：今朝は空気が澄んでいて、葉物がみずみずしく育っていました。"></textarea>
+              <p class="harvest-field-note">140文字まで。農園ページでは、最近の収穫動画の下に表示されます。</p>
+            </div>
+
+            <div class="harvest-admin-actions">
+              <button class="button primary-button" type="submit">この内容を保存する</button>
+              <a class="button secondary-button" href="farmer.html?id=yamada-nouen">やまだ農園ページで確認する</a>
+            </div>
+            <p class="harvest-admin-status" data-harvest-admin-status role="status" aria-live="polite"></p>
+          </form>
+
+          <div class="harvest-admin-card harvest-admin-notice">
+            <h2>現在の保存について</h2>
+            <p>
+              保存先は <code>shizenha_yasai_harvest_records_v1</code> です。
+              このデモでは、同じブラウザで確認するためにlocalStorageを使っています。
+            </p>
+            <ul>
+              <li>ログインや権限管理はまだありません。</li>
+              <li>動画・写真のサーバー保存はまだありません。</li>
+              <li>別の端末やブラウザには共有されません。</li>
+              <li>将来は、管理権限とクラウド保存を組み合わせる想定です。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>

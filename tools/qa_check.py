@@ -38,6 +38,7 @@ REQUIRED_HTML = [
     "mypage.html",
     "about.html",
     "map.html",
+    "harvest-admin.html",
     "harvest-video.html",
     "harvest-yamada-2025-06-16.html",
     "harvest-archive.html",

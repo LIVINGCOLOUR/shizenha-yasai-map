@@ -2330,6 +2330,193 @@ button { font: inherit; }
   font-weight: 900;
   line-height: 1.7;
 }
+.harvest-record-note {
+  margin: 11px 0 0;
+  color: var(--earth);
+  font-size: .84rem;
+  font-weight: 900;
+  line-height: 1.8;
+}
+.harvest-latest-photo-block { margin-top: 14px; }
+.harvest-latest-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 8px;
+}
+.harvest-latest-photo-card {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(32,57,42,.1);
+  background: rgba(255,253,247,.8);
+}
+.harvest-latest-photo-card img {
+  width: 100%;
+  height: 94px;
+  object-fit: cover;
+  display: block;
+}
+.harvest-admin-card {
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(32,57,42,.1);
+  background: rgba(255,253,247,.9);
+  box-shadow: 0 12px 30px rgba(32,57,42,.07);
+  padding: 22px;
+}
+.harvest-admin-card h1,
+.harvest-admin-card h2 {
+  margin: 6px 0 10px;
+  color: var(--forest);
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  line-height: 1.25;
+}
+.harvest-admin-card h1 { font-size: clamp(1.9rem, 7vw, 2.7rem); letter-spacing: -.04em; }
+.harvest-admin-card h2 { font-size: 1.3rem; }
+.harvest-admin-card p,
+.harvest-admin-card li {
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.85;
+}
+.harvest-admin-form {
+  display: grid;
+  gap: 18px;
+}
+.harvest-field {
+  display: grid;
+  gap: 8px;
+}
+.harvest-field label {
+  color: var(--forest);
+  font-size: .92rem;
+  font-weight: 900;
+}
+.harvest-field input[type="date"],
+.harvest-field input[type="file"],
+.harvest-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(32,57,42,.16);
+  border-radius: 14px;
+  background: rgba(255,253,247,.96);
+  color: var(--text);
+  font: inherit;
+  font-size: .94rem;
+  font-weight: 700;
+}
+.harvest-field input[type="date"],
+.harvest-field input[type="file"] {
+  min-height: 48px;
+  padding: 11px 12px;
+}
+.harvest-field textarea {
+  resize: vertical;
+  padding: 13px 14px;
+  line-height: 1.75;
+}
+.harvest-field-note,
+.harvest-empty-preview {
+  margin: 0;
+  color: var(--earth) !important;
+  font-size: .76rem !important;
+  line-height: 1.7 !important;
+}
+.harvest-video-preview {
+  min-height: 120px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px dashed rgba(32,57,42,.18);
+  background: rgba(235,241,216,.36);
+}
+.harvest-admin-preview-video {
+  width: 100%;
+  max-height: 260px;
+  border-radius: 14px;
+  background: #20392a;
+}
+.harvest-photo-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  min-height: 82px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px dashed rgba(32,57,42,.18);
+  background: rgba(235,241,216,.36);
+}
+.harvest-photo-preview-grid .harvest-empty-preview { grid-column: 1 / -1; align-self: center; }
+.harvest-preview-thumb {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 13px;
+  border: 1px solid rgba(32,57,42,.1);
+  background: rgba(255,253,247,.88);
+}
+.harvest-preview-thumb img {
+  width: 100%;
+  height: 92px;
+  object-fit: cover;
+  display: block;
+}
+.harvest-preview-thumb figcaption {
+  padding: 7px 8px;
+  color: var(--muted);
+  font-size: .68rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.harvest-admin-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.harvest-admin-actions .button {
+  width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 900;
+}
+.harvest-admin-actions .primary-button {
+  border: 1px solid rgba(32,57,42,.12);
+  background: var(--leaf);
+  color: var(--white);
+}
+.harvest-admin-actions .secondary-button {
+  border: 1px solid rgba(32,57,42,.16);
+  background: rgba(255,253,247,.86);
+  color: var(--forest);
+}
+.harvest-admin-status {
+  min-height: 1.4em;
+  margin: 0;
+  color: var(--forest) !important;
+  font-size: .82rem !important;
+  font-weight: 900 !important;
+}
+.harvest-admin-status.is-error { color: #9b5a22 !important; }
+.harvest-admin-notice code {
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: rgba(32,57,42,.08);
+  color: var(--forest);
+  font-size: .82em;
+  overflow-wrap: anywhere;
+}
+.harvest-admin-notice ul {
+  margin: 12px 0 0;
+  padding-left: 1.1rem;
+}
 
 .modal-open { overflow: hidden; }
 .demo-modal { width: min(520px, calc(100% - 28px)); max-width: none; padding: 0; border: 0; border-radius: 20px; background: transparent; color: var(--text); box-shadow: 0 24px 70px rgba(20,39,28,.24); }
@@ -3034,6 +3221,10 @@ button { font: inherit; }
   .yamada-info-card dl div { grid-template-columns: 1fr; gap: 4px; }
   .harvest-gallery-grid { grid-template-columns: 1fr; }
   .harvest-gallery-card img { height: 190px; }
+  .harvest-latest-photo-grid, .harvest-photo-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .harvest-admin-card { padding: 19px; }
+  .harvest-admin-card h1 { font-size: 2rem; }
+  .harvest-preview-thumb img, .harvest-latest-photo-card img { height: 112px; }
   .demo-modal-card { padding: 26px 21px 21px; }
   .demo-modal h2 { font-size: 1.55rem; }
   .seed-map-canvas { min-height: 330px; }

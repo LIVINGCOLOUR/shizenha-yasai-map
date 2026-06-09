@@ -4,6 +4,11 @@ let lastAiDemoTrigger = null;
 let lastConceptDemoTrigger = null;
 let homepageFarmers = [];
 const selectedInterestLabels = new Set();
+const HARVEST_STORAGE_KEY = "shizenha_yasai_harvest_records_v1";
+const HARVEST_FARMER_ID = "yamada-nouen";
+const HARVEST_DEFAULT_DATE = "2025-06-16";
+const HARVEST_MAX_VIDEO_DATA_SIZE = 4 * 1024 * 1024;
+const HARVEST_MAX_PHOTO_DATA_SIZE = 1.5 * 1024 * 1024;
 
 const INTEREST_LABELS = [
   "在来種・固定種を育てる農家",
@@ -131,6 +136,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   if (isPage("harvest-video")) {
     setupHarvestVideoPage();
+  }
+  if (isPage("harvest-admin")) {
+    setupHarvestAdminPage();
+  }
+  if (isPage("harvest-yamada-2025-06-16")) {
+    setupHarvestGalleryPage();
   }
 });
 
@@ -724,6 +735,89 @@ function createFarmerDetailHtml(farmer) {
   `;
 }
 
+function readHarvestRecords() {
+  try {
+    const raw = window.localStorage.getItem(HARVEST_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeHarvestRecords(records) {
+  window.localStorage.setItem(HARVEST_STORAGE_KEY, JSON.stringify(records));
+}
+
+function sortHarvestRecords(records) {
+  return records
+    .filter((record) => record && record.date)
+    .sort((a, b) => {
+      const dateCompare = String(b.date).localeCompare(String(a.date));
+      if (dateCompare !== 0) return dateCompare;
+      return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+    });
+}
+
+function getHarvestRecordsForFarmer(farmerId = HARVEST_FARMER_ID) {
+  const records = readHarvestRecords();
+  const list = records[farmerId];
+  return Array.isArray(list) ? sortHarvestRecords(list) : [];
+}
+
+function getLatestHarvestRecord(farmerId = HARVEST_FARMER_ID) {
+  return getHarvestRecordsForFarmer(farmerId)[0] || null;
+}
+
+function getHarvestRecordByDate(farmerId = HARVEST_FARMER_ID, date = HARVEST_DEFAULT_DATE) {
+  return getHarvestRecordsForFarmer(farmerId).find((record) => record.date === date) || null;
+}
+
+function formatHarvestDateJa(dateValue) {
+  if (!dateValue) return "";
+  const parts = String(dateValue).split("-");
+  if (parts.length !== 3) return String(dateValue);
+  const [year, month, day] = parts;
+  return `${Number(year)}年${Number(month)}月${Number(day)}日`;
+}
+
+function getHarvestVideoSource(record) {
+  if (!record) return "";
+  return record.videoDataUrl || record.videoObjectUrl || "";
+}
+
+function getHarvestPhotoSource(photo) {
+  if (!photo) return "";
+  return photo.dataUrl || photo.objectUrl || "";
+}
+
+function createHarvestLatestPhotosHtml(record) {
+  const photos = Array.isArray(record?.photos) ? record.photos : [];
+  const visiblePhotos = photos
+    .map((photo) => ({ ...photo, src: getHarvestPhotoSource(photo) }))
+    .filter((photo) => photo.src)
+    .slice(0, 3);
+  if (!visiblePhotos.length) return "";
+
+  return `
+    <div class="harvest-latest-photo-block" aria-label="最近の収穫写真">
+      <p class="harvest-record-note">登録された収穫写真</p>
+      <div class="harvest-latest-photo-grid">
+        ${visiblePhotos
+          .map(
+            (photo) => `
+              <figure class="harvest-latest-photo-card">
+                <img src="${escapeAttribute(photo.src)}" alt="${escapeAttribute(photo.name || "収穫写真")}" />
+              </figure>
+            `
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
 function createYamadaFarmerDetailHtml(farmer) {
   const statusText = getFarmerStatusText(farmer);
   const video = farmer.harvestVideo || {};
@@ -739,6 +833,23 @@ function createYamadaFarmerDetailHtml(farmer) {
     .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join("");
   const sourceNote = farmer.profileSummary || "";
+  const latestHarvestRecord = getLatestHarvestRecord(farmer.id);
+  const latestVideoSrc = getHarvestVideoSource(latestHarvestRecord);
+  const fallbackVideoSrc = video.src || "assets/videos/yamada-harvest-2025-06-16.mp4";
+  const displayVideoSrc = latestVideoSrc || fallbackVideoSrc;
+  const harvestDateLabel = latestHarvestRecord?.date
+    ? formatHarvestDateJa(latestHarvestRecord.date)
+    : video.dateLabel || "2025年6月16日";
+  const harvestNote = latestHarvestRecord?.note || "";
+  const videoAvailableAttr = latestVideoSrc ? ' data-video-available="true"' : "";
+  const videoPlaceholderTitle = latestVideoSrc ? "登録された収穫動画" : "動画は準備中です";
+  const videoPlaceholderText = latestVideoSrc
+    ? "登録した収穫動画を読み込んでいます。"
+    : "動画ファイルを配置、または収穫記録を登録すると、ここに収穫の様子が表示されます。";
+  const videoPlaceholderSmall = latestVideoSrc
+    ? latestHarvestRecord.videoName || "登録された動画"
+    : fallbackVideoSrc;
+  const latestPhotosHtml = createHarvestLatestPhotosHtml(latestHarvestRecord);
 
   return `
     <div class="yamada-profile-shell">
@@ -768,7 +879,7 @@ function createYamadaFarmerDetailHtml(farmer) {
           <video
             class="harvest-video"
             data-harvest-video
-            data-video-src="${escapeAttribute(video.src || "assets/videos/yamada-harvest-2025-06-16.mp4")}"
+            data-video-src="${escapeAttribute(displayVideoSrc)}"${videoAvailableAttr}
             poster="${escapeAttribute(imageSrc)}"
             controls
             muted
@@ -777,15 +888,17 @@ function createYamadaFarmerDetailHtml(farmer) {
             hidden
           ></video>
           <div class="harvest-video-placeholder" data-video-placeholder>
-            <span>動画差し替え待ち</span>
-            <p>動画ファイルを配置すると、ここに収穫の様子が表示されます。</p>
-            <small>${escapeHtml(video.src || "assets/videos/yamada-harvest-2025-06-16.mp4")}</small>
+            <span>${escapeHtml(videoPlaceholderTitle)}</span>
+            <p>${escapeHtml(videoPlaceholderText)}</p>
+            <small>${escapeHtml(videoPlaceholderSmall)}</small>
           </div>
         </div>
         <div class="harvest-video-caption">
           <strong>${escapeHtml(video.title || "今朝の収穫の様子")}</strong>
-          <span>${escapeHtml(video.dateLabel || "2025年6月16日")}</span>
+          <span>${escapeHtml(harvestDateLabel)}</span>
         </div>
+        ${harvestNote ? `<p class="harvest-record-note">${escapeHtml(harvestNote)}</p>` : ""}
+        ${latestPhotosHtml}
       </section>
 
       <div class="yamada-harvest-links">
@@ -1005,6 +1118,10 @@ function setupDeferredHarvestVideos() {
     const src = video.dataset.videoSrc;
     const shell = video.closest("[data-video-shell]");
     const placeholder = shell ? shell.querySelector("[data-video-placeholder]") : null;
+    if (src && /^(data:|blob:)/.test(src)) {
+      setHarvestVideoSource(video, placeholder, src);
+      return;
+    }
     if (!src || video.dataset.videoAvailable !== "true") {
       showVideoPlaceholder(video, placeholder);
       return;
@@ -1016,15 +1133,19 @@ function setupDeferredHarvestVideos() {
           showVideoPlaceholder(video, placeholder);
           return;
         }
-        video.src = src;
-        video.hidden = false;
-        if (placeholder) placeholder.hidden = true;
-        video.load();
+        setHarvestVideoSource(video, placeholder, src);
       })
       .catch(() => {
         showVideoPlaceholder(video, placeholder);
       });
   });
+}
+
+function setHarvestVideoSource(video, placeholder, src) {
+  video.src = src;
+  video.hidden = false;
+  if (placeholder) placeholder.hidden = true;
+  video.load();
 }
 
 function showVideoPlaceholder(video, placeholder) {
@@ -1048,6 +1169,200 @@ function setupHarvestVideoPage() {
       window.location.href = profileUrl;
     });
   }
+}
+
+function setupHarvestAdminPage() {
+  const form = document.querySelector("[data-harvest-admin-form]");
+  if (!form) return;
+
+  const dateInput = form.querySelector("[data-harvest-date]");
+  const videoInput = form.querySelector("[data-harvest-video-input]");
+  const photoInput = form.querySelector("[data-harvest-photo-input]");
+  const noteInput = form.querySelector("[data-harvest-note]");
+  const videoPreview = document.querySelector("[data-harvest-video-preview]");
+  const photoPreview = document.querySelector("[data-harvest-photo-preview]");
+  const status = document.querySelector("[data-harvest-admin-status]");
+
+  if (dateInput && !dateInput.value) {
+    dateInput.value = new Date().toISOString().slice(0, 10);
+  }
+
+  let selectedVideoFile = null;
+  let selectedPhotoFiles = [];
+
+  if (videoInput) {
+    videoInput.addEventListener("change", () => {
+      selectedVideoFile = videoInput.files?.[0] || null;
+      renderHarvestVideoPreview(videoPreview, selectedVideoFile);
+    });
+  }
+
+  if (photoInput) {
+    photoInput.addEventListener("change", () => {
+      selectedPhotoFiles = Array.from(photoInput.files || []);
+      renderHarvestPhotoPreview(photoPreview, selectedPhotoFiles);
+    });
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (status) {
+      status.textContent = "保存しています。";
+      status.classList.remove("is-error");
+    }
+
+    try {
+      const record = await buildHarvestRecord({
+        date: dateInput?.value || new Date().toISOString().slice(0, 10),
+        note: (noteInput?.value || "").trim(),
+        videoFile: selectedVideoFile,
+        photoFiles: selectedPhotoFiles,
+      });
+      saveHarvestRecord(record);
+      if (status) {
+        status.textContent = "保存しました。やまだ農園ページで確認できます。";
+        status.classList.remove("is-error");
+      }
+    } catch (error) {
+      try {
+        const fallbackRecord = await buildHarvestRecord({
+          date: dateInput?.value || new Date().toISOString().slice(0, 10),
+          note: (noteInput?.value || "").trim(),
+          videoFile: null,
+          photoFiles: [],
+          warning: "ファイルが大きい、またはブラウザの保存容量を超えたため、文章と日付のみ保存しました。",
+        });
+        saveHarvestRecord(fallbackRecord);
+        if (status) {
+          status.textContent = fallbackRecord.warning;
+          status.classList.add("is-error");
+        }
+      } catch {
+        if (status) {
+          status.textContent = "保存できませんでした。ブラウザの保存容量を確認してください。";
+          status.classList.add("is-error");
+        }
+      }
+    }
+  });
+}
+
+function renderHarvestVideoPreview(container, file) {
+  if (!container) return;
+  if (!file) {
+    container.innerHTML = '<p class="harvest-empty-preview">動画を選ぶと、ここにプレビューが表示されます。</p>';
+    return;
+  }
+  const objectUrl = URL.createObjectURL(file);
+  container.innerHTML = `
+    <video class="harvest-admin-preview-video" src="${escapeAttribute(objectUrl)}" controls muted playsinline></video>
+    <p>${escapeHtml(file.name)} / ${formatFileSize(file.size)}</p>
+  `;
+}
+
+function renderHarvestPhotoPreview(container, files) {
+  if (!container) return;
+  if (!files.length) {
+    container.innerHTML = '<p class="harvest-empty-preview">写真を選ぶと、ここにサムネイルが表示されます。</p>';
+    return;
+  }
+  container.innerHTML = files
+    .slice(0, 12)
+    .map((file) => {
+      const objectUrl = URL.createObjectURL(file);
+      return `
+        <figure class="harvest-preview-thumb">
+          <img src="${escapeAttribute(objectUrl)}" alt="${escapeAttribute(file.name)}" />
+          <figcaption>${escapeHtml(file.name)}</figcaption>
+        </figure>
+      `;
+    })
+    .join("");
+}
+
+async function buildHarvestRecord({ date, note, videoFile, photoFiles, warning }) {
+  const record = {
+    date,
+    note,
+    videoName: videoFile?.name || "",
+    videoObjectUrl: videoFile ? URL.createObjectURL(videoFile) : "",
+    videoDataUrl: "",
+    photos: [],
+    createdAt: new Date().toISOString(),
+  };
+
+  if (warning) record.warning = warning;
+
+  if (videoFile && videoFile.size <= HARVEST_MAX_VIDEO_DATA_SIZE) {
+    record.videoDataUrl = await readFileAsDataUrl(videoFile);
+  }
+
+  const photoList = Array.isArray(photoFiles) ? photoFiles.slice(0, 12) : [];
+  record.photos = await Promise.all(
+    photoList.map(async (file) => ({
+      name: file.name,
+      objectUrl: URL.createObjectURL(file),
+      dataUrl: file.size <= HARVEST_MAX_PHOTO_DATA_SIZE ? await readFileAsDataUrl(file) : "",
+    }))
+  );
+
+  return record;
+}
+
+function saveHarvestRecord(record) {
+  const records = readHarvestRecords();
+  const list = Array.isArray(records[HARVEST_FARMER_ID]) ? records[HARVEST_FARMER_ID] : [];
+  records[HARVEST_FARMER_ID] = sortHarvestRecords([record, ...list]);
+  writeHarvestRecords(records);
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(reader.error || new Error("file read failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function formatFileSize(size) {
+  if (!Number.isFinite(size)) return "";
+  if (size < 1024 * 1024) return `${Math.max(1, Math.round(size / 1024))}KB`;
+  return `${(size / 1024 / 1024).toFixed(1)}MB`;
+}
+
+function setupHarvestGalleryPage() {
+  const grid = document.querySelector("[data-dynamic-harvest-gallery]");
+  if (!grid) return;
+
+  const date = grid.dataset.harvestDate || HARVEST_DEFAULT_DATE;
+  const record = getHarvestRecordByDate(HARVEST_FARMER_ID, date);
+  const noteTarget = document.querySelector("[data-harvest-gallery-note]");
+  const photos = Array.isArray(record?.photos) ? record.photos : [];
+  const visiblePhotos = photos
+    .map((photo) => ({ ...photo, src: getHarvestPhotoSource(photo) }))
+    .filter((photo) => photo.src);
+
+  if (noteTarget && record?.note) {
+    noteTarget.textContent = record.note;
+    noteTarget.hidden = false;
+  }
+
+  if (!visiblePhotos.length) return;
+
+  grid.innerHTML = visiblePhotos
+    .map(
+      (photo, index) => `
+        <article class="harvest-gallery-card">
+          <img src="${escapeAttribute(photo.src)}" alt="${escapeAttribute(photo.name || `収穫写真${index + 1}`)}" />
+          <div>
+            <h2>${escapeHtml(photo.name || `収穫写真 ${index + 1}`)}</h2>
+            <p>${escapeHtml(formatHarvestDateJa(record.date))}に登録された収穫写真です。</p>
+          </div>
+        </article>
+      `
+    )
+    .join("");
 }
 
 function setupProfileInterviewDemo() {
