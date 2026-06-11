@@ -615,9 +615,15 @@ function loadFarmerDetail() {
       container.innerHTML = createFarmerDetailHtml(farmer);
       setupDeferredHarvestVideos();
       if (farmer.id === HARVEST_FARMER_ID) {
-        updateYamadaHarvestFromIndexedDb(farmer).catch((error) => {
-          console.error("IndexedDBから収穫記録を読み込めませんでした。", error);
-        });
+        updateYamadaHarvestFromIndexedDb(farmer)
+          .catch((error) => {
+            console.error("IndexedDBから収穫記録を読み込めませんでした。", error);
+          })
+          .finally(() => {
+            // 公開動画（data/harvest-records.json）を最優先にし、
+            // QRページの「収穫動画」とプロフィールの「最近の収穫動画」を同一にする。
+            applyPublishedHarvestVideo(farmer);
+          });
       }
     })
     .catch(() => {
@@ -1077,6 +1083,41 @@ async function updateYamadaHarvestFromIndexedDb(farmer) {
     { once: true }
   );
   setHarvestVideoSource(video, placeholder, videoSrc);
+}
+
+// QRページ(harvest-video.html)と農園プロフィールの「最近の収穫動画」を
+// 同じ動画にするため、公開ソース data/harvest-records.json を最優先で反映する。
+async function applyPublishedHarvestVideo(farmer) {
+  try {
+    const response = await fetch("data/harvest-records.json");
+    if (!response.ok) return;
+    const data = await response.json();
+    const records = Array.isArray(data?.records) ? data.records : [];
+    const forFarmer = records.filter((record) => record.farmerId === farmer.id);
+    const record = forFarmer
+      .slice()
+      .sort((a, b) => String(b.date).localeCompare(String(a.date)))[0];
+    if (!record || !record.videoUrl) return;
+
+    const video = document.querySelector("[data-harvest-video]");
+    const shell = document.querySelector("[data-video-shell]");
+    const placeholder = shell ? shell.querySelector("[data-video-placeholder]") : null;
+    const dateTarget = document.querySelector("[data-yamada-harvest-date]");
+
+    if (dateTarget && record.dateLabel) {
+      dateTarget.textContent = record.dateLabel;
+    }
+    if (video) {
+      const warning = getHarvestVideoWarningElement(shell);
+      if (warning) warning.hidden = true;
+      video.dataset.videoAvailable = "true";
+      video.dataset.videoSrc = record.videoUrl;
+      if (record.poster) video.setAttribute("poster", record.poster);
+      setHarvestVideoSource(video, placeholder, record.videoUrl);
+    }
+  } catch (error) {
+    console.warn("公開収穫動画の読み込みに失敗しました。", error);
+  }
 }
 
 function getHarvestVideoWarningElement(shell) {

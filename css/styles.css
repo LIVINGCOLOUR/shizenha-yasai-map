@@ -2252,17 +2252,6 @@ button { font: inherit; }
   text-align: center;
   margin: 0 0 12px;
 }
-.harvest-stage-eyebrow {
-  display: inline-block;
-  margin: 0 0 8px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(250,247,239,.12);
-  color: #f2ddae;
-  font-size: .72rem;
-  font-weight: 900;
-  letter-spacing: .04em;
-}
 .harvest-stage-title {
   margin: 0;
   font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
