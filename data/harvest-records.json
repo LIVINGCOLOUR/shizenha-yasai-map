@@ -2,15 +2,6 @@
   "records": [
     {
       "farmerId": "yamada-nouen",
-      "date": "2026-06-09",
-      "dateLabel": "2026年6月9日",
-      "videoUrl": "assets/videos/yamada-harvest-2025-06-16.mp4",
-      "poster": "assets/images/yamada/yamada01.jpg",
-      "message": "野菜と一緒に届いた、八郷の畑の時間です。",
-      "profileUrl": "farmer.html?id=yamada-nouen"
-    },
-    {
-      "farmerId": "yamada-nouen",
       "date": "2025-06-16",
       "dateLabel": "2025年6月16日",
       "videoUrl": "assets/videos/yamada-harvest-2025-06-16.mp4",
