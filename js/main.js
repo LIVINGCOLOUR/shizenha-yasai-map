@@ -802,10 +802,6 @@ function requestToPromise(request) {
   });
 }
 
-function createHarvestRecordId(farmerId, date) {
-  return `${farmerId}-${date}`;
-}
-
 function sortHarvestRecords(records) {
   return records
     .filter((record) => record && record.date)
@@ -814,12 +810,6 @@ function sortHarvestRecords(records) {
       if (dateCompare !== 0) return dateCompare;
       return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
     });
-}
-
-async function saveHarvestRecord(record) {
-  return useHarvestStore("readwrite", (store) => {
-    store.put(record);
-  });
 }
 
 async function getHarvestRecordsForFarmer(farmerId = HARVEST_FARMER_ID) {
@@ -1089,10 +1079,7 @@ async function updateYamadaHarvestFromIndexedDb(farmer) {
 // 同じ動画にするため、公開ソース data/harvest-records.json を最優先で反映する。
 async function applyPublishedHarvestVideo(farmer) {
   try {
-    const response = await fetch("data/harvest-records.json");
-    if (!response.ok) return;
-    const data = await response.json();
-    const records = Array.isArray(data?.records) ? data.records : [];
+    const records = await loadHarvestRecords();
     const forFarmer = records.filter((record) => record.farmerId === farmer.id);
     const record = forFarmer
       .slice()
@@ -1353,12 +1340,10 @@ function setupHarvestVideoPage() {
     }
   }
 
-  // ガシャッパ通信QRはお客さんのスマホから開かれるため、
-  // IndexedDBではなく data/harvest-records.json から動画URLを取得する。
-  fetch("data/harvest-records.json")
-    .then((response) => (response.ok ? response.json() : null))
-    .then((data) => {
-      const records = Array.isArray(data?.records) ? data.records : [];
+  // ガシャッパ通信QRはお客さんのスマホから開かれるため、IndexedDBではなく
+  // 公開ソース（/api/harvest-records → 無ければ data/harvest-records.json）から取得する。
+  loadHarvestRecords()
+    .then((records) => {
       const forFarmer = records.filter((record) => record.farmerId === farmerId);
       let record = null;
       if (requestedDate) {
@@ -1403,6 +1388,31 @@ function setupHarvestVideoPage() {
     });
 }
 
+// 公開収穫記録の取得。まずクラウド(/api/harvest-records)、
+// 無ければ静的な data/harvest-records.json にフォールバックする。
+async function loadHarvestRecords() {
+  try {
+    const response = await fetch("/api/harvest-records", { cache: "no-store" });
+    if (response.ok) {
+      const data = await response.json();
+      const records = Array.isArray(data?.records) ? data.records : [];
+      if (records.length) return records;
+    }
+  } catch (error) {
+    // クラウド未設定／ローカル静的サーバーなどでは静的JSONへ。
+  }
+  try {
+    const response = await fetch("data/harvest-records.json");
+    if (response.ok) {
+      const data = await response.json();
+      return Array.isArray(data?.records) ? data.records : [];
+    }
+  } catch (error) {
+    // どちらも取得できなければ空。
+  }
+  return [];
+}
+
 function setupHarvestAdminPage() {
   const form = document.querySelector("[data-harvest-admin-form]");
   if (!form) return;
@@ -1436,31 +1446,48 @@ function setupHarvestAdminPage() {
     });
   }
 
+  const setStatus = (text, isError = false) => {
+    if (!status) return;
+    status.textContent = text;
+    status.classList.toggle("is-error", isError);
+  };
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (status) {
-      status.textContent = "保存しています。";
-      status.classList.remove("is-error");
+
+    if (!selectedVideoFile) {
+      setStatus("収穫動画を選んでください。", true);
+      return;
     }
 
+    const date = dateInput?.value || new Date().toISOString().slice(0, 10);
+    const formData = new FormData();
+    formData.append("farmerId", HARVEST_FARMER_ID);
+    formData.append("date", date);
+    formData.append("dateLabel", formatHarvestDateJa(date));
+    formData.append("message", (noteInput?.value || "").trim());
+    formData.append("video", selectedVideoFile);
+    // 1枚目の写真があればポスター画像として使う。
+    if (selectedPhotoFiles[0]) {
+      formData.append("poster", selectedPhotoFiles[0]);
+    }
+
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+    setStatus("公開しています。動画のアップロードに少し時間がかかることがあります。");
+
     try {
-      const record = buildHarvestRecord({
-        date: dateInput?.value || new Date().toISOString().slice(0, 10),
-        note: (noteInput?.value || "").trim(),
-        videoFile: selectedVideoFile,
-        photoFiles: selectedPhotoFiles,
-      });
-      await saveHarvestRecord(record);
-      if (status) {
-        status.textContent = "保存しました。やまだ農園ページで確認できます。";
-        status.classList.remove("is-error");
+      const response = await fetch("/api/harvest-upload", { method: "POST", body: formData });
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data || data.ok !== true) {
+        throw new Error((data && data.error) || `公開に失敗しました（HTTP ${response.status}）`);
       }
+      setStatus("公開しました。QRページとやまだ農園ページで確認できます。");
     } catch (error) {
-      console.error("収穫記録をIndexedDBに保存できませんでした。", error);
-      if (status) {
-        status.textContent = "保存できませんでした。動画ファイルが大きすぎる可能性があります。";
-        status.classList.add("is-error");
-      }
+      console.error("収穫動画を公開できませんでした。", error);
+      setStatus(`公開できませんでした：${error.message}`, true);
+    } finally {
+      if (submitButton) submitButton.disabled = false;
     }
   });
 }
@@ -1507,25 +1534,6 @@ function renderHarvestPhotoPreview(container, files) {
       `;
     })
     .join("");
-}
-
-function buildHarvestRecord({ date, note, videoFile, photoFiles }) {
-  const photoList = Array.isArray(photoFiles) ? photoFiles.slice(0, 12) : [];
-  return {
-    id: createHarvestRecordId(HARVEST_FARMER_ID, date),
-    farmerId: HARVEST_FARMER_ID,
-    date,
-    note,
-    videoName: videoFile?.name || "",
-    videoType: videoFile?.type || "",
-    video: videoFile ? videoFile.slice(0, videoFile.size, videoFile.type) : null,
-    photos: photoList.map((file) => ({
-      name: file.name,
-      type: file.type || "",
-      file: file.slice(0, file.size, file.type),
-    })),
-    createdAt: new Date().toISOString(),
-  };
 }
 
 function formatFileSize(size) {

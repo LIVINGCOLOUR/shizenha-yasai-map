@@ -1,0 +1,10 @@
+# Cloudflare Pages 設定。
+# 収穫動画アップロード用に R2 バケットをバインドする。
+# 本番では Pages プロジェクトの Settings > Functions > R2 bindings でも設定可能。
+name = "shizenha-yasai-map"
+pages_build_output_dir = "."
+compatibility_date = "2024-06-01"
+
+[[r2_buckets]]
+binding = "HARVEST_BUCKET"
+bucket_name = "shizenha-yasai-harvest"

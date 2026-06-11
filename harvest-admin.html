@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>収穫記録を登録する | 自然派やさいマップ</title>
-  <meta name="description" content="やまだ農園の収穫動画と写真を登録する構想デモです。実際のサーバー保存は行いません。" />
+  <meta name="description" content="やまだ農園の収穫動画を登録し、QRページと農園プロフィールに公開する管理ページです。" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -40,11 +40,11 @@
           </div>
 
           <div class="harvest-admin-card">
-            <p class="section-eyebrow">構想デモ</p>
+            <p class="section-eyebrow">収穫動画の登録</p>
             <h1>収穫記録を登録する</h1>
             <p>
-              やまだ農園の収穫動画、写真、ひとことを登録する画面イメージです。
-              現在はブラウザ内だけに保存され、サーバー保存やファイル送信は行いません。
+              やまだ農園の収穫動画、ひとことを登録します。
+              公開すると、QRページと農園プロフィールの「最近の収穫動画」に反映されます。
             </p>
           </div>
 
@@ -57,16 +57,16 @@
             <div class="harvest-field">
               <label for="harvestVideo">収穫動画</label>
               <input id="harvestVideo" type="file" accept="video/*" data-harvest-video-input />
-              <p class="harvest-field-note">動画はこのブラウザ内のデモ保存だけです。iPhoneの.movも選択できますが、ブラウザによっては再生できない場合があります。</p>
+              <p class="harvest-field-note">公開するとQRページで再生できます。iPhoneの.movも選択できますが、再生の安定するmp4形式をおすすめします。</p>
               <div class="harvest-video-preview" data-harvest-video-preview>
                 <p class="harvest-empty-preview">動画を選ぶと、ここにプレビューが表示されます。</p>
               </div>
             </div>
 
             <div class="harvest-field">
-              <label for="harvestPhotos">収穫写真</label>
+              <label for="harvestPhotos">ポスター画像（任意）</label>
               <input id="harvestPhotos" type="file" accept="image/*" multiple data-harvest-photo-input />
-              <p class="harvest-field-note">複数枚を選べます。保存容量を超える大きなファイルは、実運用の保存方式に差し替える想定です。</p>
+              <p class="harvest-field-note">1枚目の写真を、動画再生前のポスター画像として使います。未選択でも公開できます。</p>
               <div class="harvest-photo-preview-grid" data-harvest-photo-preview>
                 <p class="harvest-empty-preview">写真を選ぶと、ここにサムネイルが表示されます。</p>
               </div>
@@ -79,23 +79,23 @@
             </div>
 
             <div class="harvest-admin-actions">
-              <button class="button primary-button" type="submit">この内容を保存する</button>
+              <button class="button primary-button" type="submit">この内容を公開する</button>
               <a class="button secondary-button" href="farmer.html?id=yamada-nouen">やまだ農園ページで確認する</a>
             </div>
             <p class="harvest-admin-status" data-harvest-admin-status role="status" aria-live="polite"></p>
           </form>
 
           <div class="harvest-admin-card harvest-admin-notice">
-            <h2>現在の保存について</h2>
+            <h2>公開について</h2>
             <p>
-              保存先は、このブラウザ内の <code>IndexedDB</code> です。
-              このデモでは、同じブラウザで確認するために動画・写真を一時保存しています。
+              公開した動画はクラウド（Cloudflare R2）に保存され、
+              QRページと農園プロフィールの「最近の収穫動画」で再生できます。
             </p>
             <ul>
-              <li>この画面はデモ用です。動画・写真はこのブラウザ内に保存されます。</li>
+              <li>同じ日付で公開し直すと、その日の動画は新しいものに置き換わります。</li>
               <li>ログインや権限管理はまだありません。</li>
-              <li>別の端末やブラウザには共有されません。</li>
-              <li>本番では、ログイン機能とクラウド保存に置き換える想定です。</li>
+              <li>公開には、Cloudflare上でのストレージ設定が必要です。</li>
+              <li>ローカルの簡易サーバーでは公開できません（後述のデプロイ環境で動作します）。</li>
             </ul>
           </div>
         </div>
