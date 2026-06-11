@@ -1280,20 +1280,86 @@ function showVideoPlaceholder(video, placeholder) {
 }
 
 function setupHarvestVideoPage() {
-  const profileLink = document.querySelector("[data-harvest-profile-link]");
   const video = document.querySelector("[data-harvest-video]");
+  const shell = document.querySelector("[data-video-shell]");
+  const placeholder = shell ? shell.querySelector("[data-video-placeholder]") : null;
+  const profileLink = document.querySelector("[data-harvest-profile-link]");
+  const fullscreenButton = document.querySelector("[data-harvest-fullscreen]");
+  const dateTarget = document.querySelector("[data-harvest-date]");
+  const messageTarget = document.querySelector("[data-harvest-message]");
+
   const params = new URLSearchParams(window.location.search);
   const farmerId = params.get("farmer") || "yamada-nouen";
-  const profileUrl = `farmer.html?id=${encodeURIComponent(farmerId)}`;
+  const requestedDate = params.get("date") || "";
+  const fallbackProfileUrl = `farmer.html?id=${encodeURIComponent(farmerId)}`;
 
-  if (profileLink) {
-    profileLink.setAttribute("href", profileUrl);
+  // 全画面ボタンは補助機能。再生本体が無い／非対応なら隠す。
+  if (fullscreenButton && video) {
+    if (!video.requestFullscreen && !video.webkitEnterFullscreen) {
+      fullscreenButton.hidden = true;
+    } else {
+      fullscreenButton.addEventListener("click", async () => {
+        try {
+          if (video.requestFullscreen) {
+            await video.requestFullscreen();
+          } else if (video.webkitEnterFullscreen) {
+            video.webkitEnterFullscreen();
+          }
+        } catch (error) {
+          console.warn("Fullscreen request failed", error);
+        }
+      });
+    }
   }
-  if (video) {
-    video.addEventListener("ended", () => {
-      window.location.href = profileUrl;
+
+  // ガシャッパ通信QRはお客さんのスマホから開かれるため、
+  // IndexedDBではなく data/harvest-records.json から動画URLを取得する。
+  fetch("data/harvest-records.json")
+    .then((response) => (response.ok ? response.json() : null))
+    .then((data) => {
+      const records = Array.isArray(data?.records) ? data.records : [];
+      const forFarmer = records.filter((record) => record.farmerId === farmerId);
+      let record = null;
+      if (requestedDate) {
+        record = forFarmer.find((item) => item.date === requestedDate) || null;
+      }
+      if (!record) {
+        // 日付指定が無い／一致しない場合は、最新（date降順）の記録を使う。
+        record =
+          forFarmer.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)))[0] || null;
+      }
+
+      const profileUrl = (record && record.profileUrl) || fallbackProfileUrl;
+      if (profileLink) {
+        profileLink.setAttribute("href", profileUrl);
+      }
+
+      if (record) {
+        if (dateTarget && record.dateLabel) dateTarget.textContent = record.dateLabel;
+        if (messageTarget && record.message) messageTarget.textContent = record.message;
+        if (video && record.poster) video.setAttribute("poster", record.poster);
+      }
+
+      const videoUrl = record && record.videoUrl;
+      if (video && videoUrl) {
+        video.src = videoUrl;
+        if (placeholder) placeholder.hidden = true;
+        video.addEventListener("ended", () => {
+          window.location.href = profileUrl;
+        });
+      } else if (placeholder) {
+        if (video) video.hidden = true;
+        placeholder.hidden = false;
+      }
+    })
+    .catch((error) => {
+      console.warn("Failed to load harvest records", error);
+      if (profileLink) profileLink.setAttribute("href", fallbackProfileUrl);
+      if (placeholder) {
+        if (video) video.hidden = true;
+        placeholder.hidden = false;
+      }
     });
-  }
 }
 
 function setupHarvestAdminPage() {

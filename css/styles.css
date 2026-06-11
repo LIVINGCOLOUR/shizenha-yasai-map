@@ -2223,6 +2223,152 @@ button { font: inherit; }
 }
 .harvest-video-placeholder p { margin: 0; font-size: 1rem; font-weight: 900; line-height: 1.7; }
 .harvest-video-placeholder small { color: rgba(255,253,247,.88); font-size: .72rem; overflow-wrap: anywhere; }
+/* ===== Harvest video full-screen experience (ガシャッパ通信QR) ===== */
+.harvest-video-page {
+  margin: 0;
+  background: #14130f;
+  color: #faf7ef;
+  min-height: 100dvh;
+}
+.harvest-stage {
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 0;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(58,72,52,.55), rgba(20,19,15,0) 60%),
+    #14130f;
+}
+.harvest-stage-inner {
+  width: 100%;
+  max-width: 460px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 18px calc(env(safe-area-inset-bottom, 0px) + 20px);
+  box-sizing: border-box;
+}
+.harvest-stage-head {
+  text-align: center;
+  margin: 0 0 12px;
+}
+.harvest-stage-eyebrow {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(250,247,239,.12);
+  color: #f2ddae;
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+.harvest-stage-title {
+  margin: 0;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.harvest-stage-date {
+  margin: 6px 0 0;
+  color: rgba(250,247,239,.72);
+  font-size: .82rem;
+  font-weight: 900;
+}
+.harvest-stage-video {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 14px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #050504;
+}
+.harvest-stage-player {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  background: #050504;
+}
+.harvest-stage-placeholder {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 28px 22px;
+  text-align: center;
+}
+.harvest-stage-placeholder[hidden] { display: none; }
+.harvest-stage-placeholder span {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(250,247,239,.16);
+  color: #f2ddae;
+  font-size: .72rem;
+  font-weight: 900;
+}
+.harvest-stage-placeholder p {
+  margin: 0;
+  color: rgba(250,247,239,.82);
+  font-size: .92rem;
+  font-weight: 900;
+  line-height: 1.7;
+}
+.harvest-stage-message {
+  margin: 0 0 16px;
+  text-align: center;
+  color: rgba(250,247,239,.86);
+  font-size: .96rem;
+  line-height: 1.8;
+}
+.harvest-stage-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+.harvest-stage-button {
+  display: block;
+  padding: 15px 18px;
+  border-radius: 14px;
+  background: #e7a93b;
+  color: #1b1810;
+  font-size: 1.02rem;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(231,169,59,.28);
+}
+.harvest-stage-button:hover { background: #efb958; }
+.harvest-stage-fullscreen {
+  align-self: center;
+  padding: 9px 16px;
+  border: 1px solid rgba(250,247,239,.3);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(250,247,239,.86);
+  font-size: .82rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.harvest-stage-fullscreen:hover { background: rgba(250,247,239,.1); }
+.harvest-stage-fullscreen[hidden] { display: none; }
+@media (min-width: 768px) {
+  .harvest-stage { padding: 28px 0; align-items: center; }
+  .harvest-stage-inner {
+    min-height: min(860px, calc(100dvh - 56px));
+    border-radius: 28px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.4);
+    background: rgba(8,8,6,.6);
+  }
+}
+
 .harvest-video-caption {
   display: flex;
   align-items: center;

@@ -44,6 +44,10 @@ REQUIRED_HTML = [
     "harvest-archive.html",
 ]
 
+NAV_EXEMPT = {
+    "harvest-video.html",
+}
+
 REQUIRED_JSON = [
     "data/farmers.json",
     "data/places.json",
@@ -132,6 +136,9 @@ def extract_nav_labels(html: str) -> list[str]:
 
 def check_nav() -> None:
     for relative in REQUIRED_HTML:
+        if relative in NAV_EXEMPT:
+            # 全画面動画体験ページは通常ナビを出さない方針のため対象外。
+            continue
         path = ROOT / relative
         if not path.exists():
             continue
