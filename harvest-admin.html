@@ -64,9 +64,18 @@
             </div>
 
             <div class="harvest-field">
+              <label for="harvestPoster">動画のサムネイル画像（任意）</label>
+              <input id="harvestPoster" type="file" accept="image/*" data-harvest-poster-input />
+              <p class="harvest-field-note">動画再生前に表示されるサムネイル画像です。未選択のときは、下の収穫写真の1枚目が使われます。</p>
+              <div class="harvest-photo-preview-grid" data-harvest-poster-preview>
+                <p class="harvest-empty-preview">画像を選ぶと、ここにプレビューが表示されます。</p>
+              </div>
+            </div>
+
+            <div class="harvest-field">
               <label for="harvestPhotos">収穫写真（複数選択できます・任意）</label>
               <input id="harvestPhotos" type="file" accept="image/*" multiple data-harvest-photo-input />
-              <p class="harvest-field-note">写真は一度にまとめて選べます。公開すると、その日の「今日の畑の様子」ページの写真欄に表示されます。1枚目は動画再生前のサムネイルにも使われます。未選択でも公開できます。</p>
+              <p class="harvest-field-note">写真は一度にまとめて選べます。公開すると、その日の「今日の畑の様子」ページの写真欄に表示されます。未選択でも公開できます。</p>
               <div class="harvest-photo-preview-grid" data-harvest-photo-preview>
                 <p class="harvest-empty-preview">写真を選ぶと、ここにサムネイルが表示されます。</p>
               </div>

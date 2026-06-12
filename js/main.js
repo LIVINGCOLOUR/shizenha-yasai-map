@@ -1481,9 +1481,11 @@ function setupHarvestAdminPage() {
 
   const dateInput = form.querySelector("[data-harvest-date]");
   const videoInput = form.querySelector("[data-harvest-video-input]");
+  const posterInput = form.querySelector("[data-harvest-poster-input]");
   const photoInput = form.querySelector("[data-harvest-photo-input]");
   const noteInput = form.querySelector("[data-harvest-note]");
   const videoPreview = document.querySelector("[data-harvest-video-preview]");
+  const posterPreview = document.querySelector("[data-harvest-poster-preview]");
   const photoPreview = document.querySelector("[data-harvest-photo-preview]");
   const status = document.querySelector("[data-harvest-admin-status]");
 
@@ -1492,12 +1494,20 @@ function setupHarvestAdminPage() {
   }
 
   let selectedVideoFile = null;
+  let selectedPosterFile = null;
   let selectedPhotoFiles = [];
 
   if (videoInput) {
     videoInput.addEventListener("change", () => {
       selectedVideoFile = videoInput.files?.[0] || null;
       renderHarvestVideoPreview(videoPreview, selectedVideoFile);
+    });
+  }
+
+  if (posterInput) {
+    posterInput.addEventListener("change", () => {
+      selectedPosterFile = posterInput.files?.[0] || null;
+      renderHarvestPhotoPreview(posterPreview, selectedPosterFile ? [selectedPosterFile] : []);
     });
   }
 
@@ -1602,7 +1612,11 @@ function setupHarvestAdminPage() {
     formData.append("dateLabel", formatHarvestDateJa(date));
     formData.append("message", (noteInput?.value || "").trim());
     formData.append("video", selectedVideoFile);
-    // 写真は複数送信。サーバー側で1枚目をポスター画像に使う。
+    // サムネイル画像を選んでいれば送信。未選択なら写真1枚目がサムネイルになる。
+    if (selectedPosterFile) {
+      formData.append("poster", selectedPosterFile);
+    }
+    // 写真は複数送信し、その日の写真欄に表示する。
     selectedPhotoFiles.forEach((file) => formData.append("photo", file));
 
     const submitButton = form.querySelector('button[type="submit"]');
