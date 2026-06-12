@@ -1519,17 +1519,39 @@ function setupHarvestAdminPage() {
   let lastPublishedId = null;
   setupHarvestQrControls(() => lastPublishedId, PUBLIC_BASE);
 
-  // 投稿の削除（その投稿日の記録をすべて削除）。
+  // 投稿の削除（公開済みの投稿日を一覧から選んで削除）。
   const deleteBtn = document.querySelector("[data-harvest-delete]");
+  const deleteSelect = document.querySelector("[data-harvest-delete-select]");
+  const deleteEmpty = document.querySelector("[data-harvest-delete-empty]");
   const deleteStatusEl = document.querySelector("[data-harvest-delete-status]");
   const setDeleteStatus = (text, isError = false) => {
     if (!deleteStatusEl) return;
     deleteStatusEl.textContent = text;
     deleteStatusEl.classList.toggle("is-error", isError);
   };
+
+  // 公開済みの投稿日でプルダウンを作り直す。
+  async function refreshDeleteOptions() {
+    if (!deleteSelect) return;
+    let records = [];
+    try {
+      records = await loadNormalizedHarvestRecords(HARVEST_FARMER_ID);
+    } catch (error) {
+      records = [];
+    }
+    deleteSelect.innerHTML = records
+      .map((record) => `<option value="${escapeAttribute(record.date)}">${escapeHtml(record.dateLabel)}</option>`)
+      .join("");
+    const hasRecords = records.length > 0;
+    deleteSelect.hidden = !hasRecords;
+    if (deleteEmpty) deleteEmpty.hidden = hasRecords;
+    if (deleteBtn) deleteBtn.disabled = !hasRecords;
+  }
+  refreshDeleteOptions();
+
   if (deleteBtn) {
     deleteBtn.addEventListener("click", async () => {
-      const date = dateInput?.value;
+      const date = deleteSelect && deleteSelect.value;
       if (!date) {
         setDeleteStatus("削除する投稿日を選んでください。", true);
         return;
@@ -1556,10 +1578,10 @@ function setupHarvestAdminPage() {
         } else {
           setDeleteStatus(data.message || "対象の投稿は見つかりませんでした。");
         }
+        await refreshDeleteOptions();
       } catch (error) {
         console.error("投稿を削除できませんでした。", error);
         setDeleteStatus(`削除できませんでした：${error.message}`, true);
-      } finally {
         deleteBtn.disabled = false;
       }
     });
@@ -1595,6 +1617,7 @@ function setupHarvestAdminPage() {
       }
       lastPublishedId = (data.record && data.record.id) || `${HARVEST_FARMER_ID}-${date}`;
       setStatus("アップロード完了。QRページとやまだ農園ページで確認できます。下の「この日のQRコードを発行」からQRを作成できます。");
+      refreshDeleteOptions();
     } catch (error) {
       console.error("収穫動画を公開できませんでした。", error);
       setStatus(`公開できませんでした：${error.message}`, true);

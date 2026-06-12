@@ -116,11 +116,16 @@
           <div class="harvest-admin-card harvest-delete-card">
             <h2>投稿を削除する</h2>
             <p>
-              上の「投稿日」で選んだ日の記録（動画・写真・ひとこと）をすべて削除します。
+              公開済みの投稿日を選んで、その日の記録（動画・写真・ひとこと）をすべて削除します。
               この操作は取り消せません。
             </p>
+            <div class="harvest-field">
+              <label for="harvestDeleteSelect">削除する投稿日</label>
+              <select id="harvestDeleteSelect" data-harvest-delete-select aria-label="削除する投稿日を選ぶ"></select>
+            </div>
+            <p class="harvest-empty-preview" data-harvest-delete-empty hidden>公開済みの投稿はありません。</p>
             <div class="harvest-admin-actions">
-              <button class="button danger-button" type="button" data-harvest-delete aria-label="この投稿日の記録をすべて削除する">この投稿日を削除</button>
+              <button class="button danger-button" type="button" data-harvest-delete aria-label="選んだ投稿日の記録をすべて削除する">この投稿日を削除</button>
             </div>
             <p class="harvest-admin-status" data-harvest-delete-status role="status" aria-live="polite"></p>
           </div>
