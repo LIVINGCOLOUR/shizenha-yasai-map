@@ -1524,10 +1524,9 @@ function setupHarvestAdminPage() {
     status.classList.toggle("is-error", isError);
   };
 
-  // QRコードの宛先は本番公開URLを使う。
+  // QRコードの宛先は本番公開URLを使う。公開済みの投稿日から発行する。
   const PUBLIC_BASE = "https://shizenha-yasai-map.pages.dev";
-  let lastPublishedId = null;
-  setupHarvestQrControls(() => lastPublishedId, PUBLIC_BASE);
+  const qrControls = setupHarvestQrControls(PUBLIC_BASE);
 
   // 投稿の削除（公開済みの投稿日を一覧から選んで削除）。
   const deleteBtn = document.querySelector("[data-harvest-delete]");
@@ -1584,11 +1583,11 @@ function setupHarvestAdminPage() {
         }
         if (data.removed) {
           setDeleteStatus("削除しました。この投稿日の動画・写真は表示されなくなります。");
-          if (lastPublishedId === `${HARVEST_FARMER_ID}-${date}`) lastPublishedId = null;
         } else {
           setDeleteStatus(data.message || "対象の投稿は見つかりませんでした。");
         }
         await refreshDeleteOptions();
+        qrControls.refresh();
       } catch (error) {
         console.error("投稿を削除できませんでした。", error);
         setDeleteStatus(`削除できませんでした：${error.message}`, true);
@@ -1629,9 +1628,10 @@ function setupHarvestAdminPage() {
       if (!response.ok || !data || data.ok !== true) {
         throw new Error((data && data.error) || `公開に失敗しました（HTTP ${response.status}）`);
       }
-      lastPublishedId = (data.record && data.record.id) || `${HARVEST_FARMER_ID}-${date}`;
-      setStatus("アップロード完了。QRページとやまだ農園ページで確認できます。下の「この日のQRコードを発行」からQRを作成できます。");
+      const publishedId = (data.record && data.record.id) || `${HARVEST_FARMER_ID}-${date}`;
+      setStatus("アップロード完了。QRページとやまだ農園ページで確認できます。下の「野菜セット用QRコード」で、この投稿日を選んでQRを発行できます。");
       refreshDeleteOptions();
+      qrControls.refresh().then(() => qrControls.selectId(publishedId));
     } catch (error) {
       console.error("収穫動画を公開できませんでした。", error);
       setStatus(`公開できませんでした：${error.message}`, true);
@@ -1641,10 +1641,13 @@ function setupHarvestAdminPage() {
   });
 }
 
-// 野菜セット用QRコードの発行・ダウンロード。getId() は直近に公開した記録ID。
-function setupHarvestQrControls(getId, publicBase) {
+// 野菜セット用QRコードの発行・ダウンロード。公開済みの投稿日から選んで発行する。
+// （ページを閉じて後日開いても、公開済みなら発行できる。）
+function setupHarvestQrControls(publicBase) {
   const card = document.querySelector("[data-qr-card]");
-  if (!card) return;
+  if (!card) return { refresh: async () => {}, selectId: () => {} };
+  const dateSelect = card.querySelector("[data-qr-date-select]");
+  const emptyEl = card.querySelector("[data-qr-empty]");
   const generateBtn = card.querySelector("[data-qr-generate]");
   const downloadBtn = card.querySelector("[data-qr-download]");
   const canvas = card.querySelector("[data-qr-canvas]");
@@ -1657,14 +1660,52 @@ function setupHarvestQrControls(getId, publicBase) {
     statusEl.textContent = text;
     statusEl.classList.toggle("is-error", isError);
   };
-
   const buildPageUrl = (id) => `${publicBase}/harvest.html?id=${encodeURIComponent(id)}`;
+  const hideOutput = () => {
+    if (canvasWrap) canvasWrap.hidden = true;
+    if (urlEl) urlEl.hidden = true;
+    if (downloadBtn) downloadBtn.hidden = true;
+  };
+
+  // 公開済みの投稿日でプルダウンを作り直す。
+  async function refresh() {
+    if (!dateSelect) return;
+    let records = [];
+    try {
+      records = await loadNormalizedHarvestRecords(HARVEST_FARMER_ID);
+    } catch (error) {
+      records = [];
+    }
+    const prev = dateSelect.value;
+    dateSelect.innerHTML = records
+      .map((record) => `<option value="${escapeAttribute(record.id)}">${escapeHtml(record.dateLabel)}</option>`)
+      .join("");
+    if (prev && records.some((record) => record.id === prev)) dateSelect.value = prev;
+    const hasRecords = records.length > 0;
+    dateSelect.hidden = !hasRecords;
+    if (emptyEl) emptyEl.hidden = hasRecords;
+    if (generateBtn) generateBtn.disabled = !hasRecords;
+    if (!hasRecords) hideOutput();
+  }
+
+  function selectId(id) {
+    if (dateSelect && id && Array.from(dateSelect.options).some((option) => option.value === id)) {
+      dateSelect.value = id;
+    }
+  }
+
+  if (dateSelect) {
+    dateSelect.addEventListener("change", () => {
+      hideOutput();
+      setQrStatus("");
+    });
+  }
 
   if (generateBtn) {
     generateBtn.addEventListener("click", () => {
-      const id = getId();
+      const id = dateSelect && dateSelect.value;
       if (!id) {
-        setQrStatus("先に保存してください。", true);
+        setQrStatus("公開済みの投稿がありません。先に動画を公開してください。", true);
         return;
       }
       if (!window.QRCodeLite || !canvas) {
@@ -1691,9 +1732,9 @@ function setupHarvestQrControls(getId, publicBase) {
 
   if (downloadBtn) {
     downloadBtn.addEventListener("click", () => {
-      const id = getId();
+      const id = dateSelect && dateSelect.value;
       if (!id || !canvas) {
-        setQrStatus("先に保存してください。", true);
+        setQrStatus("先にQRコードを発行してください。", true);
         return;
       }
       try {
@@ -1709,6 +1750,9 @@ function setupHarvestQrControls(getId, publicBase) {
       }
     });
   }
+
+  refresh();
+  return { refresh, selectId };
 }
 
 function renderHarvestVideoPreview(container, file) {

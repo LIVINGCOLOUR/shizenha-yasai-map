@@ -97,9 +97,15 @@
           <div class="harvest-admin-card harvest-qr-card" data-qr-card>
             <h2>野菜セット用QRコード</h2>
             <p>このQRコードを野菜セットに添える案内にご利用ください。<br />読み取ると、この日の動画と写真が見られます。</p>
+            <p>公開済みの投稿日を選んで発行できます。あとからでも発行できます。</p>
+            <div class="harvest-field">
+              <label for="harvestQrSelect">QRを発行する投稿日</label>
+              <select id="harvestQrSelect" data-qr-date-select aria-label="QRを発行する投稿日を選ぶ"></select>
+            </div>
+            <p class="harvest-empty-preview" data-qr-empty hidden>公開済みの投稿はまだありません。先に動画を公開してください。</p>
             <p class="harvest-qr-url" data-qr-url hidden></p>
             <div class="harvest-admin-actions">
-              <button class="button primary-button" type="button" data-qr-generate aria-label="この日のQRコードを発行する">この日のQRコードを発行</button>
+              <button class="button primary-button" type="button" data-qr-generate aria-label="選んだ投稿日のQRコードを発行する">この日のQRコードを発行</button>
               <button class="button secondary-button" type="button" data-qr-download hidden aria-label="QRコードのPNG画像をダウンロードする">QRコードをダウンロード</button>
             </div>
             <p class="harvest-admin-status" data-qr-status role="status" aria-live="polite"></p>
