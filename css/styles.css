@@ -2358,6 +2358,226 @@ button { font: inherit; }
   }
 }
 
+/* ===== その日の畑の様子（harvest.html） ===== */
+.harvest-day-page { margin: 0; }
+.harvest-day {
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) 16px calc(env(safe-area-inset-bottom, 0px) + 28px);
+  box-sizing: border-box;
+}
+.harvest-day-inner {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.harvest-day-brand {
+  align-self: center;
+  color: var(--muted);
+  font-size: .76rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-decoration: none;
+}
+.harvest-day-error {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(214, 99, 75, .1);
+  color: #a23b2a;
+  font-size: .9rem;
+  font-weight: 900;
+  text-align: center;
+}
+.harvest-day-error[hidden] { display: none; }
+.harvest-day-head { text-align: center; margin: 0; }
+.harvest-day-title {
+  margin: 0;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--forest);
+}
+.harvest-day-date { margin: 6px 0 0; color: var(--earth); font-size: .84rem; font-weight: 900; }
+.harvest-day-video-block { display: flex; flex-direction: column; gap: 10px; }
+.harvest-day-video {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #14130f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  box-shadow: var(--soft-shadow);
+}
+.harvest-day-player {
+  display: block;
+  width: 100%;
+  max-height: 64dvh;
+  object-fit: contain;
+  background: #14130f;
+}
+.harvest-day-video-empty {
+  padding: 40px 20px;
+  color: rgba(255, 253, 247, .9);
+  font-size: .95rem;
+  font-weight: 900;
+  text-align: center;
+}
+.harvest-day-video-empty[hidden] { display: none; }
+.harvest-day-note {
+  margin: 0;
+  text-align: center;
+  color: var(--text);
+  font-size: .96rem;
+  line-height: 1.8;
+}
+.harvest-day-note[hidden] { display: none; }
+.harvest-day-actions { display: flex; flex-direction: column; gap: 10px; }
+.harvest-day-photo-button,
+.harvest-day-profile-button {
+  display: block;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.harvest-day-photo-button {
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--forest);
+}
+.harvest-day-photo-button:hover { background: var(--ivory); }
+.harvest-day-profile-button {
+  border: none;
+  background: var(--forest);
+  color: var(--white);
+  box-shadow: var(--soft-shadow);
+}
+.harvest-day-profile-button:hover { background: var(--forest-deep); }
+.harvest-day-photos { display: flex; flex-direction: column; gap: 12px; }
+.harvest-day-photos-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--forest);
+}
+.harvest-day-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.harvest-day-photos-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 24px;
+  border-radius: 12px;
+  background: var(--ivory);
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 900;
+  text-align: center;
+}
+.harvest-day-photo {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--ivory);
+  aspect-ratio: 1 / 1;
+}
+.harvest-day-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ===== 最近のやまだ農園の様子（harvest-recent.html） ===== */
+.harvest-recent-page { margin: 0; }
+.harvest-recent {
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 16px calc(env(safe-area-inset-bottom, 0px) + 28px);
+  box-sizing: border-box;
+}
+.harvest-recent-inner { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 16px; }
+.harvest-recent-head { text-align: center; }
+.harvest-recent-title {
+  margin: 0;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 1.32rem;
+  font-weight: 700;
+  color: var(--forest);
+}
+.harvest-recent-lead { margin: 8px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.7; }
+.harvest-recent-empty {
+  margin: 0;
+  padding: 28px;
+  border-radius: 14px;
+  background: var(--ivory);
+  color: var(--muted);
+  font-size: .92rem;
+  font-weight: 900;
+  text-align: center;
+}
+.harvest-recent-empty[hidden] { display: none; }
+.harvest-recent-grid { display: flex; flex-direction: column; gap: 12px; }
+.harvest-recent-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: var(--soft-shadow);
+}
+.harvest-recent-card:hover { background: var(--ivory); }
+.harvest-recent-card-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 92px;
+  height: 68px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #14130f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.harvest-recent-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.harvest-recent-card-noimg { color: rgba(255, 253, 247, .8); font-size: .72rem; font-weight: 900; }
+.harvest-recent-card-play {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, .55);
+  color: #fff;
+  font-size: .7rem;
+  padding-left: 2px;
+}
+.harvest-recent-card-body { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.harvest-recent-card-date { color: var(--earth); font-size: .76rem; font-weight: 900; }
+.harvest-recent-card-title {
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--forest);
+}
+.harvest-recent-card-note { color: var(--muted); font-size: .8rem; line-height: 1.5; }
+.harvest-recent-card-arrow { flex: 0 0 auto; color: var(--earth); font-size: 1.05rem; font-weight: 900; }
+.harvest-recent-foot { text-align: center; }
+.harvest-recent-back { color: var(--forest); font-size: .86rem; font-weight: 900; text-decoration: none; }
+.harvest-recent-back:hover { text-decoration: underline; }
+
 .harvest-video-caption {
   display: flex;
   align-items: center;
@@ -2398,6 +2618,61 @@ button { font: inherit; }
   font-weight: 900;
   letter-spacing: .04em;
 }
+.yamada-archive-link.is-disabled {
+  cursor: not-allowed;
+  opacity: .5;
+  box-shadow: none;
+}
+.yamada-recent-harvest-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(32,57,42,.12);
+  background: var(--white);
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: var(--soft-shadow);
+}
+.yamada-recent-harvest-card[hidden] { display: none; }
+.yamada-recent-harvest-card:hover { background: var(--ivory); }
+.yamada-recent-harvest-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 120px;
+  height: 84px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #14130f;
+}
+.yamada-recent-harvest-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.yamada-recent-harvest-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(20,19,15,.55);
+  color: #fff;
+  font-size: .78rem;
+  padding-left: 2px;
+}
+.yamada-recent-harvest-body { flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.yamada-recent-harvest-date { color: var(--earth); font-size: .76rem; font-weight: 900; }
+.yamada-recent-harvest-title {
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--forest);
+}
+.yamada-recent-harvest-note { color: var(--muted); font-size: .82rem; line-height: 1.5; }
+.yamada-recent-harvest-note[hidden] { display: none; }
+.yamada-recent-harvest-arrow { flex: 0 0 auto; color: var(--earth); font-size: 1.1rem; font-weight: 900; }
 .yamada-source-note {
   margin-top: 14px !important;
   padding-top: 14px;
@@ -2648,6 +2923,33 @@ button { font: inherit; }
   font-weight: 900 !important;
 }
 .harvest-admin-status.is-error { color: #9b5a22 !important; }
+.harvest-qr-url {
+  margin: 0 0 4px !important;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--ivory);
+  color: var(--earth) !important;
+  font-size: .76rem !important;
+  font-weight: 900 !important;
+  overflow-wrap: anywhere;
+}
+.harvest-qr-url[hidden] { display: none; }
+.harvest-qr-canvas-wrap {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+.harvest-qr-canvas-wrap[hidden] { display: none; }
+.harvest-qr-canvas-wrap canvas {
+  width: 220px;
+  height: 220px;
+  max-width: 100%;
+  image-rendering: pixelated;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.harvest-qr-card .harvest-admin-actions { margin-top: 6px; }
 .harvest-admin-notice code {
   padding: 2px 5px;
   border-radius: 6px;

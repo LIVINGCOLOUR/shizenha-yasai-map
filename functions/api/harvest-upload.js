@@ -6,6 +6,8 @@
 const RECORDS_KEY = "harvest/records.json";
 const MAX_VIDEO_BYTES = 200 * 1024 * 1024; // 200MB
 const MAX_POSTER_BYTES = 15 * 1024 * 1024; // 15MB
+const MAX_PHOTO_BYTES = 15 * 1024 * 1024; // 15MB / 1枚
+const MAX_PHOTOS = 12;
 
 export async function onRequestPost(context) {
   const { env, request } = context;
@@ -32,6 +34,7 @@ export async function onRequestPost(context) {
     String(form.get("profileUrl") || "").trim() || `farmer.html?id=${encodeURIComponent(farmerId)}`;
   const video = form.get("video");
   const poster = form.get("poster");
+  const photoFiles = form.getAll("photo").filter(isUploadedFile);
 
   if (!farmerId) {
     return json({ ok: false, error: "farmerId は必須です。" }, 400);
@@ -58,17 +61,39 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: "動画の保存に失敗しました。" }, 500);
   }
 
-  let posterKey = "";
+  // 写真（複数可）を保存して photoUrls を作る。
+  const photoUrls = [];
+  for (let i = 0; i < photoFiles.length && photoUrls.length < MAX_PHOTOS; i += 1) {
+    const photo = photoFiles[i];
+    if (!photo.size || photo.size > MAX_PHOTO_BYTES) continue;
+    const photoExt = pickExtension(photo, "jpg");
+    const photoKey = `harvest/${safeFarmer}/${date}-photo-${i + 1}.${photoExt}`;
+    try {
+      await bucket.put(photoKey, photo.stream(), {
+        httpMetadata: { contentType: photo.type || "image/jpeg" },
+      });
+      photoUrls.push(`/api/harvest-media/${photoKey}`);
+    } catch (error) {
+      // 1枚失敗しても他は続行。
+    }
+  }
+
+  // ポスター（動画サムネイル）。明示指定があれば優先、無ければ1枚目の写真。
+  let posterUrl = "";
   if (isUploadedFile(poster) && poster.size > 0 && poster.size <= MAX_POSTER_BYTES) {
     const posterExt = pickExtension(poster, "jpg");
-    posterKey = `harvest/${safeFarmer}/${date}-poster.${posterExt}`;
+    const posterKey = `harvest/${safeFarmer}/${date}-poster.${posterExt}`;
     try {
       await bucket.put(posterKey, poster.stream(), {
         httpMetadata: { contentType: poster.type || "image/jpeg" },
       });
+      posterUrl = `/api/harvest-media/${posterKey}`;
     } catch (error) {
-      posterKey = "";
+      posterUrl = "";
     }
+  }
+  if (!posterUrl && photoUrls.length) {
+    posterUrl = photoUrls[0];
   }
 
   let records = [];
@@ -88,8 +113,11 @@ export async function onRequestPost(context) {
     dateLabel,
     message,
     videoUrl: `/api/harvest-media/${videoKey}`,
-    poster: posterKey ? `/api/harvest-media/${posterKey}` : "",
+    poster: posterUrl,
+    videoThumbnailUrl: posterUrl,
+    photoUrls,
     profileUrl,
+    createdAt: dateLabel ? `${date}T00:00:00.000Z` : "",
   };
   // 同じ農家・同じ日付の記録は上書き。
   records = records.filter((item) => !(item.farmerId === farmerId && item.date === date));

@@ -85,6 +85,20 @@
             <p class="harvest-admin-status" data-harvest-admin-status role="status" aria-live="polite"></p>
           </form>
 
+          <div class="harvest-admin-card harvest-qr-card" data-qr-card>
+            <h2>野菜セット用QRコード</h2>
+            <p>このQRコードを野菜セットに添える案内にご利用ください。<br />読み取ると、この日の動画と写真が見られます。</p>
+            <p class="harvest-qr-url" data-qr-url hidden></p>
+            <div class="harvest-admin-actions">
+              <button class="button primary-button" type="button" data-qr-generate aria-label="この日のQRコードを発行する">この日のQRコードを発行</button>
+              <button class="button secondary-button" type="button" data-qr-download hidden aria-label="QRコードのPNG画像をダウンロードする">QRコードをダウンロード</button>
+            </div>
+            <p class="harvest-admin-status" data-qr-status role="status" aria-live="polite"></p>
+            <div class="harvest-qr-canvas-wrap" data-qr-canvas-wrap hidden>
+              <canvas data-qr-canvas role="img" aria-label="この日の収穫ページのQRコード"></canvas>
+            </div>
+          </div>
+
           <div class="harvest-admin-card harvest-admin-notice">
             <h2>公開について</h2>
             <p>
@@ -102,6 +116,7 @@
       </section>
     </main>
   </div>
+  <script src="js/qrcode.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

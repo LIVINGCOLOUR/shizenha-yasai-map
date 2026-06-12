@@ -2,11 +2,26 @@
   "records": [
     {
       "farmerId": "yamada-nouen",
-      "date": "2025-06-16",
-      "dateLabel": "2025年6月16日",
-      "videoUrl": "assets/videos/yamada-harvest-2025-06-16.mp4",
+      "date": "2026-06-11",
+      "dateLabel": "2026年6月11日",
+      "title": "今日の畑の様子",
+      "message": "今朝は空気が澄んでいて、葉物がみずみずしく育っていました。",
+      "videoUrl": "/api/harvest-media/harvest/yamada-nouen/2026-06-11.mov",
       "poster": "assets/images/yamada/yamada01.jpg",
-      "message": "野菜と一緒に届いた、八郷の畑の時間です。",
+      "videoThumbnailUrl": "assets/images/yamada/yamada01.jpg",
+      "photoUrls": ["assets/images/yamada/yamada01.jpg"],
+      "profileUrl": "farmer.html?id=yamada-nouen"
+    },
+    {
+      "farmerId": "yamada-nouen",
+      "date": "2026-06-05",
+      "dateLabel": "2026年6月5日",
+      "title": "今日の畑の様子",
+      "message": "雨上がりの畑。葉物が元気に育っています。",
+      "videoUrl": "",
+      "poster": "assets/images/yamada/yamada01.jpg",
+      "videoThumbnailUrl": "assets/images/yamada/yamada01.jpg",
+      "photoUrls": ["assets/images/yamada/yamada01.jpg", "assets/images/yamada/yamada01.jpg"],
       "profileUrl": "farmer.html?id=yamada-nouen"
     }
   ]

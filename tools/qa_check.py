@@ -40,12 +40,17 @@ REQUIRED_HTML = [
     "map.html",
     "harvest-admin.html",
     "harvest-video.html",
+    "harvest.html",
+    "harvest-recent.html",
     "harvest-yamada-2025-06-16.html",
     "harvest-archive.html",
 ]
 
 NAV_EXEMPT = {
+    # 全画面の体験ページ／QR導線ページは通常ナビを出さない方針。
     "harvest-video.html",
+    "harvest.html",
+    "harvest-recent.html",
 }
 
 REQUIRED_JSON = [

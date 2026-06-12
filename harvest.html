@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>今日の畑の様子 | 自然派やさいマップ</title>
+  <meta name="description" content="野菜と一緒に届いた、八郷の畑の時間です。その日の動画と写真をご覧いただけます。" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<!-- 媒体名（紙の通信など）は画面に出さず、「今日の畑の様子」に直接つなげる体験ページ。 -->
+<body class="harvest-day-page">
+  <main class="harvest-day" data-harvest-day>
+    <div class="harvest-day-inner">
+      <a class="harvest-day-brand" href="index.html">自然派やさいマップ</a>
+
+      <p class="harvest-day-error" data-harvest-error hidden></p>
+
+      <header class="harvest-day-head">
+        <h1 class="harvest-day-title" data-harvest-title>今日の畑の様子</h1>
+        <p class="harvest-day-date" data-harvest-date></p>
+      </header>
+
+      <section class="harvest-day-video-block">
+        <div class="harvest-day-video" data-video-shell>
+          <video
+            class="harvest-day-player"
+            data-harvest-video
+            controls
+            playsinline
+            preload="metadata"
+          ></video>
+          <div class="harvest-day-video-empty" data-video-placeholder hidden>
+            この日の動画はまだありません
+          </div>
+        </div>
+        <p class="harvest-day-note" data-harvest-note hidden></p>
+      </section>
+
+      <div class="harvest-day-actions">
+        <button type="button" class="harvest-day-photo-button" data-show-photos aria-label="この日の写真をみる">
+          写真をみる
+        </button>
+        <a class="harvest-day-profile-button" data-profile-link href="farmer.html?id=yamada-nouen" aria-label="やまだ農園ページを見る">
+          やまだ農園ページを見る
+        </a>
+      </div>
+
+      <section class="harvest-day-photos" data-photos-section aria-label="この日の写真">
+        <h2 class="harvest-day-photos-title">写真</h2>
+        <div class="harvest-day-photo-grid" data-photo-grid></div>
+      </section>
+    </div>
+  </main>
+  <script src="js/main.js"></script>
+</body>
+</html>
