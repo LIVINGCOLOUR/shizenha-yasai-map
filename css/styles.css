@@ -2438,7 +2438,6 @@ button { font: inherit; }
 }
 .harvest-day-note[hidden] { display: none; }
 .harvest-day-actions { display: flex; flex-direction: column; gap: 10px; }
-.harvest-day-photo-button,
 .harvest-day-profile-button {
   display: block;
   padding: 14px 18px;
@@ -2448,14 +2447,6 @@ button { font: inherit; }
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-}
-.harvest-day-photo-button {
-  border: 1px solid var(--line);
-  background: var(--white);
-  color: var(--forest);
-}
-.harvest-day-photo-button:hover { background: var(--ivory); }
-.harvest-day-profile-button {
   border: none;
   background: var(--forest);
   color: var(--white);
@@ -2915,6 +2906,13 @@ button { font: inherit; }
   background: rgba(255,253,247,.86);
   color: var(--forest);
 }
+.harvest-admin-actions .danger-button {
+  border: 1px solid #c2603f;
+  background: #fff;
+  color: #a23b2a;
+}
+.harvest-admin-actions .danger-button:hover { background: #fbeeea; }
+.harvest-delete-card h2 { color: #a23b2a; }
 .harvest-admin-status {
   min-height: 1.4em;
   margin: 0;

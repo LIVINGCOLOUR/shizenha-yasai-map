@@ -1334,8 +1334,6 @@ function setupHarvestDayPage() {
   const video = root.querySelector("[data-harvest-video]");
   const placeholder = root.querySelector("[data-video-placeholder]");
   const profileLinks = root.querySelectorAll("[data-profile-link]");
-  const showPhotosBtn = root.querySelector("[data-show-photos]");
-  const photosSection = root.querySelector("[data-photos-section]");
   const photoGrid = root.querySelector("[data-photo-grid]");
 
   const params = new URLSearchParams(window.location.search);
@@ -1347,12 +1345,6 @@ function setupHarvestDayPage() {
 
   const setProfileUrl = (url) => profileLinks.forEach((link) => link.setAttribute("href", url));
   setProfileUrl(fallbackProfileUrl);
-
-  if (showPhotosBtn && photosSection) {
-    showPhotosBtn.addEventListener("click", () => {
-      photosSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
 
   const showError = (message) => {
     if (!errorEl) return;
@@ -1526,6 +1518,52 @@ function setupHarvestAdminPage() {
   const PUBLIC_BASE = "https://shizenha-yasai-map.pages.dev";
   let lastPublishedId = null;
   setupHarvestQrControls(() => lastPublishedId, PUBLIC_BASE);
+
+  // 投稿の削除（その投稿日の記録をすべて削除）。
+  const deleteBtn = document.querySelector("[data-harvest-delete]");
+  const deleteStatusEl = document.querySelector("[data-harvest-delete-status]");
+  const setDeleteStatus = (text, isError = false) => {
+    if (!deleteStatusEl) return;
+    deleteStatusEl.textContent = text;
+    deleteStatusEl.classList.toggle("is-error", isError);
+  };
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", async () => {
+      const date = dateInput?.value;
+      if (!date) {
+        setDeleteStatus("削除する投稿日を選んでください。", true);
+        return;
+      }
+      const confirmed = window.confirm(
+        `${formatHarvestDateJa(date)}の投稿（動画・写真・ひとこと）をすべて削除します。よろしいですか？`
+      );
+      if (!confirmed) return;
+
+      deleteBtn.disabled = true;
+      setDeleteStatus("削除しています…");
+      try {
+        const formData = new FormData();
+        formData.append("farmerId", HARVEST_FARMER_ID);
+        formData.append("date", date);
+        const response = await fetch("/api/harvest-delete", { method: "POST", body: formData });
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data || data.ok !== true) {
+          throw new Error((data && data.error) || `削除に失敗しました（HTTP ${response.status}）`);
+        }
+        if (data.removed) {
+          setDeleteStatus("削除しました。この投稿日の動画・写真は表示されなくなります。");
+          if (lastPublishedId === `${HARVEST_FARMER_ID}-${date}`) lastPublishedId = null;
+        } else {
+          setDeleteStatus(data.message || "対象の投稿は見つかりませんでした。");
+        }
+      } catch (error) {
+        console.error("投稿を削除できませんでした。", error);
+        setDeleteStatus(`削除できませんでした：${error.message}`, true);
+      } finally {
+        deleteBtn.disabled = false;
+      }
+    });
+  }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
